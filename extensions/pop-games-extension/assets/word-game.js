@@ -121,7 +121,7 @@ function processInput(e) {
 
 function update() {
     let guess = "";
-    document.getElementById("answer").innerText = "Guess your code";
+    document.getElementById("answer").innerText = "Guess a word";
 
     //string up the guesses into the word
     for (let c = 0; c < width; c++) {
@@ -174,6 +174,7 @@ function update() {
 
         if (correct == width) {
             document.getElementById("answer").innerText = "Correct!";
+            document.getElementById("discount-box").style.background = "#000";
             document.getElementById("discount-box").innerText = "POPGAMES-" + word;
             showConfetti();
             gameOver = true;
@@ -199,9 +200,15 @@ function update() {
                 letterCount[letter] -= 1;
             } // Not in the word or (was in word but letters all used up to avoid overcount)
             else {
-                currTile.classList.add("absent");
+                if (letterCount[letter] <= -1) {
+                    currTile.classList.add("present");
+                } else {
+                    currTile.classList.add("absent");
+                }
                 let keyTile = document.getElementById("Key" + letter);
-                keyTile.classList.add("absent")
+                if (!keyTile.classList.contains("correct") && !keyTile.classList.contains("present")) {
+                    keyTile.classList.add("absent");
+                }
             }
         }
     }

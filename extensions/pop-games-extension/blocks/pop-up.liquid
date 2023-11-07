@@ -1,25 +1,25 @@
 <div id="popUp">
   <div class="left-column">
     <div id="headerContainer">
-      <text id="headerText">Get 25% off your first order!</text>
+      <text id="headerText">Get 25% Off Your First Order!</text>
     </div>
     <div id="subheaderContainer">
-      <text id="subheaderText">Win the game to discover your discount code</text>
+      <text id="subheaderText">Win the game to discover a code</text>
     </div>
+    <form id="emailForm">
+      <label for="email">Enter your email to play:</label>
+      <input type="email" id="email" name="email" placeholder="Your email">
+      <button type="submit">Submit</button>
+    </form>
     <div id="discountContainer">
       <text id="discountText">Redeem code:</text>
     </div>
     <div id="discount-box"> </div>
-    <form id="emailForm">
-      <label for="email">Enter your email:</label>
-      <input type="email" id="email" name="email" placeholder="Your email">
-      <button type="submit">Submit</button>
-    </form>
   </div>
   <div class="right-column">
     <div id="gameContainer">
       <div id="board"></div>
-      <h1 id="answer">Guess your code</h1>
+      <div id="answer">Guess a word</div>
       <div id="keyboard"></div>
     </div>
   </div>
@@ -47,155 +47,6 @@
     70% {border-color: hsl(280,100%,50%);}
     84% {border-color: hsl(320,100%,50%);}
     100% {border-color: hsl(255, 100%, 50%);}
-  }
-
-  #popUp {
-    display: flex;
-    position: fixed;
-    bottom: 12.5%;
-    right: 12.5%;
-    width: 75%;
-    height: 75%;
-    border: 4px solid hsl(0, 100%, 50%);
-    animation: rainbow 10s infinite alternate;
-    -webkit-animation: rainbow 10s infinite alternate;
-    z-index: 100;
-    background: #fff;
-    padding-bottom: 8%;
-  }
-
-  .left-column {
-    width: 50%;
-    background-color: #fff;
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-  }
-
-  .right-column {
-    width: 50%;
-    background-color: #fff;
-    text-align: center;
-    border: none;
-    display: flex;
-    flex-direction: column;
-  }
-
-  #headerContainer {
-    width: 100%;
-    background-color: #fff;
-    text-align: center;
-    margin-top: 9%;
-  }
-
-  #headerText {
-    font-size: 25px;
-    font-weight: bold;
-
-    margin: 10px;
-  }
-
-  #subheaderText {
-    font-size: 16px;
-    font-weight: bold;
-    color: #808080;
-    margin: 10px;
-  }
-
-  #subheaderContainer {
-    width: 100%;
-    background-color: #fff;
-    text-align: center;
-    margin-top: 1%;
-  }
-
-  #discountText {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 10%;
-  }
-
-  #discountContainer {
-    width: 100%;
-    background-color: #fff;
-    text-align: center;
-    margin-top: 10%;
-  }
-
-  #discount-box {
-    width: 45%; /* Set the width of the box */
-    height: 7.5%; /* Set the height of the box */
-    margin-left: 28%;
-    padding-top: 1%;
-    border: 2px solid #ccc; /* Add a border */
-    text-align: center; /* Center the text horizontally */
-    color: #888; /* Text color for the placeholder text */
-    font-weight: bold; /* Apply styling to the placeholder text */
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  #gameContainer {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    background-color: #fff; 
-    border: none;
-    font: inherit;
-    z-index: 100;
-  }
-
-  button[is="party-button"] {
-    width: 100%;
-    height: 75%;
-    background: url("{{ 'thumbs-up.png' | asset_img_url: '180x180' }}") no-repeat center;
-    padding: 0;
-    border: none;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-    z-index: 100;
-    transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-  }
-
-  button[is="party-button"]:hover {
-    transform: scale(1.10);
-  }
-
-  button[is="party-button"]:active {
-    transform: scale(0.95);
-  }
-
-  #emailForm {
-    padding: 2%;
-    border: none;
-    background: #fff;
-    z-index: 100;
-    text-align: center;
-    margin-top: 5%
-  }
-
-  #emailForm label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 1%;
-    margin-top: 5%;
-  }
-
-  #emailForm input {
-    display: inline-block;
-    padding: 1%;
-    border: 1px solid #ccc;
-    margin-bottom: 5%;
-  }
-
-  #emailForm button[type="submit"] {
-    display: inline-block;
-    background-color: #007BFF;
-    color: #fff;
-    padding: 1% 2%;
-    border: none;
-    cursor: pointer;
   }
 
   @media (max-width: 768px) {
