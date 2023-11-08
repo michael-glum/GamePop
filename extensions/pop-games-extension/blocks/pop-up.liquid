@@ -1,16 +1,19 @@
 <div id="popUp">
   <div class="left-column">
     <div id="headerContainer">
-      <text id="headerText">Get 25% Off Your First Order!</text>
+      <text id="headerText">Get 10%, 20%, or 30% Off Your First Order</text>
     </div>
     <div id="subheaderContainer">
-      <text id="subheaderText">Win the game to discover a code</text>
+      <text id="subheaderText">Win a game to discover your discount!</text>
     </div>
     <form id="emailForm">
       <label for="email">Enter your email to play:</label>
       <input type="email" id="email" name="email" placeholder="Your email">
-      <button type="submit">Submit</button>
+      <button type="button" onclick="validateAndProcessEmail()">Submit</button>
     </form>
+    <div id="imageContainer">
+      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick" id="circleTick">
+    </div>
     <div id="discountContainer">
       <text id="discountText">Redeem code:</text>
     </div>
@@ -18,6 +21,10 @@
   </div>
   <div class="right-column">
     <div id="gameContainer">
+      <div id="lockContainer">
+        <img src="{{ 'LockFilledMajor.svg' | asset_url }}" alt="Lock" id="lock" />
+      </div>
+      <img src="{{ 'wordgame.png' | asset_url }}" alt="Word Game" id="wordGameImg" />
       <div id="board"></div>
       <div id="answer">Guess a word</div>
       <div id="keyboard"></div>

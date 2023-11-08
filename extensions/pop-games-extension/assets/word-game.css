@@ -34,8 +34,9 @@
   }
 
   #headerContainer {
-    width: 100%;
+    width: 80%;
     text-align: center;
+    margin-left: 10%;
   }
 
   #headerText {
@@ -122,6 +123,44 @@
     transform: scale(0.95);
   }
 
+  #imageContainer {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    height: 17.25%;
+    z-index: 100;
+    margin-top: 11.85%;
+  }
+
+  #circleTick {
+    width: 20%;
+    height: 100%;
+  }
+
+  #lockContainer {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    z-index: 102;
+    bottom: 1%;
+  }
+
+  #lock {
+    width: 20%;
+    height: 100%;
+  }
+
+  #wordGameImg {
+    position: fixed;
+    height: 95%;
+    z-index: 101;
+    filter: blur(3px);
+    bottom: 5%;
+    /*opacity: 0.9;*/
+  }
+
   #emailForm {
     padding: 2%;
     border: none;
@@ -145,7 +184,7 @@
     margin-bottom: 5%;
   }
 
-  #emailForm button[type="submit"] {
+  #emailForm button[type="button"] {
     display: inline-block;
     background-color: #007BFF;
     color: #fff;
