@@ -8,17 +8,24 @@ export const action = async ({ request }) => {
     const { admin } = await unauthenticated.admin(shop);
 
     let customerResponse;
+    let validEmailGiven = false;
 
     const existingCustomerResponse = await existingCustomer(email, admin)
     if (existingCustomerResponse) {
         if (existingCustomerResponse.node.emailMarketingConsent.marketingState === "NOT_SUBSCRIBED" ||
             existingCustomerResponse.node.emailMarketingConsent.marketingState === "UNSUBSCRIBED") {
             customerResponse = await updateEmailMarketingConsent(existingCustomerResponse.node.id, admin);
+            validEmailGiven = true;
         }
     } else {
         customerResponse = await createCustomer(email, admin)
+        validEmailGiven = true;
     }
-    return json({ message: "Email: " + email + " Shop: " + shop + " Customer Response: " + JSON.stringify(customerResponse)})
+    return json({ 
+        email: email, 
+        customerResponse: JSON.stringify(customerResponse),
+        validEmailGiven: validEmailGiven
+    })
 }
 
 async function existingCustomer(email, admin) {

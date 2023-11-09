@@ -4,20 +4,29 @@
       <text id="headerText">Get 10%, 20%, or 30% Off Your First Order</text>
     </div>
     <div id="subheaderContainer">
-      <text id="subheaderText">Win a game to discover your discount!</text>
+      <text id="subheaderText">Win the game to discover your discount!</text>
     </div>
     <form id="emailForm">
       <label for="email">Enter your email to play:</label>
       <input type="email" id="email" name="email" placeholder="Your email">
       <button type="button" onclick="validateAndProcessEmail()">Submit</button>
+      <text id="emailDenied">This email has already been used</text>
     </form>
     <div id="imageContainer">
       <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick" id="circleTick">
     </div>
+    <div id="discountPercentageContainer">
+      <text id="discountPercentage">20% Off!</text>
+    </div>
     <div id="discountContainer">
       <text id="discountText">Redeem code:</text>
     </div>
-    <div id="discount-box"> </div>
+    <div id="discount-box"> 
+      <text id="discountCode"></text>
+      <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="copyButton" onclick="copyTextToClipboard()">
+      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="circleTickSmall">
+    </div>
+    <div id="discount-terms"> Single use per customer</div>
   </div>
   <div class="right-column">
     <div id="gameContainer">

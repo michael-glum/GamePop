@@ -181,7 +181,10 @@ function update() {
         if (correct == width) {
             document.getElementById("answer").innerText = "Correct!";
             document.getElementById("discount-box").style.background = "#000";
-            document.getElementById("discount-box").innerText = "POPGAMES-" + word;
+            document.getElementById("discountCode").textContent = "POPGAMES-" + word;
+            document.getElementById("imageContainer").style.display = "none";
+            document.getElementById("discountPercentageContainer").style.display = "flex";
+            document.getElementById("copyButton").style.display = "inline-block"
             showConfetti();
             gameOver = true;
         }
@@ -290,19 +293,24 @@ function processEmail(email) {
         .then((response) => response.json())
         .then((data) => {
           console.log(data); // Handle the response from backend
-          const emailForm = document.getElementById("emailForm");
-          const imageContainer = document.getElementById("imageContainer");
-          emailForm.style.display = "none";
-          imageContainer.style.display = "flex";
-          while (board.firstChild) {
-            board.removeChild(board.firstChild);
+          if (data.validEmailGiven) {
+            const emailForm = document.getElementById("emailForm");
+            const imageContainer = document.getElementById("imageContainer");
+            emailForm.style.display = "none";
+            imageContainer.style.display = "flex";
+            while (board.firstChild) {
+              board.removeChild(board.firstChild);
+            }
+            while (keyboard.firstChild) {
+              keyboard.removeChild(keyboard.firstChild);
+            }
+            initialize();
+            document.getElementById("emailDenied").style.display = "none";
+            document.getElementById("wordGameImg").style.display = "none";
+            document.getElementById("lockContainer").style.display = "none";
+          } else {
+            document.getElementById("emailDenied").style.display = "block";
           }
-          while (keyboard.firstChild) {
-            keyboard.removeChild(keyboard.firstChild);
-          }
-          initialize();
-          document.getElementById("wordGameImg").style.display = "none";
-          document.getElementById("lockContainer").style.display = "none";
         })
         .catch((error) => {
           console.error(error);
@@ -313,4 +321,17 @@ function isValidEmail(email) {
     // Regular expression for basic email validation
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return emailPattern.test(email);
+}
+
+function copyTextToClipboard() {
+    var id = "discountCode";
+
+    var r = document.createRange();
+    r.selectNode(document.getElementById(id));
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    document.getElementById("copyButton").style.display = "none";
+    document.getElementById("circleTickSmall").style.display = "inline-block";
 }
