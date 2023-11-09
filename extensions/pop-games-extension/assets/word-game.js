@@ -23,6 +23,7 @@ console.log("Word: " + word);
 
 
 window.onload = function(){
+    initExitHover();
     initialize(true, false);
 }
 
@@ -147,7 +148,7 @@ function update() {
     //start processing guess
     let correct = 0;
 
-    let letterCount = {}; //keep track of letter frequency, ex) KENNY -> {K:1, E:1, N:2, Y: 1}
+    let letterCount = {};
     for (let i = 0; i < word.length; i++) {
         let letter = word[i];
 
@@ -262,7 +263,7 @@ function restartGame() {
     while (keyboard.firstChild) {
         keyboard.removeChild(keyboard.firstChild);
     }
-    document.getElementById("answer").innerText = "The word was " + word;
+    document.getElementById("answer").innerText = "Try again";
     word = wordList[Math.floor(Math.random()*wordList.length)].toUpperCase();
     row = 0;
     col = 0;
@@ -306,10 +307,12 @@ function processEmail(email) {
             }
             initialize();
             document.getElementById("emailDenied").style.display = "none";
+            document.getElementById("discountContainer").style.marginTop = "5.75%";
             document.getElementById("wordGameImg").style.display = "none";
             document.getElementById("lockContainer").style.display = "none";
           } else {
             document.getElementById("emailDenied").style.display = "block";
+            document.getElementById("discountContainer").style.marginTop = "5.5%";
           }
         })
         .catch((error) => {
@@ -334,4 +337,25 @@ function copyTextToClipboard() {
     window.getSelection().removeAllRanges();
     document.getElementById("copyButton").style.display = "none";
     document.getElementById("circleTickSmall").style.display = "inline-block";
+}
+
+function closePopUp() {
+    var popUp = document.getElementById("popUp");
+    popUp.parentNode.removeChild(popUp);
+}
+
+function initExitHover() {
+    const exitContainer = document.getElementById('exitContainer');
+    const exitButton = document.getElementById('exitButton');
+    const exitButtonHover = document.getElementById('exitButtonHover');
+
+    exitContainer.addEventListener('mouseover', () => {
+        exitButton.style.display = "none";
+        exitButtonHover.style.display = "inline-block";
+    });
+
+    exitContainer.addEventListener('mouseout', () => {
+        exitButton.style.display = "inline-block";
+        exitButtonHover.style.display = "none";
+    });
 }

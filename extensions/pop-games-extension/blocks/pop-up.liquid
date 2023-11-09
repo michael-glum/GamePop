@@ -26,9 +26,14 @@
       <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="copyButton" onclick="copyTextToClipboard()">
       <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="circleTickSmall">
     </div>
-    <div id="discount-terms"> Single use per customer</div>
+    <div id="discount-terms">Single use per customer</div>
+    <div id="email-terms">By submitting your email you agree to recieve email marketing updates for this store</div>
   </div>
   <div class="right-column">
+    <div id="exitContainer" onclick="closePopUp()">
+      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButton">
+      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHover">
+    </div>
     <div id="gameContainer">
       <div id="lockContainer">
         <img src="{{ 'LockFilledMajor.svg' | asset_url }}" alt="Lock" id="lock" />
