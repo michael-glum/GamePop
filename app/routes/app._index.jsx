@@ -14,11 +14,12 @@ import {
   InlineStack,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
+import { getStore } from "~/models/store.server";
 
 export const loader = async ({ request }) => {
-  await authenticate.admin(request);
-
-  return null;
+  const { admin, session } = await authenticate.admin(request);
+  const store = await getStore(session.shop, session.id, admin.graphql);
+  return json({ store: store });
 };
 
 export const action = async ({ request }) => {

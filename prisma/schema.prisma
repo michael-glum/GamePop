@@ -20,3 +20,19 @@ model Session {
   accessToken String
   userId      BigInt?
 }
+
+model Store {
+  id              String    @id
+  shop            String
+  lowDiscountId   String?
+  midDiscountId   String?
+  highDiscountId  String?
+  lowPctOff       Float     @default(0.1)
+  midPctOff       Float     @default(0.2)
+  highPctOff      Float     @default(0.3)
+  totalSales      Float     @default(0)
+  currSales       Float     @default(0)
+  lastUpdated     String?
+  lastPayment     Float?
+  isInstalled     Boolean   @default(true)
+}
