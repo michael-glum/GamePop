@@ -40,15 +40,26 @@ var highProb = 20;
 
 var word = "";
 
+var birdGame = true;
+var wordGame = false;
+
 window.onload = async function(){
     initExitHover();
     await initDiscountOptions();
     word = getRandomWord();
-    console.log("Word: " + word);
-    initialize(true, false);
+    if (wordGame) {
+        document.getElementById("wordGameContainer").style.display = "flex";
+        document.getElementById("birdGameContainer").style.display = "none";
+        console.log("Word: " + word);
+        initializeWordGame(true, false);
+    } else if (birdGame) {
+        document.getElementById("wordGameContainer").style.display = "none";
+        document.getElementById("birdGameContainer").style.display = "flex";
+        document.getElementById("right-column").style.margin = "0";
+    }
 }
 
-function initialize(firstInit = true, isUnlocked = true) {
+function initializeWordGame(firstInit = true, isUnlocked = true) {
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
@@ -89,7 +100,7 @@ function initialize(firstInit = true, isUnlocked = true) {
             } 
 
             if (isUnlocked) {
-                keyTile.addEventListener("click", processKey);
+                keyTile.addEventListener("click", processWordGameKey);
             }
 
             if (key == "Enter") {
@@ -106,17 +117,17 @@ function initialize(firstInit = true, isUnlocked = true) {
     // Listen for Key Press
     if (firstInit && isUnlocked) {
         document.addEventListener("keyup", (e) => {
-            processInput(e);
+            processWordGameInput(e);
         })
     }
 }
 
-function processKey() {
+function processWordGameKey() {
     e = { "code" : this.id };
-    processInput(e);
+    processWordGameInput(e);
 }
 
-function processInput(e) {
+function processWordGameInput(e) {
     if (gameOver) return; 
 
     // alert(e.code);
@@ -138,15 +149,15 @@ function processInput(e) {
     }
 
     else if (e.code == "Enter") {
-        update();
+        updateWordGame();
     }
 
     if (!gameOver && row == height) {
-        restartGame();
+        restartWordGame();
     }
 }
 
-function update() {
+function updateWordGame() {
     let guess = "";
     document.getElementById("answer").innerText = "Guess a word";
 
@@ -248,6 +259,20 @@ function update() {
     col = 0; //start at 0 for new row
 }
 
+function restartWordGame() {
+    while (board.firstChild) {
+        board.removeChild(board.firstChild);
+    }
+    while (keyboard.firstChild) {
+        keyboard.removeChild(keyboard.firstChild);
+    }
+    document.getElementById("answer").innerText = "Try again";
+    word = getRandomWord();
+    row = 0;
+    col = 0;
+    initializeWordGame(false);
+}
+
 function showConfetti() {
     const end = Date.now() + (5 * 1000);
 
@@ -275,20 +300,6 @@ function animate(end) {
       } else {
         this.isAnimating = false;
     }
-}
-
-function restartGame() {
-    while (board.firstChild) {
-        board.removeChild(board.firstChild);
-    }
-    while (keyboard.firstChild) {
-        keyboard.removeChild(keyboard.firstChild);
-    }
-    document.getElementById("answer").innerText = "Try again";
-    word = getRandomWord();
-    row = 0;
-    col = 0;
-    initialize(false);
 }
 
 function validateAndProcessEmail() {
@@ -320,13 +331,17 @@ function processEmail(email) {
             const imageContainer = document.getElementById("imageContainer");
             emailForm.style.display = "none";
             imageContainer.style.display = "flex";
-            while (board.firstChild) {
-              board.removeChild(board.firstChild);
+            if (wordGame) {
+                while (board.firstChild) {
+                    board.removeChild(board.firstChild);
+                }
+                while (keyboard.firstChild) {
+                    keyboard.removeChild(keyboard.firstChild);
+                }
+                initializeWordGame();
+            } else if (birdGame) {
+                initializeBirdGame();
             }
-            while (keyboard.firstChild) {
-              keyboard.removeChild(keyboard.firstChild);
-            }
-            initialize();
             document.getElementById("emailDenied").style.display = "none";
             document.getElementById("discountContainer").style.marginTop = "5.75%";
             document.getElementById("wordGameImg").style.display = "none";
@@ -426,4 +441,233 @@ async function initDiscountOptions() {
     } catch (error) {
       console.error(error);
     }
-  }
+}
+
+//#region BirdGame
+//board
+let birdBoard;
+let boardWidth = 360;
+let boardHeight = 450;
+let context;
+
+//bird
+let birdWidth = 35; //width/height ratio = 408/228 = 17/12
+let birdHeight = 25;
+let birdX = boardWidth/8;
+let birdY = boardHeight/2;
+let birdImg;
+
+let bird = {
+    x : birdX,
+    y : birdY,
+    width : birdWidth,
+    height : birdHeight
+}
+
+//pipes
+let pipeArray = [];
+let pipeWidth = 45; //width/height ratio = 384/3072 = 1/8
+let pipeHeight = 360;
+let pipeX = boardWidth;
+let pipeY = 0;
+
+let topPipeImg;
+let bottomPipeImg;
+
+//physics
+let velocityX = -1.5; //pipes moving left speed
+let velocityY = 0; //bird jump speed
+let gravity = 0.09;
+
+let birdGameOver = false;
+let score = 0;
+let beginGame = false;
+
+function initializeBirdGame() {
+    birdBoard = document.getElementById("bird-board");
+    context = birdBoard.getContext("2d");
+
+    console.log("Canvas Width: ", birdBoard.width);
+    console.log("Canvas Height: ", birdBoard.height);
+
+    birdImg = document.getElementById("birdImg");
+    topPipeImg = document.getElementById("topPipeImg");
+    bottomPipeImg = document.getElementById("bottomPipeImg");
+
+    console.log("Bird Image Source: ", birdImg.src);
+    console.log("Top Pipe Image Source: ", topPipeImg.src);
+    console.log("Bottom Pipe Image Source: ", bottomPipeImg.src);
+
+    bird = {
+        x : birdX,
+        y : birdY,
+        width : birdImg.width,
+        height : birdImg.height
+    }
+
+    if (birdImg.complete) {
+        console.log("Bird Image Loaded!");
+        context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+    } else {
+        birdImg.onload = function() {
+            console.log("Bird Image Loaded!");
+            context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+        }
+    }
+
+    beginGame = true;
+    context.fillStyle = "white";
+    context.font="20px sans-serif";
+    wrapTextCentered(context, "Mouse click or press W to play", 20, 100, 250, 25);
+    document.addEventListener("click", moveBird);
+    document.addEventListener("keydown", moveBird);
+}
+
+function update() {
+    requestAnimationFrame(update);
+    console.log("Update Function Called!");
+
+    if (birdGameOver) {
+        return;
+    }
+    context.clearRect(0, 0, birdBoard.width, birdBoard.height);
+
+    //bird
+    velocityY += gravity;
+    // bird.y += velocityY;
+    bird.y = Math.max(bird.y + velocityY, 0); //apply gravity to current bird.y, limit the bird.y to top of the canvas
+    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+    if (bird.y > birdBoard.height) {
+        birdGameOver = true;
+    }
+
+    //pipes
+    for (let i = 0; i < pipeArray.length; i++) {
+        let pipe = pipeArray[i];
+        pipe.x += velocityX;
+        context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+
+        if (!pipe.passed && bird.x > pipe.x + pipe.width) {
+            score += 0.5; //0.5 because there are 2 pipes! so 0.5*2 = 1, 1 for each set of pipes
+            pipe.passed = true;
+        }
+
+        if (detectCollision(bird, pipe)) {
+            birdGameOver = true;
+        }
+    }
+
+    //clear pipes
+    while (pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
+        pipeArray.shift(); //removes first element from the array
+    }
+
+    //score
+    context.fillStyle = "white";
+    context.font="28px sans-serif";
+    context.fillText(score, 5, 30);
+
+    if (birdGameOver) {
+        if (score >= 5) {
+            context.fillText("You Win!", 90, 100);
+            document.removeEventListener("click", moveBird);
+            document.removeEventListener("keydown", moveBird);
+            document.getElementById("discount-box").style.background = "#000";
+            document.getElementById("discountCode").textContent = "POPGAMES-" + word;
+            document.getElementById("imageContainer").style.display = "none";
+            document.getElementById("discountPercentageContainer").style.display = "flex";
+            document.getElementById("discountPercentage").textContent = `${pctOff}% Off!`;
+            document.getElementById("copyButton").style.display = "inline-block"
+            showConfetti();
+        } else {
+            context.fillText("Try Again", 80, 100);
+        }
+    }
+}
+
+function placePipes() {
+    console.log("placePipes Function Called!");
+
+    if (birdGameOver) {
+        return;
+    }
+
+    //(0-1) * pipeHeight/2.
+    // 0 -> -128 (pipeHeight/4)
+    // 1 -> -128 - 256 (pipeHeight/4 - pipeHeight/2) = -3/4 pipeHeight
+    let randomPipeY = pipeY - pipeHeight/4 - Math.random()*(pipeHeight/2);
+    let openingSpace = birdBoard.height/4;
+
+    let topPipe = {
+        img : topPipeImg,
+        x : pipeX,
+        y : randomPipeY,
+        width : pipeWidth,
+        height : pipeHeight,
+        passed : false
+    }
+    pipeArray.push(topPipe);
+
+    let bottomPipe = {
+        img : bottomPipeImg,
+        x : pipeX,
+        y : randomPipeY + pipeHeight + openingSpace,
+        width : pipeWidth,
+        height : pipeHeight,
+        passed : false
+    }
+    pipeArray.push(bottomPipe);
+}
+
+function moveBird(e) {
+    if (e.type === "click" || e.code === "KeyW") {
+        if (beginGame) {
+            requestAnimationFrame(update);
+            setInterval(placePipes, 1500); //every 1.5 seconds
+            beginGame = false;
+        }
+        console.log("moveBird Function Called!");
+
+        velocityY = -3;
+
+        if (birdGameOver) {
+            bird.y = birdY;
+            pipeArray = [];
+            score = 0;
+            birdGameOver = false;
+        }
+    }
+}
+
+function detectCollision(a, b) {
+    return a.x < b.x + b.width &&   //a's top left corner doesn't reach b's top right corner
+           a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
+           a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
+           a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+}
+
+function wrapTextCentered(context, text, x, y, maxWidth, lineHeight) {
+    var words = text.split(' ');
+    var line = '';
+    var centerX = x + maxWidth / 2; // Center X position
+
+    for (var i = 0; i < words.length; i++) {
+        var testLine = line + words[i] + ' ';
+        var metrics = context.measureText(testLine);
+        var testWidth = metrics.width;
+
+        if (testWidth > maxWidth && i > 0) {
+            var xPos = centerX - context.measureText(line).width / 2; // Calculate centered X position
+            context.fillText(line, xPos, y);
+            line = words[i] + ' ';
+            y += lineHeight;
+        } else {
+            line = testLine;
+        }
+    }
+
+    var xPosLastLine = centerX - context.measureText(line).width / 2; // Calculate centered X position for last line
+    context.fillText(line, xPosLastLine, y);
+}
+//#endregion

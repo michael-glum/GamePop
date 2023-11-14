@@ -29,7 +29,7 @@
     <div id="discount-terms">Single use per customer</div>
     <div id="email-terms">By submitting your email you agree to recieve email marketing updates for this store</div>
   </div>
-  <div class="right-column">
+  <div id="right-column">
     <div id="exitContainer" onclick="closePopUp()">
       <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButton">
       <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHover">
@@ -38,10 +38,18 @@
       <div id="lockContainer">
         <img src="{{ 'LockFilledMajor.svg' | asset_url }}" alt="Lock" id="lock" />
       </div>
-      <img src="{{ 'wordgame.png' | asset_url }}" alt="Word Game" id="wordGameImg" />
-      <div id="board"></div>
-      <div id="answer">Guess a word</div>
-      <div id="keyboard"></div>
+      <div id="wordGameContainer">
+        <img src="{{ 'wordgame.png' | asset_url }}" alt="Word Game" id="wordGameImg" />
+        <div id="board"></div>
+        <div id="answer">Guess a word</div>
+        <div id="keyboard"></div>
+      </div>
+      <div id="birdGameContainer">
+        <canvas id="bird-board" width:"360px" height="450px"></canvas>
+        <img src="{{ 'flappybird.png' | asset_url }}" alt="Flappy Bird" id="birdImg" width="34px" height="24px">
+        <img src="{{ 'toppipe.png' | asset_url }}" alt="Top Pipe" id="topPipeImg" width="64px" height="360px">
+        <img src="{{ 'bottompipe.png' | asset_url }}" alt="Bottom Pipe" id="bottomPipeImg" width="64px" height="360px">
+      </div>
     </div>
   </div>
 </div>

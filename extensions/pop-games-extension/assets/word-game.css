@@ -23,7 +23,7 @@
     /*margin: 30px 10px 30px 30px;*/
   }
 
-  .right-column {
+  #right-column {
     width: 400px;
     background-color: #fff;
     text-align: center;
@@ -34,10 +34,13 @@
   }
 
   #exitContainer {
+    position: absolute;
     height: 30px;
     width: 30px;
+    top: 10px;
+    right: 10px;
     z-index: 102;
-    margin-left: 93%;
+    /*margin-left: 93%;*/
   }
 
   #exitButton {
@@ -242,6 +245,10 @@
     bottom: 5%;
   }
 
+  #wordGameContainer {
+    display: none;
+  }
+
   #emailForm {
     padding: 1.25%;
     border: none;
@@ -385,4 +392,34 @@
     background-color: #787C7E;
     color: white;
     border-color:white;
+}
+
+#bird-board {
+  background-image: url("./flappybirdbg.png");
+  background-size: 400px 500px;
+  height: 500px;
+  width: 400px;
+}
+
+#birdGameContainer {
+  height: 100%;
+  width: 400px;
+}
+
+#birdImg {
+  display: none;
+  width: 34px;
+  height: 24px;
+}
+
+#topPipeImg {
+  display: none;
+  width: 64px;
+  height: 360px;
+}
+
+#bottomPipeImg {
+  display: none;
+  width: 64px;
+  height: 360px;
 }
