@@ -62,6 +62,64 @@ export async function createDiscount(pctOff, graphql, codesNum) {
     }
 }
 
+export async function discountStillExists(discountId, graphql) {
+    const response = await graphql(
+        `#graphql
+            query discountStillExists($id: ID!) {
+                codeDiscountNode(id: $id) {
+                    id
+                }
+            }`,
+        {
+            variables: {
+                id: discountId,
+            }
+        }
+    );
+
+    const { data: { codeDiscountNode } } = await response.json();
+    if (codeDiscountNode == null) {
+        return false;
+    }
+    return true;
+}
+
+export async function updateDiscountPercentage(discountId, pctOff, graphql) {
+    const response = await graphql(
+        `#graphql
+            mutation discountCodeBasicUpdate($basicCodeDiscount: DiscountCodeBasicInput!, $id: ID!) {
+                discountCodeBasicUpdate(basicCodeDiscount: $basicCodeDiscount, id: $id) {
+                    codeDiscountNode {
+                        id
+                    }
+                    userErrors {
+                        field
+                        message
+                    }
+                }
+            }`,
+        {
+            variables: {
+                "id": discountId,
+                "basicCodeDiscount": {
+                    "title": Math.floor(pctOff * 100) + "% Off With PopGames!",
+                    "customerGets": {
+                        "value": {
+                            "percentage": pctOff,
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    const { data } = await response.json();
+    if (data.discountCodeBasicUpdate?.codeDiscountNode?.id === null) {
+        return false;
+    }
+    return true;
+}
+
 async function discountCodesBulkCreate(discountId, graphql, codesNum) {
     const codes = [];
     const wordList = CODES_DIC[codesNum];
@@ -93,8 +151,4 @@ async function discountCodesBulkCreate(discountId, graphql, codesNum) {
     const responseJson = await response.json();
     console.log("Bulk response: " + JSON.stringify(responseJson));
     return responseJson;
-}
-
-export async function supplementCodes(discountId, graphql, codesNum) {
-    return null;
 }

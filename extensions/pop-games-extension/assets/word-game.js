@@ -193,6 +193,7 @@ function update() {
             document.getElementById("discountCode").textContent = "POPGAMES-" + word;
             document.getElementById("imageContainer").style.display = "none";
             document.getElementById("discountPercentageContainer").style.display = "flex";
+            document.getElementById("discountPercentage").style.textContent = "20% Off!";
             document.getElementById("copyButton").style.display = "inline-block"
             showConfetti();
             gameOver = true;

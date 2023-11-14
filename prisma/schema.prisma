@@ -30,6 +30,9 @@ model Store {
   lowPctOff       Float     @default(0.1)
   midPctOff       Float     @default(0.2)
   highPctOff      Float     @default(0.3)
+  lowProb         Float     @default(0.2)
+  midProb         Float     @default(0.6)
+  highProb        Float     @default(0.2)
   totalSales      Float     @default(0)
   currSales       Float     @default(0)
   lastUpdated     String?
