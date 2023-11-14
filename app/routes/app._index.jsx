@@ -450,7 +450,7 @@ const DiscountSection = ({ tier, percentage, probability, onPctUpdate, onProbUpd
         <Card>
           <BlockStack gap="200">
             <Text as="h2" variant="headingMd">
-              {tier} Discount
+              {(tier == "Mid") ? "Medium" : tier} Discount
             </Text>
             <Text variant="heading3xl" as="h2" fontWeight="semibold" alignment="center">
               {pctValue}% Off
@@ -459,14 +459,14 @@ const DiscountSection = ({ tier, percentage, probability, onPctUpdate, onProbUpd
               {probValue}% Chance
             </Text>
             <TextField
-              label="Percentage off"
+              label="Percent off"
               type="number"
               value={pctValue}
               onChange={handlePctChange}
               autoComplete="off"
             />
             <TextField
-              label="Probability of occurring"
+              label="Chance of occuring"
               type="number"
               value={probValue}
               onChange={handleProbChange}

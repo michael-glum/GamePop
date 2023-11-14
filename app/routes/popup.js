@@ -1,31 +1,49 @@
 import { json } from "@remix-run/node";
 import { unauthenticated } from "../shopify.server";
+import db from "../db.server.js"
 
 export const action = async ({ request }) => {
     const url = new URL(request.url);
     const shop = url.searchParams.get('shop');
-    const { email } = await request.json();
+    const { email, getDiscountOptions } = await request.json();
     const { admin } = await unauthenticated.admin(shop);
 
-    let customerResponse;
-    let validEmailGiven = false;
+    if (email) {
+        let customerResponse;
+        let validEmailGiven = false;
 
-    const existingCustomerResponse = await existingCustomer(email, admin)
-    if (existingCustomerResponse) {
-        if (existingCustomerResponse.node.emailMarketingConsent.marketingState === "NOT_SUBSCRIBED" ||
-            existingCustomerResponse.node.emailMarketingConsent.marketingState === "UNSUBSCRIBED") {
-            customerResponse = await updateEmailMarketingConsent(existingCustomerResponse.node.id, admin);
+        const existingCustomerResponse = await existingCustomer(email, admin)
+        if (existingCustomerResponse) {
+            if (existingCustomerResponse.node.emailMarketingConsent.marketingState === "NOT_SUBSCRIBED" ||
+                existingCustomerResponse.node.emailMarketingConsent.marketingState === "UNSUBSCRIBED") {
+                customerResponse = await updateEmailMarketingConsent(existingCustomerResponse.node.id, admin);
+                validEmailGiven = true;
+            }
+        } else {
+            customerResponse = await createCustomer(email, admin)
             validEmailGiven = true;
         }
-    } else {
-        customerResponse = await createCustomer(email, admin)
-        validEmailGiven = true;
+        return json({ 
+            email: email, 
+            customerResponse: JSON.stringify(customerResponse),
+            validEmailGiven: validEmailGiven
+        })
+    } else if (getDiscountOptions) {
+        const discountOptions = await db.store.findFirst({ where: { shop: shop },
+            select: {
+                lowPctOff: true,
+                midPctOff: true,
+                highPctOff: true,
+                lowProb: true,
+                midProb: true,
+                highProb: true,
+            }
+        })
+
+        return json({
+            discountOptions: discountOptions
+        })
     }
-    return json({ 
-        email: email, 
-        customerResponse: JSON.stringify(customerResponse),
-        validEmailGiven: validEmailGiven
-    })
 }
 
 async function existingCustomer(email, admin) {

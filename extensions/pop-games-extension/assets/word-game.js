@@ -28,11 +28,23 @@ var gameOver = false;
 
 guessList = guessList.concat(originalWordList);
 
-var word = getRandomWord();
-console.log("Word: " + word);
+var lowPctOff = 10;
+var midPctOff = 20;
+var highPctOff = 30;
 
-window.onload = function(){
+var pctOff = 20;
+
+var lowProb = 20;
+var midProb = 60;
+var highProb = 20;
+
+var word = "";
+
+window.onload = async function(){
     initExitHover();
+    await initDiscountOptions();
+    word = getRandomWord();
+    console.log("Word: " + word);
     initialize(true, false);
 }
 
@@ -193,7 +205,7 @@ function update() {
             document.getElementById("discountCode").textContent = "POPGAMES-" + word;
             document.getElementById("imageContainer").style.display = "none";
             document.getElementById("discountPercentageContainer").style.display = "flex";
-            document.getElementById("discountPercentage").style.textContent = "20% Off!";
+            document.getElementById("discountPercentage").textContent = `${pctOff}% Off!`;
             document.getElementById("copyButton").style.display = "inline-block"
             showConfetti();
             gameOver = true;
@@ -298,7 +310,7 @@ function processEmail(email) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: email, getDiscountOptions: false }),
     })
         .then((response) => response.json())
         .then((data) => {
@@ -370,7 +382,48 @@ function initExitHover() {
 }
 
 function getRandomWord() {
-    const randomInt = Math.floor(Math.random() * 3) + 1;
+    let randomInt = Math.floor(Math.random() * 100) + 1;
+    if (randomInt <= lowProb) {
+        pctOff = lowPctOff;
+        randomInt = 1;
+    } else if (randomInt <= lowProb + midProb) {
+        pctOff = midPctOff;
+        randomInt = 2;
+    } else {
+        pctOff = highPctOff;
+        randomInt = 3;
+    }
     const wordList = wordDic[randomInt];
     return wordList[Math.floor(Math.random()*wordList.length)].toUpperCase();
 }
+
+async function initDiscountOptions() {
+    try {
+      const response = await fetch(proxyUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: null, getDiscountOptions: true }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to fetch discount options");
+      }
+  
+      const data = await response.json();
+  
+      const discountOptions = data.discountOptions || {};
+  
+      lowPctOff = discountOptions.lowPctOff != null ? Math.floor(discountOptions.lowPctOff * 100) : lowPctOff;
+      midPctOff = discountOptions.midPctOff != null ? Math.floor(discountOptions.midPctOff * 100) : midPctOff;
+      highPctOff = discountOptions.highPctOff != null ? Math.floor(discountOptions.highPctOff * 100) : highPctOff;
+      lowProb = discountOptions.lowProb != null ? Math.floor(discountOptions.lowProb * 100) : lowProb;
+      midProb = discountOptions.midProb != null ? Math.floor(discountOptions.midProb * 100) : midProb;
+      highProb = discountOptions.highProb != null ? Math.floor(discountOptions.highProb * 100) : highProb;
+  
+      document.getElementById("headerText").textContent = `Get ${lowPctOff}%, ${midPctOff}%, or ${highPctOff}% Off Your First Order`;
+    } catch (error) {
+      console.error(error);
+    }
+  }
