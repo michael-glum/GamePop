@@ -8,13 +8,12 @@ import {
   Card,
   Button,
   BlockStack,
-  Box,
   List,
   Link,
   InlineStack,
   TextField,
-  Toast,
-  Frame,
+  Image,
+  Select
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { getStore } from "~/models/store.server";
@@ -38,6 +37,8 @@ export const action = async ({ request }) => {
   const lowProb = parseFloat(data.get('lowProb'));
   const midProb = parseFloat(data.get('midProb'));
   const highProb = parseFloat(data.get('highProb'));
+  const useWordGame = data.get('useWordGame');
+  const useBirdGame = data.get('useBirdGame');
 
   const store = await db.store.findFirst({ where: { shop: shop }});
 
@@ -47,6 +48,16 @@ export const action = async ({ request }) => {
 
   let success = true;
   let message = "Updated successfully";
+
+  if (useWordGame != null) {
+    store.useWordGame = (useWordGame === 'true');
+    console.log("Word Game: " + store.useWordGame);
+  }
+
+  if (useBirdGame != null) {
+    store.useBirdGame = (useBirdGame === 'true');
+    console.log("Bird Game: " + store.useBirdGame);
+  }
 
   if (lowProb + midProb + highProb == 1) {
     if (store.lowProb != lowProb) {
@@ -109,6 +120,8 @@ export default function Index() {
   const lowProb = store.lowProb;
   const midProb = store.midProb;
   const highProb = store.highProb;
+  const useWordGame = store.useWordGame;
+  const useBirdGame = store.useBirdGame;
 
   const isLoading =
     ["loading", "submitting"].includes(nav.state) && nav.formMethod === "POST";
@@ -161,6 +174,23 @@ export default function Index() {
     }
   };
 
+  const [wordGameActiveState, setWordGameActiveState] = useState(useWordGame);
+  const [birdGameActiveState, setBirdGameActiveState] = useState(useBirdGame);
+
+  const handleGameUpdate = (game, value) => {
+    switch (game) {
+      case 'Word Game':
+        console.log("Value: " + value)
+        setWordGameActiveState(value === 'active');
+        break;
+      case 'Bird Game':
+        setBirdGameActiveState(value === 'active');
+        break;
+      default:
+        break;
+    }
+  }
+
   const updatePopUp = () => {
     submit({
       lowPctOff: parseFloat(lowPercentage) / 100,
@@ -169,6 +199,8 @@ export default function Index() {
       lowProb: parseFloat(lowProbability) / 100,
       midProb: parseFloat(midProbability) / 100,
       highProb: parseFloat(highProbability) / 100,
+      useWordGame: wordGameActiveState,
+      useBirdGame: birdGameActiveState,
     }, { replace: true, method: "POST" });
   };
 
@@ -181,61 +213,28 @@ export default function Index() {
       </ui-title-bar>
       <BlockStack gap="500">
         <Layout>
-          <Layout.Section>
+          <Layout.Section variant="oneThird">
             <Card>
-              <BlockStack gap="500">
-                <BlockStack gap="200">
-                  <Text as="h2" variant="headingMd">
-                    Congrats on creating a new Shopify app 🎉
-                  </Text>
-                  <Text variant="bodyMd" as="p">
-                    This embedded app template uses{" "}
-                    <Link
-                      url="https://shopify.dev/docs/apps/tools/app-bridge"
-                      target="_blank"
-                      removeUnderline
-                    >
-                      App Bridge
-                    </Link>{" "}
-                    interface examples like an{" "}
-                    <Link url="/app/additional" removeUnderline>
-                      additional page in the app nav
-                    </Link>
-                    , as well as an{" "}
-                    <Link
-                      url="https://shopify.dev/docs/api/admin-graphql"
-                      target="_blank"
-                      removeUnderline
-                    >
-                      Admin GraphQL
-                    </Link>{" "}
-                    mutation demo, to provide a starting point for app
-                    development.
-                  </Text>
-                </BlockStack>
-                <BlockStack gap="200">
-                  <Text as="h3" variant="headingMd">
-                    Get started with products
-                  </Text>
-                  <Text as="p" variant="bodyMd">
-                    Generate a product with GraphQL and get the JSON output for
-                    that product. Learn more about the{" "}
-                    <Link
-                      url="https://shopify.dev/docs/api/admin-graphql/latest/mutations/productCreate"
-                      target="_blank"
-                      removeUnderline
-                    >
-                      productCreate
-                    </Link>{" "}
-                    mutation in our API references.
-                  </Text>
-                </BlockStack>
-                <InlineStack gap="300">
-                  <Button loading={isLoading} onClick={updatePopUp}>
-                    Update Pop Up
-                  </Button>
-                </InlineStack>
-              </BlockStack>
+              <GameSection
+                game="Word Game"
+                source="https://i.imgur.com/i7SL76B.png"
+                width="275"
+                height="325"
+                gap="200"
+                onGameUpdate={(value) => handleGameUpdate('Word Game', value)}
+              />
+            </Card>
+          </Layout.Section>
+          <Layout.Section variant="oneThird">
+            <Card>
+              <GameSection
+                game="Bird Game"
+                source="https://i.imgur.com/piyUAQ4.png?2"
+                width="275"
+                height="325"
+                gap="200"
+                onGameUpdate={(value) => handleGameUpdate('Bird Game', value)}
+              />
             </Card>
           </Layout.Section>
           <Layout.Section variant="oneThird">
@@ -370,58 +369,37 @@ export default function Index() {
   );
 }
 
-const PercentageField = ({ percentage, onUpdate }) => {
-  const [value, setValue] = useState('' + Math.floor(percentage * 100));
+const GameSection = ({ game, source, width, height, gap, onGameUpdate }) => {
+  const [selected, setSelected] = useState('active');
 
-  const handleChange = useCallback(
-    (newValue) => { 
-      setValue(newValue);
-      onUpdate(newValue);
-    },
-    [onUpdate],
+  const handleSelectChange = useCallback(
+    (value) => setSelected(value),
+    [onGameUpdate],
   );
+
+  const options = [
+    {label: 'Active', value: 'active'},
+    {label: 'Inactive', value: 'inactive'},
+  ];
 
   return (
-    <>
-      <Text variant="heading3xl" as="h2" fontWeight="medium" alignment="center">
-        {value}% Off
+    <BlockStack gap={gap}>
+      <Text as="h2" variant="headingLg" alignment="center">
+        {game}
       </Text>
-      <TextField
-        label="Percentage"
-        type="number"
-        value={value}
-        onChange={handleChange}
-        autoComplete="off"
+      <Image
+        source = {source}
+        alt = "Word Game Image"
+        width = {width}
+        height = {height}
       />
-    </>
-  );
-}
-
-const ProbabilityField = ({ probability, onUpdate }) => {
-  const [value, setValue] = useState('' + Math.floor(probability * 100));
-
-  const handleChange = useCallback(
-    (newValue) => { 
-      setValue(newValue);
-      onUpdate(newValue);
-    },
-    [onUpdate],
-  );
-
-  return (
-    <>
-      <Text variant="heading2x1" as="h4" fontWeight="medium" alignment="center">
-        {value}% likelihood
-      </Text>
-      <TextField
-        label="Probability"
-        type="number"
-        value={value}
-        onChange={handleChange}
-        autoComplete="off"
+      <Select
+        options={options}
+        onChange={handleSelectChange}
+        value={selected}
       />
-    </>
-  );
+    </BlockStack>
+  )
 }
 
 const DiscountSection = ({ tier, percentage, probability, onPctUpdate, onProbUpdate }) => {

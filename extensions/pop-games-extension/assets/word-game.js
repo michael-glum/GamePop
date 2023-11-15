@@ -40,22 +40,24 @@ var highProb = 20;
 
 var word = "";
 
-var birdGame = true;
-var wordGame = false;
+var gameToPlay = "wordGame";
 
 window.onload = async function(){
     initExitHover();
     await initDiscountOptions();
+    await initGameOptions();
     word = getRandomWord();
-    if (wordGame) {
-        document.getElementById("wordGameContainer").style.display = "flex";
+    if (gameToPlay === "wordGame") {
+        document.getElementById("wordGameContainer").style.display = "inline-block";
         document.getElementById("birdGameContainer").style.display = "none";
         console.log("Word: " + word);
         initializeWordGame(true, false);
-    } else if (birdGame) {
+    } else if (gameToPlay === "birdGame") {
         document.getElementById("wordGameContainer").style.display = "none";
         document.getElementById("birdGameContainer").style.display = "flex";
         document.getElementById("right-column").style.margin = "0";
+    } else {
+        closePopUp();
     }
 }
 
@@ -321,7 +323,7 @@ function processEmail(email) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email, getDiscountOptions: false }),
+        body: JSON.stringify({ email: email, getDiscountOptions: false, getGameOptions: false }),
     })
         .then((response) => response.json())
         .then((data) => {
@@ -331,7 +333,7 @@ function processEmail(email) {
             const imageContainer = document.getElementById("imageContainer");
             emailForm.style.display = "none";
             imageContainer.style.display = "flex";
-            if (wordGame) {
+            if (gameToPlay === "wordGame") {
                 while (board.firstChild) {
                     board.removeChild(board.firstChild);
                 }
@@ -339,7 +341,7 @@ function processEmail(email) {
                     keyboard.removeChild(keyboard.firstChild);
                 }
                 initializeWordGame();
-            } else if (birdGame) {
+            } else if (gameToPlay === "birdGame") {
                 initializeBirdGame();
             }
             document.getElementById("emailDenied").style.display = "none";
@@ -419,7 +421,7 @@ async function initDiscountOptions() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: null, getDiscountOptions: true }),
+        body: JSON.stringify({ email: null, getDiscountOptions: true, getGameOptions: false }),
       });
   
       if (!response.ok) {
@@ -440,6 +442,45 @@ async function initDiscountOptions() {
       document.getElementById("headerText").textContent = `Get ${lowPctOff}%, ${midPctOff}%, or ${highPctOff}% Off Your First Order`;
     } catch (error) {
       console.error(error);
+    }
+}
+
+async function initGameOptions() {
+    try {
+        const response = await fetch(proxyUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: null, getDiscountOptions: false, getGameOptions: true }),
+        });
+    
+        if (!response.ok) {
+          throw new Error("Failed to fetch game options");
+        }
+    
+        const data = await response.json();
+    
+        console.log("Game Options Data: " + JSON.stringify(data));
+
+        const gameOptions = data.gameOptions || {};
+    
+        birdGame = gameOptions.useBirdGame != null ? gameOptions.useBirdGame : false;
+        wordGame = gameOptions.useWordGame != null ? gameOptions.useWordGame : false;
+    
+        if (birdGame && wordGame) {
+            const randInt = Math.round(Math.random());
+            gameToPlay = randInt ? "birdGame" : "wordGame";
+        } else if (birdGame) {
+            gameToPlay = "birdGame";
+        } else if (wordGame) {
+            gameToPlay = "wordGame";
+        } else {
+            gameToPlay = "none";
+        }
+        console.log("GAME TO PLAY: " + gameToPlay)
+      } catch (error) {
+        console.error(error);
     }
 }
 

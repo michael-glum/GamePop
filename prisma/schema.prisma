@@ -33,6 +33,8 @@ model Store {
   lowProb         Float     @default(0.2)
   midProb         Float     @default(0.6)
   highProb        Float     @default(0.2)
+  useWordGame     Boolean   @default(true)
+  useBirdGame     Boolean   @default(true)
   totalSales      Float     @default(0)
   currSales       Float     @default(0)
   lastUpdated     String?

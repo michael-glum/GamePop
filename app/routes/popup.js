@@ -5,7 +5,7 @@ import db from "../db.server.js"
 export const action = async ({ request }) => {
     const url = new URL(request.url);
     const shop = url.searchParams.get('shop');
-    const { email, getDiscountOptions } = await request.json();
+    const { email, getDiscountOptions, getGameOptions } = await request.json();
     const { admin } = await unauthenticated.admin(shop);
 
     if (email) {
@@ -42,6 +42,17 @@ export const action = async ({ request }) => {
 
         return json({
             discountOptions: discountOptions
+        })
+    } else if (getGameOptions) {
+        const gameOptions = await db.store.findFirst({ where: { shop: shop },
+            select: {
+                useWordGame: true,
+                useBirdGame: true,
+            }
+        })
+
+        return json({
+            gameOptions: gameOptions
         })
     }
 }
