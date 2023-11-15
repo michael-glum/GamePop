@@ -13,7 +13,9 @@ import {
   InlineStack,
   TextField,
   Image,
-  Select
+  Select,
+  Divider,
+  Badge,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { getStore } from "~/models/store.server";
@@ -180,7 +182,6 @@ export default function Index() {
   const handleGameUpdate = (game, value) => {
     switch (game) {
       case 'Word Game':
-        console.log("Value: " + value)
         setWordGameActiveState(value === 'active');
         break;
       case 'Bird Game':
@@ -219,8 +220,9 @@ export default function Index() {
                 game="Word Game"
                 source="https://i.imgur.com/i7SL76B.png"
                 width="275"
-                height="325"
-                gap="200"
+                height="315"
+                gap="100"
+                useGame={useWordGame}
                 onGameUpdate={(value) => handleGameUpdate('Word Game', value)}
               />
             </Card>
@@ -231,8 +233,9 @@ export default function Index() {
                 game="Bird Game"
                 source="https://i.imgur.com/piyUAQ4.png?2"
                 width="275"
-                height="325"
-                gap="200"
+                height="315"
+                gap="100"
+                useGame={useBirdGame}
                 onGameUpdate={(value) => handleGameUpdate('Bird Game', value)}
               />
             </Card>
@@ -360,8 +363,83 @@ export default function Index() {
             onPctUpdate={(percentage) => handlePctUpdate('High', percentage)}
             onProbUpdate={(probability) => handleProbUpdate('High', probability)}
           />
-          <Layout.Section>
+          <Layout.Section variant="fullWidth">
             <SaveDiscountsButton isLoading={isLoading} updatePopUp={updatePopUp}/>
+          </Layout.Section>
+          <Layout.Section variant="oneHalf">
+            <Card>
+              <BlockStack gap="200">
+                <Text variant="headingXl" as="h4" fontWeight="semibold" alignment="center">
+                  Total Sales (All Time)
+                </Text>
+                <Text variant="headingLg" as="h5" fontWeight="regular" alignment="center">
+                  $0
+                </Text>
+              </BlockStack>
+            </Card>
+          </Layout.Section>
+          <Layout.Section variant="oneHalf">
+            <Card>
+              <BlockStack gap="200">
+                <Text variant="headingXl" as="h4" fontWeight="semibold" alignment="center">
+                  Commissions (Period)
+                </Text>
+                <Text variant="headingLg" as="h5" fontWeight="regular" alignment="center">
+                  $0
+                </Text>
+              </BlockStack>
+            </Card>
+          </Layout.Section>
+          <Layout.Section variant="fullWidth">
+            <BlockStack gap="500">
+              <Card>
+                <BlockStack gap="200">
+                  <InlineStack align="space-between">
+                    <Text as="h2" variant="headingMd">
+                      Your support team at Adelfi
+                    </Text>
+                  </InlineStack>
+                  <BlockStack gap="200">
+                    <Divider />
+                    <InlineStack align="space-between">
+                      <Text as="span" variant="bodyMd">
+                        Katie
+                      </Text>
+                      <Badge>
+                        Marketing and Partnerships
+                      </Badge>
+                      <Link url="mailto:kellsworth@adelfi.shop" target="_blank">
+                        kellsworth@adelfi.shop
+                      </Link>
+                    </InlineStack>
+                    <Divider />
+                    <InlineStack align="space-between">
+                      <Text as="span" variant="bodyMd">
+                        Michael
+                      </Text>
+                      <Badge>
+                        Technical Support
+                      </Badge>
+                      <Link url="mailto:mglum@adelfi.shop" target="_blank">
+                        mglum@adelfi.shop
+                      </Link>
+                    </InlineStack>
+                    <Divider />
+                    <InlineStack align="space-between">
+                      <Text as="span" variant="bodyMd">
+                        Info
+                      </Text>
+                      <Badge>
+                        General Info
+                      </Badge>
+                      <Link url="mailto:info@adelfi.shop" target="_blank">
+                        info@adelfi.shop
+                      </Link>
+                    </InlineStack>
+                  </BlockStack>
+                </BlockStack>
+              </Card>
+            </BlockStack>
           </Layout.Section>
         </Layout>
       </BlockStack>
@@ -369,11 +447,14 @@ export default function Index() {
   );
 }
 
-const GameSection = ({ game, source, width, height, gap, onGameUpdate }) => {
-  const [selected, setSelected] = useState('active');
+const GameSection = ({ game, source, width, height, gap, useGame, onGameUpdate }) => {
+  const [selected, setSelected] = useState(useGame ? 'active' : 'inactive');
 
   const handleSelectChange = useCallback(
-    (value) => setSelected(value),
+    (value) => {
+      setSelected(value);
+      onGameUpdate(value);
+    },
     [onGameUpdate],
   );
 

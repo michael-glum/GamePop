@@ -40,24 +40,76 @@ var highProb = 20;
 
 var word = "";
 
-var gameToPlay = "wordGame";
+var gameToPlay = "birdGame";
+
+document.addEventListener('DOMContentLoaded', function() {
+    const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
+    if (!hasPopUpDisplayed) {
+        document.getElementById('emailForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                validateAndProcessEmail();
+            }
+        });
+
+        const currentTime = Date.now();
+        const storedTime = sessionStorage.getItem(`popUpStartTime`);
+        const timeElapsed = storedTime ? (currentTime - parseInt(storedTime)) : 0;
+
+        const minimumDelay = 2000; // Minimum second delay per page
+        const remainingDelay = 10000 - timeElapsed
+        const delayRemaining = remainingDelay > minimumDelay ? remainingDelay : minimumDelay;
+
+        if (delayRemaining > 0) {
+            const popUp = document.getElementById('popUp');
+
+            setTimeout(function() {
+                popUp.style.display = 'flex';
+                sessionStorage.setItem('hasPopUpDisplayed', 'true');
+            }, delayRemaining);
+
+            sessionStorage.setItem('popUpStartTime', currentTime - timeElapsed);
+        } else {
+            sessionStorage.setItem('hasPopUpDisplayed', 'true');
+        }
+    }
+})
 
 window.onload = async function(){
-    initExitHover();
-    await initDiscountOptions();
-    await initGameOptions();
-    word = getRandomWord();
-    if (gameToPlay === "wordGame") {
-        document.getElementById("wordGameContainer").style.display = "inline-block";
-        document.getElementById("birdGameContainer").style.display = "none";
-        console.log("Word: " + word);
-        initializeWordGame(true, false);
-    } else if (gameToPlay === "birdGame") {
-        document.getElementById("wordGameContainer").style.display = "none";
-        document.getElementById("birdGameContainer").style.display = "flex";
+    const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
+    console.log("Pop up has displayed: " + hasPopUpDisplayed);
+    if (!hasPopUpDisplayed) {
+        initExitHover();
+        exitContainer.style.position = "absolute";
+        exitContainer.style.top = "10px";
+        exitContainer.style.right = "10px";
+        exitContainer.style.marginLeft = "initial";
         document.getElementById("right-column").style.margin = "0";
-    } else {
-        closePopUp();
+        await initDiscountOptions();
+        await initGameOptions();
+        word = getRandomWord();
+        if (gameToPlay === "wordGame") {
+            document.getElementById("wordGameContainer").style.display = "flex";
+            document.getElementById("birdGameContainer").style.display = "none";
+            exitContainer.style.position = "initial";
+            exitContainer.style.top = "initial";
+            exitContainer.style.right = "initial";
+            exitContainer.style.marginLeft = "93%";
+            document.getElementById("right-column").style.margin = "0px 0px 30px 0px";
+            console.log("Word: " + word);
+            initializeWordGame(true, false);
+        } else if (gameToPlay === "birdGame") {
+            document.getElementById("wordGameContainer").style.display = "none";
+            document.getElementById("birdGameContainer").style.display = "flex";
+            const exitContainer = document.getElementById("exitContainer")
+            /*exitContainer.style.position = "absolute";
+            exitContainer.style.top = "10px";
+            exitContainer.style.right = "10px";
+            exitContainer.style.marginLeft = "initial";
+            document.getElementById("right-column").style.margin = "0";*/
+        } else {
+            closePopUp();
+        }
     }
 }
 
