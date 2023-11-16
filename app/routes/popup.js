@@ -5,10 +5,10 @@ import db from "../db.server.js"
 export const action = async ({ request }) => {
     const url = new URL(request.url);
     const shop = url.searchParams.get('shop');
-    const { email, getDiscountOptions, getGameOptions } = await request.json();
+    const { email, getDiscountOptions, getGameOptions, getUserStats, setUserStats } = await request.json();
     const { admin } = await unauthenticated.admin(shop);
 
-    if (email) {
+    if (email && !getUserStats && !setUserStats) {
         let customerResponse;
         let validEmailGiven = false;
 
@@ -53,6 +53,110 @@ export const action = async ({ request }) => {
 
         return json({
             gameOptions: gameOptions
+        })
+    } else if (email && getUserStats) {
+        const userStats = await db.user.findUnique({ where: { email: email },
+            select: {
+                wordGamesPlayed: true,
+                wordGamesTotal: true,
+                wordGameBest: true,
+                birdGamesPlayed: true,
+                birdGamesTotal: true,
+                birdGameBest: true,
+            }
+        });
+
+        return json({
+            userStats: userStats
+        })
+    } else if (email && setUserStats) {
+        const game = setUserStats.game;
+        const score = setUserStats.score;
+        let updatedUserStats;
+
+        if (game === 'wordGame') {
+            let userStats = await db.user.findUnique({ where: { email: email },
+                select: {
+                    wordGamesPlayed: true,
+                    wordGamesTotal: true,
+                    wordGameBest: true,
+                }
+            });
+
+            if (!userStats) {
+                updatedUserStats = await db.user.create({
+                    data: {
+                        email: email,
+                        wordGamesPlayed: 1,
+                        wordGamesTotal: score,
+                        wordGameBest: score
+                    },
+                    select: {
+                        wordGamesPlayed: true,
+                        wordGamesTotal: true,
+                        wordGameBest: true,
+                    }
+                });
+            } else {
+                const updatedWordGameStats = await db.user.update({ where: { email: email },
+                    data: {
+                        wordGamesPlayed: userStats.wordGamesPlayed + 1,
+                        wordGamesTotal: userStats.wordGamesTotal + score,
+                        wordGameBest: Math.min(score, userStats.wordGameBest),
+                    },
+                    select: {
+                        wordGamesPlayed: true,
+                        wordGamesTotal: true,
+                        wordGameBest: true,
+                    }
+                });
+
+                updatedUserStats = updatedWordGameStats || userStats;
+            }
+        } else if (game === 'birdGame') {
+            let userStats = await db.user.findUnique({ where: { email: email },
+                select: {
+                    birdGamesPlayed: true,
+                    birdGamesTotal: true,
+                    birdGameBest: true,
+                }
+            });
+
+            if (!userStats) {
+                updatedUserStats = await db.user.create({
+                    data: {
+                        email: email,
+                        birdGamesPlayed: 1,
+                        birdGamesTotal: score,
+                        birdGameBest: score
+                    },
+                    select: {
+                        birdGamesPlayed: true,
+                        birdGamesTotal: true,
+                        birdGameBest: true,
+                    }
+                });
+            } else {
+                const updatedBirdGameStats = await db.user.update({ where: { email: email },
+                    data: {
+                        birdGamesPlayed: userStats.birdGamesPlayed + 1,
+                        birdGamesTotal: userStats.birdGamesTotal + score,
+                        birdGameBest: Math.max(score, userStats.birdGameBest),
+                    },
+                    select: {
+                        birdGamesPlayed: true,
+                        birdGamesTotal: true,
+                        birdGameBest: true,
+                    }
+                });
+
+                updatedUserStats = updatedBirdGameStats || userStats;
+            }
+        }
+
+        console.log("UpdatedUserStats: " + JSON.stringify(updatedUserStats));
+        return json({
+            updatedUserStats: updatedUserStats || null
         })
     }
 }

@@ -218,6 +218,7 @@ export default function Index() {
             <Card>
               <GameSection
                 game="Word Game"
+                description="Guess the word to win"
                 source="https://i.imgur.com/i7SL76B.png"
                 width="275"
                 height="315"
@@ -231,6 +232,7 @@ export default function Index() {
             <Card>
               <GameSection
                 game="Bird Game"
+                description="Score 5 to win"
                 source="https://i.imgur.com/piyUAQ4.png?2"
                 width="275"
                 height="315"
@@ -447,7 +449,7 @@ export default function Index() {
   );
 }
 
-const GameSection = ({ game, source, width, height, gap, useGame, onGameUpdate }) => {
+const GameSection = ({ game, description, source, width, height, gap, useGame, onGameUpdate }) => {
   const [selected, setSelected] = useState(useGame ? 'active' : 'inactive');
 
   const handleSelectChange = useCallback(
@@ -464,22 +466,29 @@ const GameSection = ({ game, source, width, height, gap, useGame, onGameUpdate }
   ];
 
   return (
-    <BlockStack gap={gap}>
-      <Text as="h2" variant="headingLg" alignment="center">
-        {game}
-      </Text>
-      <Image
-        source = {source}
-        alt = "Word Game Image"
-        width = {width}
-        height = {height}
-      />
-      <Select
-        options={options}
-        onChange={handleSelectChange}
-        value={selected}
-      />
-    </BlockStack>
+    <>
+      <BlockStack gap={gap}>
+        <Text as="h2" variant="headingLg" alignment="center">
+          {game}
+        </Text>
+        <Text alignment="center">
+          {description}
+        </Text>
+      </BlockStack>
+      <BlockStack gap={gap}>
+        <Image
+          source = {source}
+          alt = "Word Game Image"
+          width = {width}
+          height = {height}
+        />
+        <Select
+          options={options}
+          onChange={handleSelectChange}
+          value={selected}
+        />
+      </BlockStack>
+    </>
   )
 }
 

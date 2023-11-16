@@ -41,10 +41,11 @@ var highProb = 20;
 var word = "";
 
 var gameToPlay = "birdGame";
+var delay = 0; // Set to 10000
 
 document.addEventListener('DOMContentLoaded', function() {
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
-    if (!hasPopUpDisplayed) {
+    if (true || !hasPopUpDisplayed) { // Remove true ||
         document.getElementById('emailForm').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const timeElapsed = storedTime ? (currentTime - parseInt(storedTime)) : 0;
 
         const minimumDelay = 2000; // Minimum second delay per page
-        const remainingDelay = 10000 - timeElapsed
+        const remainingDelay = delay - timeElapsed
         const delayRemaining = remainingDelay > minimumDelay ? remainingDelay : minimumDelay;
 
         if (delayRemaining > 0) {
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
 window.onload = async function(){
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
     console.log("Pop up has displayed: " + hasPopUpDisplayed);
-    if (!hasPopUpDisplayed) {
+    if (true || !hasPopUpDisplayed) { // Remove true ||
         initExitHover();
         exitContainer.style.position = "absolute";
         exitContainer.style.top = "10px";
@@ -207,6 +208,7 @@ function processWordGameInput(e) {
     }
 
     if (!gameOver && row == height) {
+        setUserStats(row + 1, 'wordGame')
         restartWordGame();
     }
 }
@@ -274,6 +276,7 @@ function updateWordGame() {
             document.getElementById("copyButton").style.display = "inline-block"
             showConfetti();
             gameOver = true;
+            showStats('wordGame', row + 1);
         }
     }
 
@@ -375,7 +378,13 @@ function processEmail(email) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email, getDiscountOptions: false, getGameOptions: false }),
+        body: JSON.stringify({
+            email: email,
+            getDiscountOptions: false,
+            getGameOptions: false,
+            getUserStats: false,
+            setUserStats: null,
+        }),
     })
         .then((response) => response.json())
         .then((data) => {
@@ -473,7 +482,13 @@ async function initDiscountOptions() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: null, getDiscountOptions: true, getGameOptions: false }),
+        body: JSON.stringify({
+            email: null,
+            getDiscountOptions: true,
+            getGameOptions: false,
+            getUserStats: false,
+            setUserStats: null,
+        }),
       });
   
       if (!response.ok) {
@@ -504,7 +519,13 @@ async function initGameOptions() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email: null, getDiscountOptions: false, getGameOptions: true }),
+          body: JSON.stringify({
+            email: null,
+            getDiscountOptions: false,
+            getGameOptions: true,
+            getUserStats: false,
+            setUserStats: null,
+          }),
         });
     
         if (!response.ok) {
@@ -534,6 +555,65 @@ async function initGameOptions() {
       } catch (error) {
         console.error(error);
     }
+}
+
+async function setUserStats(myScore, game) {
+    const emailInput = document.getElementById("email");
+    const email = emailInput.value;
+    return fetch(proxyUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ 
+          email: email,
+          getDiscountOptions: false, 
+          getGameOptions: false, 
+          getUserStats: false,  
+          setUserStats: { score: myScore, game: game }
+      }),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error; // Re-throw the error for the caller to catch
+    });
+  }
+
+function showStats(game, myScore) {
+    setUserStats(myScore, game)
+        .then(stats => {
+            let avg = parseFloat(myScore);
+            console.log("AVG: " + avg);
+            let best = myScore;
+            console.log("BEST: " + best);
+            console.log("stats: " + JSON.stringify(stats.updatedUserStats));
+            if (stats.updatedUserStats != null) {
+                if (game === 'wordGame') {
+                    avg = (parseFloat(stats.updatedUserStats.wordGamesTotal) / parseFloat(stats.updatedUserStats.wordGamesPlayed)).toFixed(1);
+                    best = stats.updatedUserStats.wordGameBest;
+                } else if (game === 'birdGame') {
+                    avg = (parseFloat(stats.updatedUserStats.birdGamesTotal) / parseFloat(stats.updatedUserStats.birdGamesPlayed)).toFixed(1);
+                    best = stats.updatedUserStats.birdGameBest;
+                }
+            }
+            setTimeout(function() {
+                const statsContainer = document.getElementById("statsContainer");
+                statsContainer.style.display = "flex";
+                document.getElementById("score").textContent = myScore;
+                document.getElementById("avg").textContent = avg;
+                document.getElementById("best").textContent = best;
+                document.getElementById("answer").style.visibility = "hidden";
+            }, 2000);
+        })
+        .catch(error => {
+            console.error("Error fetching user stats:", error);
+        });
 }
 
 //#region BirdGame
@@ -570,7 +650,7 @@ let bottomPipeImg;
 //physics
 let velocityX = -1.5; //pipes moving left speed
 let velocityY = 0; //bird jump speed
-let gravity = 0.09;
+let gravity = 0.0975;
 
 let birdGameOver = false;
 let score = 0;
@@ -673,8 +753,10 @@ function update() {
             document.getElementById("discountPercentage").textContent = `${pctOff}% Off!`;
             document.getElementById("copyButton").style.display = "inline-block"
             showConfetti();
+            showStats('birdGame', score);
         } else {
             context.fillText("Try Again", 80, 100);
+            setUserStats(score, 'birdGame')
         }
     }
 }

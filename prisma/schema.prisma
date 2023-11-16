@@ -41,3 +41,14 @@ model Store {
   lastPayment     Float?
   isInstalled     Boolean   @default(true)
 }
+
+model User {
+  id              Int       @id         @default(autoincrement())
+  email           String    @unique
+  wordGamesPlayed Int       @default(0)
+  wordGamesTotal  Int       @default(0)
+  wordGameBest    Int       @default(0)
+  birdGamesPlayed Int       @default(0)
+  birdGamesTotal  Int       @default(0)
+  birdGameBest    Int       @default(0)
+}
