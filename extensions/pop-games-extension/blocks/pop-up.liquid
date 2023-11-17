@@ -1,5 +1,10 @@
+<div id="overlay"></div>
 <div id="popUp">
-  <div class="left-column">
+  <div id="left-column">
+    <div id="exitContainerMobile" onclick="closePopUp()">
+      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButtonMobile">
+      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHoverMobile">
+    </div>
     <div id="headerContainer">
       <text id="headerText">Get 10%, 20%, or 30% Off Your First Order</text>
     </div>
@@ -98,20 +103,60 @@
 
   @media (max-width: 768px) {
     #popUp {
-      right: 0%;
-      width: 100%;
-      display: flex;
       flex-direction: column;
     }
 
-    #headerContainer, #gameContainer, #emailForm {
-      width: 100%;
+    #right-column {
+      display: none;
+      width: 350px;
     }
 
-    button[is="party-button"]:hover {
-      transform: scale(1.00);
+    #left-column {
+      height: 500px; 
+      width: 350px;
+      padding: 0px 0px 30x 0px;
+      position: relative;
     }
+
+    #exitContainerMobile {
+      display: flex;
+    }
+
+    #discountContainer {
+      margin-left: 1%;
+    }
+
+    #discount-box {
+      width: 200px;
+      margin-left: 22%;
+    }
+
+    #discount-terms {
+      margin-left: 22%;
+    }
+
+    #email-terms {
+      margin-left: 0%;
+    }
+
+    #wordGameContainer {
+      display: none;
+    }
+
+    #birdGameContainer {
+      width: 350px;
+    }
+
+    #wordGameImg {
+      display: none;
+    }
+
+    #lockContainer {
+      display: none;
+    }
+
   }
+
 
   canvas:empty {
     display: initial;
@@ -120,7 +165,7 @@
 
 {% schema %}
 {
-  "name": "Word Game",
+  "name": "Pop-up Game",
   "target": "body",
   "stylesheet": "word-game.css",
   "javascript": "word-game.js",

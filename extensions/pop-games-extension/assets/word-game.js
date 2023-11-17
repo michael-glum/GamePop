@@ -42,10 +42,24 @@ var word = "";
 
 var gameToPlay = "birdGame";
 var delay = 0; // Set to 10000
+var mobile = false;
+var gameInProgress = false;
 
 document.addEventListener('DOMContentLoaded', function() {
+    const overlay = document.getElementById('overlay');
+    overlay.style.display = 'none';
+    const popUp = document.getElementById('popUp');
+    popUp.style.display = 'none';
+    if (!mobile) {
+        document.getElementById("exitContainerMobile").style.display = "none";
+    }
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
     if (true || !hasPopUpDisplayed) { // Remove true ||
+        if (window.innerWidth < 768) {
+            mobile = true;
+        } else {
+            mobile = false;
+        }
         document.getElementById('emailForm').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -62,10 +76,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const delayRemaining = remainingDelay > minimumDelay ? remainingDelay : minimumDelay;
 
         if (delayRemaining > 0) {
-            const popUp = document.getElementById('popUp');
-
             setTimeout(function() {
                 popUp.style.display = 'flex';
+                overlay.style.display = 'block';
                 sessionStorage.setItem('hasPopUpDisplayed', 'true');
             }, delayRemaining);
 
@@ -114,6 +127,43 @@ window.onload = async function(){
     }
 }
 
+window.addEventListener('resize', function() {
+    if (window.innerWidth < 768) {
+      mobile = true;
+      makeItMobile();
+    } else {
+      mobile = false;
+      makeItDesktop();
+    }
+});
+
+function handleOverlayClick(event) {
+    if (gameToPlay === 'birdGame' && gameInProgress) {
+        moveBird(event);
+    }
+    event.stopPropagation();
+};
+
+document.getElementById('overlay').addEventListener('click', handleOverlayClick);
+document.getElementById('overlay').addEventListener('touchstart', handleOverlayClick);
+
+function makeItMobile() {
+    if (gameInProgress) {
+        document.getElementById("right-column").style.display = "flex";
+        document.getElementById("left-column").style.display = "none"
+    } else {
+        document.getElementById("right-column").style.display = "none";
+        document.getElementById("left-column").style.display = "flex";
+        document.getElementById("exitContainerMobile").style.display = "flex";
+    }
+}
+
+function makeItDesktop() {
+    document.getElementById("right-column").style.display = "flex";
+    document.getElementById("left-column").style.display = "flex";
+    document.getElementById("exitContainerMobile").style.display = "none";
+}
+
 function initializeWordGame(firstInit = true, isUnlocked = true) {
     // Create the game board
     for (let r = 0; r < height; r++) {
@@ -156,6 +206,7 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
 
             if (isUnlocked) {
                 keyTile.addEventListener("click", processWordGameKey);
+                keyTile.addEventListener("touchstart", processWordGameKey);
             }
 
             if (key == "Enter") {
@@ -174,6 +225,10 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
         document.addEventListener("keyup", (e) => {
             processWordGameInput(e);
         })
+    }
+
+    if (mobile) {
+        makeItMobile();
     }
 }
 
@@ -394,6 +449,7 @@ function processEmail(email) {
             const imageContainer = document.getElementById("imageContainer");
             emailForm.style.display = "none";
             imageContainer.style.display = "flex";
+            gameInProgress = true;
             if (gameToPlay === "wordGame") {
                 while (board.firstChild) {
                     board.removeChild(board.firstChild);
@@ -440,7 +496,10 @@ function copyTextToClipboard() {
 
 function closePopUp() {
     var popUp = document.getElementById("popUp");
+    var overlay = document.getElementById("overlay");
+    overlay.parentNode.removeChild(overlay);
     popUp.parentNode.removeChild(popUp);
+
 }
 
 function initExitHover() {
@@ -586,6 +645,7 @@ async function setUserStats(myScore, game) {
   }
 
 function showStats(game, myScore) {
+    const delay = mobile ? 500 : 2000;
     setUserStats(myScore, game)
         .then(stats => {
             let avg = parseFloat(myScore);
@@ -609,11 +669,22 @@ function showStats(game, myScore) {
                 document.getElementById("avg").textContent = avg;
                 document.getElementById("best").textContent = best;
                 document.getElementById("answer").style.visibility = "hidden";
-            }, 2000);
+            }, delay);
         })
         .catch(error => {
             console.error("Error fetching user stats:", error);
         });
+    if (mobile) {
+        switchScreens();
+    }
+}
+
+function switchScreens() {
+    setTimeout(function() {
+        document.getElementById("right-column").style.display = "none";
+        document.getElementById("left-column").style.display = "flex";
+        gameInProgress = false;
+    }, 4000);
 }
 
 //#region BirdGame
@@ -657,6 +728,9 @@ let score = 0;
 let beginGame = false;
 
 function initializeBirdGame() {
+    if (mobile) {
+        makeItMobile();
+    }
     birdBoard = document.getElementById("bird-board");
     context = birdBoard.getContext("2d");
 
@@ -679,11 +753,9 @@ function initializeBirdGame() {
     }
 
     if (birdImg.complete) {
-        console.log("Bird Image Loaded!");
         context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
     } else {
         birdImg.onload = function() {
-            console.log("Bird Image Loaded!");
             context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
         }
     }
@@ -691,9 +763,15 @@ function initializeBirdGame() {
     beginGame = true;
     context.fillStyle = "white";
     context.font="20px sans-serif";
-    wrapTextCentered(context, "Mouse click or press W to play", 20, 100, 250, 25);
-    document.addEventListener("click", moveBird);
-    document.addEventListener("keydown", moveBird);
+    if (!mobile) {
+        wrapTextCentered(context, "Click Space or W to Play", 20, 100, 250, 25);
+        document.addEventListener("click", moveBird);
+        document.addEventListener("keydown", moveBird);
+    } else {
+        wrapTextCentered(context, "Tap to play", 22, 100, 250, 25);
+        document.addEventListener("touchstart", moveBird);
+        document.addEventListener("keydown", moveBird);
+    }
 }
 
 function update() {
@@ -746,6 +824,8 @@ function update() {
             context.fillText("You Win!", 90, 100);
             document.removeEventListener("click", moveBird);
             document.removeEventListener("keydown", moveBird);
+            document.getElementById('overlay').removeEventListener('click', handleOverlayClick);
+            document.getElementById('overlay').removeEventListener('touchstart', handleOverlayClick);
             document.getElementById("discount-box").style.background = "#000";
             document.getElementById("discountCode").textContent = "POPGAMES-" + word;
             document.getElementById("imageContainer").style.display = "none";
@@ -756,7 +836,7 @@ function update() {
             showStats('birdGame', score);
         } else {
             context.fillText("Try Again", 80, 100);
-            setUserStats(score, 'birdGame')
+            setUserStats(score, 'birdGame');
         }
     }
 }
@@ -796,7 +876,8 @@ function placePipes() {
 }
 
 function moveBird(e) {
-    if (e.type === "click" || e.code === "KeyW") {
+    if (e.type === "click" || e.code === "KeyW" || e.code === "Space") {
+        e.preventDefault();
         if (beginGame) {
             requestAnimationFrame(update);
             setInterval(placePipes, 1500); //every 1.5 seconds
