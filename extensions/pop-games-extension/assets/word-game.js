@@ -45,7 +45,11 @@ var delay = 0; // Set to 10000
 var mobile = false;
 var gameInProgress = false;
 
+var originalViewportContent;
+
 document.addEventListener('DOMContentLoaded', function() {
+    originalViewportContent = document.querySelector('meta[name="viewport"]').getAttribute('content');
+    document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
     const overlay = document.getElementById('overlay');
     overlay.style.display = 'none';
     const popUp = document.getElementById('popUp');
@@ -145,7 +149,7 @@ function handleOverlayClick(event) {
 };
 
 document.getElementById('overlay').addEventListener('click', handleOverlayClick);
-document.getElementById('overlay').addEventListener('touchstart', handleOverlayClick);
+//document.getElementById('overlay').addEventListener('touchstart', handleOverlayClick);
 
 function makeItMobile() {
     if (gameInProgress) {
@@ -206,7 +210,7 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
 
             if (isUnlocked) {
                 keyTile.addEventListener("click", processWordGameKey);
-                keyTile.addEventListener("touchstart", processWordGameKey);
+                //keyTile.addEventListener("touchstart", processWordGameKey);
             }
 
             if (key == "Enter") {
@@ -495,6 +499,9 @@ function copyTextToClipboard() {
 }
 
 function closePopUp() {
+    if (originalViewportContent) {
+        document.querySelector('meta[name="viewport"]').setAttribute('content', originalViewportContent);
+    }
     var popUp = document.getElementById("popUp");
     var overlay = document.getElementById("overlay");
     overlay.parentNode.removeChild(overlay);
@@ -676,6 +683,8 @@ function showStats(game, myScore) {
         });
     if (mobile) {
         switchScreens();
+    } else {
+        gameInProgress = false;
     }
 }
 
@@ -730,6 +739,7 @@ let beginGame = false;
 function initializeBirdGame() {
     if (mobile) {
         makeItMobile();
+        velocityX = -5.0;
     }
     birdBoard = document.getElementById("bird-board");
     context = birdBoard.getContext("2d");
@@ -769,8 +779,7 @@ function initializeBirdGame() {
         document.addEventListener("keydown", moveBird);
     } else {
         wrapTextCentered(context, "Tap to play", 22, 100, 250, 25);
-        document.addEventListener("touchstart", moveBird);
-        document.addEventListener("keydown", moveBird);
+        document.getElementById("popUp").addEventListener("click", moveBird);
     }
 }
 
@@ -824,8 +833,9 @@ function update() {
             context.fillText("You Win!", 90, 100);
             document.removeEventListener("click", moveBird);
             document.removeEventListener("keydown", moveBird);
+            document.getElementById('popUp').removeEventListener('click', moveBird);
             document.getElementById('overlay').removeEventListener('click', handleOverlayClick);
-            document.getElementById('overlay').removeEventListener('touchstart', handleOverlayClick);
+            //document.getElementById('overlay').removeEventListener('touchstart', handleOverlayClick);
             document.getElementById("discount-box").style.background = "#000";
             document.getElementById("discountCode").textContent = "POPGAMES-" + word;
             document.getElementById("imageContainer").style.display = "none";

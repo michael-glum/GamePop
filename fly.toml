@@ -1,0 +1,24 @@
+# fly.toml app configuration file generated for pop-games on 2023-11-17T15:11:22-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "pop-games"
+primary_region = "iad"
+
+[build]
+#  image = "flyio/hellofly:latest"
+
+[env]
+  PORT = "3000"
+  SHOPIFY_APP_URL = "https://pop-games.fly.dev"
+  SHOPIFY_API_KEY = "8264fe948822caff6f49c871198a559a"
+  SCOPES = "write_discounts, write_customers, read_customers"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
