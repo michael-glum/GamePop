@@ -49,7 +49,7 @@ var originalViewportContent;
 
 document.addEventListener('DOMContentLoaded', function() {
     originalViewportContent = document.querySelector('meta[name="viewport"]').getAttribute('content');
-    document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+    /*document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');*/
     const overlay = document.getElementById('overlay');
     overlay.style.display = 'none';
     const popUp = document.getElementById('popUp');
@@ -421,6 +421,9 @@ function animate(end) {
 function validateAndProcessEmail() {
     const emailInput = document.getElementById("email");
     const email = emailInput.value;
+
+    document.querySelector('meta[name="viewport"]').setAttribute('content', originalViewportContent);
+
     if (isValidEmail(email)) {
         console.log("emailInput value: " + email);
         processEmail(email);
@@ -726,6 +729,8 @@ let pipeY = 0;
 
 let topPipeImg;
 let bottomPipeImg;
+let topPipe;
+let bottomPipe;
 
 //physics
 let velocityX = -1.5; //pipes moving left speed
@@ -736,10 +741,15 @@ let birdGameOver = false;
 let score = 0;
 let beginGame = false;
 
+let lastPipePlacementTime = 0;
+let pipePlacementInterval = 1500;
+
+let optimalFPS = 144;
+let fpsOptimizedJumpSpeed = -3;
+
 function initializeBirdGame() {
     if (mobile) {
         makeItMobile();
-        velocityX = -5.0;
     }
     birdBoard = document.getElementById("bird-board");
     context = birdBoard.getContext("2d");
@@ -754,6 +764,24 @@ function initializeBirdGame() {
     console.log("Bird Image Source: ", birdImg.src);
     console.log("Top Pipe Image Source: ", topPipeImg.src);
     console.log("Bottom Pipe Image Source: ", bottomPipeImg.src);
+
+    topPipe = {
+        img: topPipeImg,
+        x: pipeX,
+        y: 0, // Set initial position
+        width: pipeWidth,
+        height: pipeHeight,
+        passed: false
+    };
+    
+    bottomPipe = {
+        img: bottomPipeImg,
+        x: pipeX,
+        y: 0, // Set initial position
+        width: pipeWidth,
+        height: pipeHeight,
+        passed: false
+    };
 
     bird = {
         x : birdX,
@@ -783,125 +811,166 @@ function initializeBirdGame() {
     }
 }
 
-function update() {
-    requestAnimationFrame(update);
-    console.log("Update Function Called!");
+let frameCount = 0;
+let lastFrameTime;
+let frameRate = 0;
+let initialFrameCalculated = false;
 
-    if (birdGameOver) {
-        return;
-    }
-    context.clearRect(0, 0, birdBoard.width, birdBoard.height);
+function update(timestamp) {
+    frameCount++
+    const currentTime = performance.now();
+    const timeDiff = currentTime - lastFrameTime;
 
-    //bird
-    velocityY += gravity;
-    // bird.y += velocityY;
-    bird.y = Math.max(bird.y + velocityY, 0); //apply gravity to current bird.y, limit the bird.y to top of the canvas
-    context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-
-    if (bird.y > birdBoard.height) {
-        birdGameOver = true;
+    if (!initialFrameCalculated && timeDiff > 200) {
+        frameRate = frameCount / (timeDiff / 1000);
+        console.log(`Frame rate: ${frameRate.toFixed(2)} FPS`);
+        initialFrameCalculated = true;
+        lastFrameTime = currentTime;
     }
 
-    //pipes
-    for (let i = 0; i < pipeArray.length; i++) {
-        let pipe = pipeArray[i];
-        pipe.x += velocityX;
-        context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
+    if (initialFrameCalculated) {
+        adjustVariablesForFPS(frameRate);
 
-        if (!pipe.passed && bird.x > pipe.x + pipe.width) {
-            score += 0.5; //0.5 because there are 2 pipes! so 0.5*2 = 1, 1 for each set of pipes
-            pipe.passed = true;
+        if (birdGameOver) {
+            return;
         }
+        context.clearRect(0, 0, birdBoard.width, birdBoard.height);
 
-        if (detectCollision(bird, pipe)) {
+        //bird
+        velocityY += gravity;
+        // bird.y += velocityY;
+        bird.y = Math.max(bird.y + velocityY, 0); //apply gravity to current bird.y, limit the bird.y to top of the canvas
+        context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+        if (bird.y > birdBoard.height) {
             birdGameOver = true;
         }
-    }
 
-    //clear pipes
-    while (pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
-        pipeArray.shift(); //removes first element from the array
-    }
+        //pipes
+        for (let i = 0; i < pipeArray.length; i++) {
+            let pipe = pipeArray[i];
+            pipe.x += velocityX;
+            context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
 
-    //score
-    context.fillStyle = "white";
-    context.font="28px sans-serif";
-    context.fillText(score, 5, 30);
+            if (!pipe.passed && bird.x > pipe.x + pipe.width) {
+                score += 0.5; //0.5 because there are 2 pipes! so 0.5*2 = 1, 1 for each set of pipes
+                pipe.passed = true;
+            }
 
-    if (birdGameOver) {
-        if (score >= 5) {
-            context.fillText("You Win!", 90, 100);
-            document.removeEventListener("click", moveBird);
-            document.removeEventListener("keydown", moveBird);
-            document.getElementById('popUp').removeEventListener('click', moveBird);
-            document.getElementById('overlay').removeEventListener('click', handleOverlayClick);
-            //document.getElementById('overlay').removeEventListener('touchstart', handleOverlayClick);
-            document.getElementById("discount-box").style.background = "#000";
-            document.getElementById("discountCode").textContent = "POPGAMES-" + word;
-            document.getElementById("imageContainer").style.display = "none";
-            document.getElementById("discountPercentageContainer").style.display = "flex";
-            document.getElementById("discountPercentage").textContent = `${pctOff}% Off!`;
-            document.getElementById("copyButton").style.display = "inline-block"
-            showConfetti();
-            showStats('birdGame', score);
-        } else {
-            context.fillText("Try Again", 80, 100);
-            setUserStats(score, 'birdGame');
+            if (detectCollision(bird, pipe)) {
+                birdGameOver = true;
+            }
         }
+
+        //clear pipes
+        while (pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
+            pipeArray.shift(); //removes first element from the array
+        }
+
+        const elapsedTime = timestamp - lastPipePlacementTime;
+
+        // Check if the time interval for placing pipes has elapsed
+        if (elapsedTime > pipePlacementInterval) {
+            placePipes();
+            lastPipePlacementTime = timestamp; // Update the last placement time
+        }
+
+        //score
+        context.fillStyle = "white";
+        context.font="28px sans-serif";
+        context.fillText(score, 5, 30);
+
+        if (birdGameOver) {
+            if (score >= 5) {
+                context.fillText("You Win!", 90, 100);
+                document.removeEventListener("click", moveBird);
+                document.removeEventListener("keydown", moveBird);
+                document.getElementById('popUp').removeEventListener('click', moveBird);
+                document.getElementById('overlay').removeEventListener('click', handleOverlayClick);
+                //document.getElementById('overlay').removeEventListener('touchstart', handleOverlayClick);
+                document.getElementById("discount-box").style.background = "#000";
+                document.getElementById("discountCode").textContent = "POPGAMES-" + word;
+                document.getElementById("imageContainer").style.display = "none";
+                document.getElementById("discountPercentageContainer").style.display = "flex";
+                document.getElementById("discountPercentage").textContent = `${pctOff}% Off!`;
+                document.getElementById("copyButton").style.display = "inline-block"
+                showConfetti();
+                showStats('birdGame', score);
+            } else {
+                context.fillText("Try Again", 80, 100);
+                setUserStats(score, 'birdGame');
+                console.log("reset 14");
+            }
+        }
+
+        lastFrameTime = currentTime;
     }
+
+    requestAnimationFrame(update);
+}
+
+function adjustVariablesForFPS(actualFPS) {
+    // Calculate the ratio between actual and optimal FPS
+    let ratio = optimalFPS / actualFPS;
+
+    // Scaling factors for each variable
+    let velocityXScale = 1.0;
+    let pipePlacementScale = 1.0;
+    let gravityScale = 1.0;
+    let jumpSpeedScale = 1.0;
+
+    // Adjust the scaling factors based on the ratio
+    velocityXScale *= ratio;
+    pipePlacementScale *= ratio;
+    gravityScale *= ratio;
+    jumpSpeedScale *= ratio;
+
+    // Apply the scaling factors to the variables
+    velocityX = -1.5 + (-1.5 * (velocityXScale - 1));
+    pipePlacementInterval = 1500; //(1500 * (pipePlacementScale - 1) / 4);
+    gravity = 0.0975 + (0.0975 * (gravityScale - 1) * 2);
+    fpsOptimizedJumpSpeed = -3.5 + (-3.5 * (jumpSpeedScale - 1) / 2.25);
 }
 
 function placePipes() {
-    console.log("placePipes Function Called!");
-
     if (birdGameOver) {
         return;
     }
 
-    //(0-1) * pipeHeight/2.
-    // 0 -> -128 (pipeHeight/4)
-    // 1 -> -128 - 256 (pipeHeight/4 - pipeHeight/2) = -3/4 pipeHeight
     let randomPipeY = pipeY - pipeHeight/4 - Math.random()*(pipeHeight/2);
     let openingSpace = birdBoard.height/4;
 
-    let topPipe = {
-        img : topPipeImg,
-        x : pipeX,
-        y : randomPipeY,
-        width : pipeWidth,
-        height : pipeHeight,
-        passed : false
-    }
-    pipeArray.push(topPipe);
+    topPipe.x = pipeX;
+    topPipe.y = randomPipeY;
+    topPipe.passed = false;
+    pipeArray.push({ ...topPipe }); // Push a copy of the topPipe object
 
-    let bottomPipe = {
-        img : bottomPipeImg,
-        x : pipeX,
-        y : randomPipeY + pipeHeight + openingSpace,
-        width : pipeWidth,
-        height : pipeHeight,
-        passed : false
-    }
-    pipeArray.push(bottomPipe);
+    bottomPipe.x = pipeX;
+    bottomPipe.y = randomPipeY + pipeHeight + openingSpace;
+    bottomPipe.passed = false;
+    pipeArray.push({ ...bottomPipe }); // Push a copy of the bottomPipe object
 }
 
 function moveBird(e) {
     if (e.type === "click" || e.code === "KeyW" || e.code === "Space") {
         e.preventDefault();
         if (beginGame) {
+            lastFrameTime = performance.now();
             requestAnimationFrame(update);
-            setInterval(placePipes, 1500); //every 1.5 seconds
+            //setInterval(placePipes, 1500); //every 1.5 seconds
             beginGame = false;
         }
-        console.log("moveBird Function Called!");
 
-        velocityY = -3;
+        velocityY = fpsOptimizedJumpSpeed;
 
         if (birdGameOver) {
             bird.y = birdY;
             pipeArray = [];
             score = 0;
             birdGameOver = false;
+            //initialFrameCalculated = false;
+            lastFrameTime = performance.now();
+            requestAnimationFrame(update);
         }
     }
 }
@@ -912,6 +981,7 @@ function detectCollision(a, b) {
            a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
            a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
 }
+
 
 function wrapTextCentered(context, text, x, y, maxWidth, lineHeight) {
     var words = text.split(' ');

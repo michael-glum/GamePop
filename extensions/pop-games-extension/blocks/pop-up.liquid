@@ -2,8 +2,8 @@
 <div id="popUp">
   <div id="left-column">
     <div id="exitContainerMobile" onclick="closePopUp()">
-      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButtonMobile">
-      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHoverMobile">
+      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButtonMobile" width="30" height="30" />
+      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHoverMobile" width="30" height="30" />
     </div>
     <div id="headerContainer">
       <text id="headerText">Get 10%, 20%, or 30% Off Your First Order</text>
@@ -18,7 +18,7 @@
       <text id="emailDenied">This email has already been used</text>
     </form>
     <div id="imageContainer">
-      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick" id="circleTick">
+      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick" id="circleTick" width="20" height="100" />
     </div>
     <div id="discountPercentageContainer">
       <text id="discountPercentage">20% Off!</text>
@@ -28,32 +28,32 @@
     </div>
     <div id="discount-box"> 
       <text id="discountCode"></text>
-      <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="copyButton" onclick="copyTextToClipboard()">
-      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="circleTickSmall">
+      <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="copyButton" onclick="copyTextToClipboard()" width="10" height="75" />
+      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="circleTickSmall" width="10" height="75" />
     </div>
     <div id="discount-terms">Single use per customer</div>
     <div id="email-terms">By submitting your email you agree to recieve email marketing updates for this store</div>
   </div>
   <div id="right-column">
     <div id="exitContainer" onclick="closePopUp()">
-      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButton">
-      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHover">
+      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButton" width="75" height="75" />
+      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHover" width="75" height="75" />
     </div>
     <div id="gameContainer">
       <div id="lockContainer">
-        <img src="{{ 'LockFilledMajor.svg' | asset_url }}" alt="Lock" id="lock" />
+        <img src="{{ 'LockFilledMajor.svg' | asset_url }}" alt="Lock" id="lock" width="20" height="100" />
       </div>
       <div id="wordGameContainer">
-        <img src="{{ 'wordgame.png' | asset_url }}" alt="Word Game" id="wordGameImg" />
+        <img src="{{ 'wordgame.png' | asset_url }}" alt="Word Game" id="wordGameImg" width="auto" height="95"/>
         <div id="board"></div>
         <div id="answer">Guess a word</div>
         <div id="keyboard"></div>
       </div>
       <div id="birdGameContainer">
         <canvas id="bird-board" width:"360px" height="450px"></canvas>
-        <img src="{{ 'flappybird.png' | asset_url }}" alt="Flappy Bird" id="birdImg" width="34px" height="24px">
-        <img src="{{ 'toppipe.png' | asset_url }}" alt="Top Pipe" id="topPipeImg" width="64px" height="360px">
-        <img src="{{ 'bottompipe.png' | asset_url }}" alt="Bottom Pipe" id="bottomPipeImg" width="64px" height="360px">
+        <img src="{{ 'flappybird.png' | asset_url }}" alt="Flappy Bird" id="birdImg" width="34" height="24" />
+        <img src="{{ 'toppipe.png' | asset_url }}" alt="Top Pipe" id="topPipeImg" width="64" height="360" />
+        <img src="{{ 'bottompipe.png' | asset_url }}" alt="Bottom Pipe" id="bottomPipeImg" width="64" height="360" />
       </div>
       <div id="statsContainer">
         <p class="title">Your Stats</p>
