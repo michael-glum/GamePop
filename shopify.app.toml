@@ -2,7 +2,7 @@
 
 name = "pop-games"
 client_id = "8264fe948822caff6f49c871198a559a"
-application_url = "https://acm-lambda-clouds-father.trycloudflare.com"
+application_url = "https://pop-games.fly.dev"
 embedded = true
 
 [access_scopes]
@@ -11,17 +11,17 @@ scopes = "write_discounts, write_customers, read_customers"
 
 [auth]
 redirect_urls = [
-  "https://acm-lambda-clouds-father.trycloudflare.com/auth/callback",
-  "https://acm-lambda-clouds-father.trycloudflare.com/auth/shopify/callback",
-  "https://acm-lambda-clouds-father.trycloudflare.com/api/auth/callback",
-  "https://acm-lambda-clouds-father.trycloudflare.com/.shopify/graphiql/auth/callback"
+  "https://pop-games.fly.dev/auth/callback",
+  "https://pop-games.fly.dev/auth/shopify/callback",
+  "https://pop-games.fly.dev/api/auth/callback",
+  "https://pop-games.fly.dev/.shopify/graphiql/auth/callback"
 ]
 
 [webhooks]
 api_version = "2023-10"
 
 [app_proxy]
-url = "https://acm-lambda-clouds-father.trycloudflare.com/popup"
+url = "https://pop-games.fly.dev/popup"
 subpath = "handle-pop-up"
 prefix = "apps"
 

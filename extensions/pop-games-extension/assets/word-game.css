@@ -283,6 +283,15 @@
     bottom: 5%;
   }
 
+  #birdGameImg {
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 50%;
+    z-index: 101;
+    /*filter: blur(3px);*/
+  }
+
   #wordGameContainer {
     display: none;
     flex-wrap: wrap;
@@ -312,6 +321,7 @@
     padding: 1%;
     border: 1px solid #ccc;
     margin-bottom: 2%;
+    font-size: 16px;
   }
 
   #emailForm button[type="button"] {

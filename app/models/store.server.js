@@ -5,7 +5,7 @@ export async function getStore(shop, id, graphql) {
     let store = await db.store.findFirst({ where: { shop: shop }});
 
     if (!store) {
-        await prisma.store.create({
+        await db.store.create({
             data: {
                 id: id,
                 shop: shop,

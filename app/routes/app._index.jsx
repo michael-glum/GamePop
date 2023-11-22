@@ -233,7 +233,7 @@ export default function Index() {
               <GameSection
                 game="Bird Game"
                 description="Score 5 to win"
-                source="https://i.imgur.com/piyUAQ4.png?2"
+                source="https://i.imgur.com/GMitNo2.png"
                 width="275"
                 height="315"
                 gap="100"
@@ -371,10 +371,10 @@ export default function Index() {
           <Layout.Section variant="oneHalf">
             <Card>
               <BlockStack gap="200">
-                <Text variant="headingXl" as="h4" fontWeight="semibold" alignment="center">
+                <Text variant="headingLg" as="h5" fontWeight="semibold" alignment="center">
                   Total Sales (All Time)
                 </Text>
-                <Text variant="headingLg" as="h5" fontWeight="regular" alignment="center">
+                <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
                   $0
                 </Text>
               </BlockStack>
@@ -383,10 +383,10 @@ export default function Index() {
           <Layout.Section variant="oneHalf">
             <Card>
               <BlockStack gap="200">
-                <Text variant="headingXl" as="h4" fontWeight="semibold" alignment="center">
+                <Text variant="headingLg" as="h5" fontWeight="semibold" alignment="center">
                   Commissions (Period)
                 </Text>
-                <Text variant="headingLg" as="h5" fontWeight="regular" alignment="center">
+                <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
                   $0
                 </Text>
               </BlockStack>
@@ -398,7 +398,7 @@ export default function Index() {
                 <BlockStack gap="200">
                   <InlineStack align="space-between">
                     <Text as="h2" variant="headingMd">
-                      Your support team at Adelfi
+                      Your support team at PopGames
                     </Text>
                   </InlineStack>
                   <BlockStack gap="200">
