@@ -44,7 +44,7 @@ const checkbox = document.getElementById('optOut');
 checkbox.addEventListener('change', function(event) {
   if (event.target.checked) {
     optOut = true;
-    document.getElementById("emailEntryLabel").textContent = "Enter your email to reveal:"
+    document.getElementById("emailEntryLabel").textContent = "Enter your email to claim:"
   } else {
     optOut = false;
     document.getElementById("emailEntryLabel").textContent = "Enter your email to play:"
