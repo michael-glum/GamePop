@@ -118,6 +118,25 @@
     text-align: center;
   }
 
+  #optOutText {
+    font-size: 12px;
+    color: #d2d2d2;
+  }
+
+  #optOutContainer {
+    width: 100%;
+    margin-top: 2%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /*#optOut {
+    margin-top: 20px;
+    top: 5px;
+  }*/
+
   #discountText {
     font-size: 16px;
     font-weight: bold;
@@ -236,6 +255,7 @@
     height: 17.25%;
     z-index: 100;
     margin-top: 11.85%;
+    margin-bottom: 5.85%;
   }
 
   #circleTick {
@@ -250,6 +270,7 @@
     height: 17.25%;
     z-index: 100;
     margin-top: 11.85%;
+    margin-bottom: 5.85%;
   }
 
   #discountPercentage {
@@ -305,7 +326,7 @@
     border: none;
     z-index: 100;
     text-align: center;
-    margin-top: 5%;
+    margin-top: 3%;
   }
 
   #emailForm label {
@@ -500,6 +521,12 @@
   margin-top: 130px;
   margin-bottom: 0px;
   font-weight: bold;
+}
+
+#statsSubtitle {
+  font-size: 12px;
+  text-align: center;
+  margin: 0;
 }
 
 .footer {

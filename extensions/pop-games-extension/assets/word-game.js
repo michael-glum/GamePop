@@ -37,6 +37,20 @@ var delay = 0; // Set to 10000
 var mobile = false;
 var gameInProgress = false;
 
+var optOut = false;
+
+const checkbox = document.getElementById('optOut');
+
+checkbox.addEventListener('change', function(event) {
+  if (event.target.checked) {
+    optOut = true;
+    document.getElementById("emailEntryLabel").textContent = "Enter your email to reveal:"
+  } else {
+    optOut = false;
+    document.getElementById("emailEntryLabel").textContent = "Enter your email to play:"
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const overlay = document.getElementById('overlay');
     overlay.style.display = 'none';
@@ -44,6 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
     popUp.style.display = 'none';
     if (!mobile) {
         document.getElementById("exitContainerMobile").style.display = "none";
+    } else {
+        document.getElementById("exitContainerMobile").style.display = "flex";
     }
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
     if (true || !hasPopUpDisplayed) { // Remove true ||
@@ -451,23 +467,36 @@ function processEmail(email) {
             const imageContainer = document.getElementById("imageContainer");
             emailForm.style.display = "none";
             imageContainer.style.display = "flex";
-            gameInProgress = true;
-            if (gameToPlay === "wordGame") {
-                while (board.firstChild) {
-                    board.removeChild(board.firstChild);
-                }
-                while (keyboard.firstChild) {
-                    keyboard.removeChild(keyboard.firstChild);
-                }
-                initializeWordGame();
-            } else if (gameToPlay === "birdGame") {
-                initializeBirdGame();
-            }
+            document.getElementById("optOutContainer").style.display = "none"
             document.getElementById("emailDenied").style.display = "none";
             document.getElementById("discountContainer").style.marginTop = "5.75%";
-            document.getElementById("wordGameImg").style.display = "none";
-            document.getElementById("birdGameImg").style.display = "none";
-            document.getElementById("lockContainer").style.display = "none";
+            if (!optOut) {
+                gameInProgress = true;
+                if (gameToPlay === "wordGame") {
+                    while (board.firstChild) {
+                        board.removeChild(board.firstChild);
+                    }
+                    while (keyboard.firstChild) {
+                        keyboard.removeChild(keyboard.firstChild);
+                    }
+                    initializeWordGame();
+                } else if (gameToPlay === "birdGame") {
+                    initializeBirdGame();
+                }
+                document.getElementById("wordGameImg").style.display = "none";
+                document.getElementById("birdGameImg").style.display = "none";
+                document.getElementById("lockContainer").style.display = "none";
+            } else {
+                lowProb = 100;
+                word = getRandomWord();
+                document.getElementById("discount-box").style.background = "#000";
+                document.getElementById("discountCode").textContent = "POPGAMES-" + word;
+                document.getElementById("imageContainer").style.display = "none";
+                document.getElementById("discountPercentageContainer").style.display = "flex";
+                document.getElementById("discountPercentage").textContent = `${pctOff}% Off!`;
+                document.getElementById("copyButton").style.display = "inline-block"
+                showConfetti();
+            }
           } else {
             document.getElementById("emailDenied").style.display = "block";
             document.getElementById("discountContainer").style.marginTop = "5.5%";
@@ -568,6 +597,7 @@ async function initDiscountOptions() {
       highProb = discountOptions.highProb != null ? Math.floor(discountOptions.highProb * 100) : highProb;
   
       document.getElementById("headerText").textContent = `Get ${lowPctOff}%, ${midPctOff}%, or ${highPctOff}% Off Your First Order`;
+      document.getElementById("optOutText").textContent = `Or check the box to receive ${lowPctOff}% off now: `;
     } catch (error) {
       console.error(error);
     }
@@ -661,6 +691,9 @@ function showStats(game, myScore) {
             setTimeout(function() {
                 const statsContainer = document.getElementById("statsContainer");
                 statsContainer.style.display = "flex";
+                const emailInput = document.getElementById("email");
+                const email = emailInput.value;
+                document.getElementById("statsSubtitle").textContent = email;
                 document.getElementById("score").textContent = myScore;
                 document.getElementById("avg").textContent = avg;
                 document.getElementById("best").textContent = best;
@@ -683,7 +716,7 @@ function switchScreens() {
         document.getElementById("left-column").style.display = "flex";
         document.getElementById("exitContainerMobile").style.display = "flex";
         gameInProgress = false;
-    }, 4000);
+    }, 3500);
 }
 
 //#region BirdGame
