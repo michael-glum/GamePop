@@ -19,6 +19,7 @@
     "prisma": "prisma"
   },
   "dependencies": {
+    "@defer/client": "^1.14.0",
     "@prisma/client": "^4.13.0",
     "@remix-run/node": "^2.0.0",
     "@remix-run/react": "^2.0.0",

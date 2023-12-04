@@ -1,10 +1,10 @@
 import { authenticate } from "../shopify.server";
 import db from "../db.server";
+import { processBulkOrdersWebhook } from "./processBulkOrders";
 
 export const action = async ({ request }) => {
-  const { topic, shop, session, admin, payload } = await authenticate.webhook(
-    request
-  );
+  const clonedRequest = await request.clone();
+  const { topic, shop, session, admin, payload } = await authenticate.webhook(request);
 
   if (!admin) {
     // The admin context isn't returned if the webhook fired after a shop was uninstalled.
@@ -15,6 +15,12 @@ export const action = async ({ request }) => {
     case "APP_UNINSTALLED":
       if (session) {
         await db.session.deleteMany({ where: { shop } });
+      }
+
+      break;
+    case "BULK_OPERATIONS_FINISH":
+      if (topic && shop && session) {
+        await processBulkOrdersWebhook(topic, shop, session, clonedRequest);
       }
 
       break;

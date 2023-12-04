@@ -22,6 +22,8 @@ import { getStore } from "~/models/store.server";
 import { updateDiscountPercentage } from "~/utils/discountUtil.server";
 import db from "../db.server"
 
+const COMMISSION = .075;
+
 export const loader = async ({ request }) => {
   const { admin, session } = await authenticate.admin(request);
   const store = await getStore(session.shop, session.id, admin.graphql);
@@ -375,7 +377,7 @@ export default function Index() {
                   Total Sales (All Time)
                 </Text>
                 <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
-                  $0
+                  ${store.totalSales.toFixed(2)}
                 </Text>
               </BlockStack>
             </Card>
@@ -387,7 +389,7 @@ export default function Index() {
                   Commissions (Period)
                 </Text>
                 <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
-                  $0
+                  ${(Math.floor(store.currSales * COMMISSION * 100) / 100).toFixed(2)}
                 </Text>
               </BlockStack>
             </Card>
