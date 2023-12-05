@@ -72,7 +72,25 @@ export const action = async ({ request }) => {
     } else if (email && setUserStats) {
         const game = setUserStats.game;
         const score = setUserStats.score;
+        let scores = setUserStats.scores.map(Number);
+        if (!(Array.isArray(scores) && scores.every(Number.isInteger))) {
+            scores = [];
+        }
         let updatedUserStats;
+
+        let sumScores = score;
+        let maxScore = score;
+        let minScore = score;
+        for (let i = 0; i < scores.length; i++) {
+            let currScore = parseInt(scores[i]);
+            sumScores += currScore;
+            if (currScore > maxScore) {
+                maxScore = currScore;
+            }
+            if (currScore < minScore) {
+                minScore = currScore;
+            }
+        }
 
         if (game === 'wordGame') {
             let userStats = await db.user.findUnique({ where: { email: email },
@@ -81,15 +99,15 @@ export const action = async ({ request }) => {
                     wordGamesTotal: true,
                     wordGameBest: true,
                 }
-            });
+            }); 
 
             if (!userStats) {
                 updatedUserStats = await db.user.create({
                     data: {
                         email: email,
-                        wordGamesPlayed: 1,
-                        wordGamesTotal: score,
-                        wordGameBest: score
+                        wordGamesPlayed: scores.length + 1,
+                        wordGamesTotal: sumScores,
+                        wordGameBest: minScore,
                     },
                     select: {
                         wordGamesPlayed: true,
@@ -100,9 +118,9 @@ export const action = async ({ request }) => {
             } else {
                 const updatedWordGameStats = await db.user.update({ where: { email: email },
                     data: {
-                        wordGamesPlayed: userStats.wordGamesPlayed + 1,
-                        wordGamesTotal: userStats.wordGamesTotal + score,
-                        wordGameBest: Math.min(score, userStats.wordGameBest),
+                        wordGamesPlayed: userStats.wordGamesPlayed + scores.length + 1,
+                        wordGamesTotal: userStats.wordGamesTotal + sumScores,
+                        wordGameBest: Math.min(minScore, userStats.wordGameBest),
                     },
                     select: {
                         wordGamesPlayed: true,
@@ -126,9 +144,9 @@ export const action = async ({ request }) => {
                 updatedUserStats = await db.user.create({
                     data: {
                         email: email,
-                        birdGamesPlayed: 1,
-                        birdGamesTotal: score,
-                        birdGameBest: score
+                        birdGamesPlayed: scores.length + 1,
+                        birdGamesTotal: sumScores,
+                        birdGameBest: maxScore,
                     },
                     select: {
                         birdGamesPlayed: true,
@@ -139,9 +157,9 @@ export const action = async ({ request }) => {
             } else {
                 const updatedBirdGameStats = await db.user.update({ where: { email: email },
                     data: {
-                        birdGamesPlayed: userStats.birdGamesPlayed + 1,
-                        birdGamesTotal: userStats.birdGamesTotal + score,
-                        birdGameBest: Math.max(score, userStats.birdGameBest),
+                        birdGamesPlayed: userStats.birdGamesPlayed + scores.length + 1,
+                        birdGamesTotal: userStats.birdGamesTotal + sumScores,
+                        birdGameBest: Math.max(maxScore, userStats.birdGameBest),
                     },
                     select: {
                         birdGamesPlayed: true,
@@ -153,8 +171,7 @@ export const action = async ({ request }) => {
                 updatedUserStats = updatedBirdGameStats || userStats;
             }
         }
-
-        console.log("UpdatedUserStats: " + JSON.stringify(updatedUserStats));
+        
         return json({
             updatedUserStats: updatedUserStats || null
         })

@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
 import db from "../db.server";
-import { unauthenticted } from "../shopify.server";
+import { unauthenticated } from "../shopify.server";
 
 const PRIVATE_AUTH_TOKEN = process.env.PRIVATE_AUTH_TOKEN;
 const ORDER_GRACE_PERIOD = 1;

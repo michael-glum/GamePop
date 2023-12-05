@@ -15,10 +15,13 @@
       <text id="optOutText">Or check the box to recieve 10% off now: </text>
       <input type="checkbox" id="optOut" name="optOut" value="false">
     </div>
+    <div id="actionButtonContainer">
+      <button type="button" onclick="actionButtonPressed()" id="actionButton">Play</button>
+    </div>
     <form id="emailForm">
-      <label for="email" id="emailEntryLabel">Enter your email to play:</label>
+      <label for="email" id="emailEntryLabel">Enter your email to claim:</label>
       <input type="email" id="email" name="email" placeholder="Your email">
-      <button type="button" onclick="validateAndProcessEmail()">Submit</button>
+      <button type="button" onclick="validateAndProcessEmail()" id="submitButton">Submit</button>
       <text id="emailDenied">This email has already been used</text>
     </form>
     <div id="imageContainer">
