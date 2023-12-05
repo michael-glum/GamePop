@@ -60,17 +60,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const popUp = document.getElementById('popUp');
     popUp.style.display = 'none';
     document.getElementById('emailForm').style.display = 'none';
-    if (!mobile) {
-        document.getElementById("exitContainerMobile").style.display = "none";
-    } else {
-        document.getElementById("exitContainerMobile").style.display = "flex";
-    }
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
     if (true || !hasPopUpDisplayed) { // Remove true ||
         if (window.innerWidth < 768) {
             mobile = true;
+            document.getElementById("exitContainerMobile").style.display = "flex";
         } else {
             mobile = false;
+            document.getElementById("exitContainerMobile").style.display = "none";
         }
         document.getElementById('emailForm').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
@@ -103,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.onload = async function(){
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
-    console.log("Pop up has displayed: " + hasPopUpDisplayed);
     if (true || !hasPopUpDisplayed) { // Remove true ||
         document.getElementById('email').addEventListener('focus', function(event) {
             event.preventDefault();
@@ -339,13 +335,20 @@ function updateWordGame() {
             document.getElementById("imageContainer").style.display = "none";
             const emailForm = document.getElementById("emailForm");
             emailForm.style.display = "block";
-            emailForm.style.marginTop = "11.85%";
-            emailForm.style.marginBottom = "5.85%";
             document.getElementById("emailEntryLabel").style.display = "block";
             document.getElementById("email").style.display = "inline-block";
             document.getElementById("submitButton").style.display = "inline-block";
             gameOver = true;
             score = row + 1;
+            const confettiLength = (mobile) ? 1500 : 2000;
+            showConfetti(confettiLength);
+            if (mobile) {
+                setTimeout(() => {
+                    switchScreens();
+                }, 1000)
+            } else {
+                gameInProgress = false;
+            }
         }
     }
     //go again and mark which ones are present but in wrong position
@@ -397,8 +400,8 @@ function restartWordGame() {
     initializeWordGame(false);
 }
 
-function showConfetti() {
-    const end = Date.now() + (5 * 1000);
+function showConfetti(delay) {
+    const end = Date.now() + delay;
 
     if (this.isAnimating) return;
 
@@ -482,15 +485,15 @@ function processEmail(email) {
                 document.getElementById("discount-box").style.background = "#000";
                 document.getElementById("discountCode").textContent = "POPGAMES-" + word;
                 document.getElementById("copyButton").style.display = "inline-block"
-                showConfetti();
+                showConfetti(5000);
             } else {
                 const newPctOffTexts = [lowPctOff, midPctOff, highPctOff];
                 const discountPercentage = document.getElementById("discountPercentage");
-                discountPercentage.textContent = `${lowPctOff}`;
+                discountPercentage.textContent = `${lowPctOff}%`;
                 document.getElementById("discountPercentageContainer").style.display = "flex";
                 let index = 0;
                 const interval = setInterval(() => {
-                    discountPercentage.textContent = `${newPctOffTexts[index]}`;
+                    discountPercentage.textContent = `${newPctOffTexts[index]}%`;
                     index = (index + 1) % newPctOffTexts.length;
                 }, 50)
                 setTimeout(() => {
@@ -499,10 +502,10 @@ function processEmail(email) {
                     document.getElementById("discountCode").textContent = "POPGAMES-" + word;
                     discountPercentage.textContent = `${pctOff}% Off!`;
                     document.getElementById("copyButton").style.display = "inline-block"
-                    showConfetti();
+                    showConfetti(5000);
+                    showStats(gameToPlay, score)
                 }, 1250)
             }
-            showStats(gameToPlay, score)
           } else {
             document.getElementById("emailDenied").style.display = "block";
             document.getElementById("discountContainer").style.marginTop = "5.5%";
@@ -530,12 +533,15 @@ function actionButtonPressed() {
                 keyboard.removeChild(keyboard.firstChild);
             }
             initializeWordGame();
+            document.getElementById("lockContainer").style.display = "none";
         } else if (gameToPlay === "birdGame") {
-            initializeBirdGame();
+            setTimeout(() => {
+                document.getElementById("birdGameImg").style.display = "none";
+                document.getElementById("lockContainer").style.display = "none";
+                initializeBirdGame();
+            }, 500)
         }
         document.getElementById("wordGameImg").style.display = "none";
-        document.getElementById("birdGameImg").style.display = "none";
-        document.getElementById("lockContainer").style.display = "none";
         document.getElementById("actionButtonContainer").style.display = "none";
         document.getElementById("optOutContainer").style.display = "none";
         document.getElementById("discountContainer").style.marginTop = "5.75%";
@@ -548,8 +554,8 @@ function actionButtonPressed() {
         document.getElementById("optOutContainer").style.display = "none";
         const emailForm = document.getElementById("emailForm");
         emailForm.style.display = "block";
-        emailForm.style.marginTop = "11.85%";
-        emailForm.style.marginBottom = "5.85%";
+        emailForm.style.marginTop = "7.85%";
+        emailForm.style.marginBottom = "2.85%";
         document.getElementById("emailEntryLabel").style.display = "block";
         document.getElementById("email").style.display = "inline-block";
         document.getElementById("submitButton").style.display = "inline-block";
@@ -717,7 +723,7 @@ async function setUserStats(myScore, game) {
   }
 
 function showStats(game, myScore) {
-    const delay = mobile ? 500 : 2000;
+    const delay = 0; // mobile ? 500 : 2000;
     setUserStats(myScore, game)
         .then(stats => {
             let avg = parseFloat(myScore);
@@ -746,11 +752,6 @@ function showStats(game, myScore) {
         .catch(error => {
             console.error("Error fetching user stats:", error);
         });
-    if (mobile) {
-        switchScreens();
-    } else {
-        gameInProgress = false;
-    }
 }
 
 function switchScreens() {
@@ -759,7 +760,7 @@ function switchScreens() {
         document.getElementById("left-column").style.display = "flex";
         document.getElementById("exitContainerMobile").style.display = "flex";
         gameInProgress = false;
-    }, 3500);
+    }, 500);
 }
 
 //#region BirdGame
@@ -944,11 +945,18 @@ function update(timestamp) {
                 document.getElementById('imageContainer').style.display = "none";
                 const emailForm = document.getElementById("emailForm");
                 emailForm.style.display = "block";
-                emailForm.style.marginTop = "11.85%";
-                emailForm.style.marginBottom = "5.85%";
                 document.getElementById("emailEntryLabel").style.display = "block";
                 document.getElementById("email").style.display = "inline-block";
                 document.getElementById("submitButton").style.display = "inline-block";
+                const confettiLength = (mobile) ? 1500 : 2000;
+                showConfetti(confettiLength);
+                if (mobile) {
+                    setTimeout(() => {
+                        switchScreens();
+                    }, 1000)
+                } else {
+                    gameInProgress = false;
+                }
             } else {
                 context.fillText("Try Again", 80, 100);
                 scores.push(score);
