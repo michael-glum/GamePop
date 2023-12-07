@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useActionData, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 import {
   Page,
@@ -29,8 +29,11 @@ const COUPON_CODES = ["SAVE10"];
 
 export const loader = async ({ request }) => {
     const { admin, session } = await authenticate.admin(request);
-  
-    const store = await getStore(session.shop, session.id, admin.graphql);
+    /*const { searchParams } = new URL(request.url);
+    const shop = decodeURIComponent(searchParams.get('shop'));
+    const id = searchParams.get('id');*/
+
+    const store = await getStore(session.shop, session.id, null /*admin.graphql*/);
     return json({ store });
 };
 
@@ -42,7 +45,7 @@ export const action = async ({ request }) => {
         isTest: true,
         onFailure: async () => billing.request({
             plan: MONTHLY_COMMISSION_PLAN,
-            returnUrl: '/app._index'
+            returnUrl: '/app/_index'
         }),
     });
 

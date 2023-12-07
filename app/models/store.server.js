@@ -16,9 +16,13 @@ export async function getStore(shop, id, graphql) {
         store.isInstalled = true;
     }
 
-    const updatedStore = await supplementDiscounts(store, graphql);
-    await db.store.updateMany({ where: { shop: shop }, data: { ...updatedStore }});
-    return updatedStore;
+    if (graphql != null) {
+        const updatedStore = await supplementDiscounts(store, graphql);
+        await db.store.updateMany({ where: { shop: shop }, data: { ...updatedStore }});
+        return updatedStore;
+    } else {
+        return store;
+    }
 }
 
 async function supplementDiscounts(store, graphql) {

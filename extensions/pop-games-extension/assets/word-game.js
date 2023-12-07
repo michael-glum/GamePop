@@ -856,7 +856,11 @@ function initializeBirdGame() {
 
     beginGame = true;
     context.fillStyle = "white";
-    context.font="20px sans-serif";
+    const headerText = document.getElementById('headerText');
+    const computedStyle = window.getComputedStyle(headerText);
+    const fontFamily = computedStyle.fontFamily;
+    const fontSize = computedStyle.fontSize;
+    context.font=`${fontSize} ${fontFamily}`;
     if (!mobile) {
         wrapTextCentered(context, "Click Space or W to Play", 20, 100, 250, 25);
         document.addEventListener("click", moveBird);

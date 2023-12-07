@@ -4,6 +4,7 @@ import {
   DeliveryMethod,
   shopifyApp,
   LATEST_API_VERSION,
+  BillingInterval,
 } from "@shopify/shopify-app-remix/server";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
 import { restResources } from "@shopify/shopify-api/rest/admin/2023-10";

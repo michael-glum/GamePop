@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useActionData, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 import {
   Page,
@@ -28,16 +28,20 @@ import db from "../db.server"
 const COMMISSION = .075;
 
 export const loader = async ({ request }) => {
-  const { billing, admin, session } = await authenticate.admin(request);
+  const { billing, admin, session, redirect} = await authenticate.admin(request);
 
   const billingCheck = await billing.require({
     plans: [MONTHLY_COMMISSION_PLAN],
     isTest: true,
-    onFailure: () => redirect('/billingSetUp'),
+    onFailure: () => redirect('/app/billingSetUp'),
   });
 
-  const subscription = billingCheck.appSubscriptions[0];
-  console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
+  if (billingCheck && billingCheck.appSubscriptions && billingCheck.appSubscriptions.length > 0) {
+    const subscription = billingCheck.appSubscriptions[0];
+    console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
+  } else {
+    console.log(`No app subscriptions found`);
+  }
 
   const store = await getStore(session.shop, session.id, admin.graphql);
   return json({ store });

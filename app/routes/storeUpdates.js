@@ -20,7 +20,7 @@ export const action = async ({ request }) => {
 
             updateResponses.push(stores.forEach(async function(store) {
                 if (store.lastUpdated != today) {
-                    const { admin } = await unauthenticted.admin(store.shop);
+                    const { admin } = await unauthenticated.admin(store.shop);
                     if (store.lowDiscountId && store.midDiscountId && store.highDiscountId) {
                         if (task === UPDATE_SALES_TASK) {
                             const bulkOpResponse = await queryOrdersBulkOperation(admin);
