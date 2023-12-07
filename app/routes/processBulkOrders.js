@@ -22,7 +22,8 @@ export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRe
             lowDiscountId: true,
             totalSales: true,
             currSales: true,
-            lastUpdated: true
+            lastUpdated: true,
+            hasCoupon: true,
         }
     });
 

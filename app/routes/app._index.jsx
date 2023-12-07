@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useActionData, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 import {
   Page,
@@ -16,8 +16,11 @@ import {
   Select,
   Divider,
   Badge,
+  Form,
+  FormLayout,
+  Icon,
 } from "@shopify/polaris";
-import { authenticate } from "../shopify.server";
+import { MONTHLY_COMMISSION_PLAN, authenticate } from "../shopify.server";
 import { getStore } from "~/models/store.server";
 import { updateDiscountPercentage } from "~/utils/discountUtil.server";
 import db from "../db.server"
@@ -25,7 +28,17 @@ import db from "../db.server"
 const COMMISSION = .075;
 
 export const loader = async ({ request }) => {
-  const { admin, session } = await authenticate.admin(request);
+  const { billing, admin, session } = await authenticate.admin(request);
+
+  const billingCheck = await billing.require({
+    plans: [MONTHLY_COMMISSION_PLAN],
+    isTest: true,
+    onFailure: () => redirect('/billingSetUp'),
+  });
+
+  const subscription = billingCheck.appSubscriptions[0];
+  console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
+
   const store = await getStore(session.shop, session.id, admin.graphql);
   return json({ store });
 };
@@ -55,12 +68,10 @@ export const action = async ({ request }) => {
 
   if (useWordGame != null) {
     store.useWordGame = (useWordGame === 'true');
-    console.log("Word Game: " + store.useWordGame);
   }
 
   if (useBirdGame != null) {
     store.useBirdGame = (useBirdGame === 'true');
-    console.log("Bird Game: " + store.useBirdGame);
   }
 
   if (lowProb + midProb + highProb == 1) {
@@ -249,7 +260,7 @@ export default function Index() {
                 <Card>
                   <BlockStack gap="200">
                     <Text as="h2" variant="headingMd">
-                      App template specs
+                      Tutorial
                     </Text>
                     <BlockStack gap="200">
                       <InlineStack align="space-between">
@@ -311,37 +322,6 @@ export default function Index() {
                         </Link>
                       </InlineStack>
                     </BlockStack>
-                  </BlockStack>
-                </Card>
-                <Card>
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingMd">
-                      Next steps
-                    </Text>
-                    <List>
-                      <List.Item>
-                        Build an{" "}
-                        <Link
-                          url="https://shopify.dev/docs/apps/getting-started/build-app-example"
-                          target="_blank"
-                          removeUnderline
-                        >
-                          {" "}
-                          example app
-                        </Link>{" "}
-                        to get started
-                      </List.Item>
-                      <List.Item>
-                        Explore Shopify’s API with{" "}
-                        <Link
-                          url="https://shopify.dev/docs/apps/tools/graphiql-admin-api"
-                          target="_blank"
-                          removeUnderline
-                        >
-                          GraphiQL
-                        </Link>
-                      </List.Item>
-                    </List>
                   </BlockStack>
                 </Card>
               </BlockStack>
@@ -407,37 +387,13 @@ export default function Index() {
                     <Divider />
                     <InlineStack align="space-between">
                       <Text as="span" variant="bodyMd">
-                        Katie
-                      </Text>
-                      <Badge>
-                        Marketing and Partnerships
-                      </Badge>
-                      <Link url="mailto:kellsworth@adelfi.shop" target="_blank">
-                        kellsworth@adelfi.shop
-                      </Link>
-                    </InlineStack>
-                    <Divider />
-                    <InlineStack align="space-between">
-                      <Text as="span" variant="bodyMd">
                         Michael
                       </Text>
                       <Badge>
                         Technical Support
                       </Badge>
-                      <Link url="mailto:mglum@adelfi.shop" target="_blank">
-                        mglum@adelfi.shop
-                      </Link>
-                    </InlineStack>
-                    <Divider />
-                    <InlineStack align="space-between">
-                      <Text as="span" variant="bodyMd">
-                        Info
-                      </Text>
-                      <Badge>
-                        General Info
-                      </Badge>
-                      <Link url="mailto:info@adelfi.shop" target="_blank">
-                        info@adelfi.shop
+                      <Link url="mailto:popgames@gmail.com" target="_blank">
+                        popgames@gmail.com
                       </Link>
                     </InlineStack>
                   </BlockStack>

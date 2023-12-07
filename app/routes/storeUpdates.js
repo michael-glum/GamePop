@@ -10,7 +10,7 @@ export const action = async ({ request }) => {
     if (request.method === "POST") {
         const { token, task } = await request.json();
         if (token === PRIVATE_AUTH_TOKEN) {
-            const stores = await db.stores.findMany();
+            const stores = await db.store.findMany();
             if (!stores) {
                 return json({ message: 'Stores not found' }, { status: 404 });
             }

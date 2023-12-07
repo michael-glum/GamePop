@@ -40,6 +40,8 @@ model Store {
   lastUpdated     String?
   lastPayment     Float?
   isInstalled     Boolean   @default(true)
+  hasCoupon       Boolean   @default(false)
+  couponCode      String?
 }
 
 model User {

@@ -9,6 +9,10 @@ import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prism
 import { restResources } from "@shopify/shopify-api/rest/admin/2023-10";
 import prisma from "./db.server";
 
+export const MONTHLY_COMMISSION_PLAN = "Monthly commission plan";
+
+const COMMISSION = 7.5;
+
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
@@ -19,6 +23,14 @@ const shopify = shopifyApp({
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
   restResources,
+  billing: {
+    [MONTHLY_COMMISSION_PLAN]: {
+      amount: 10000,
+      currencyCode: "USD",
+      interval: BillingInterval.Usage,
+      terms: `${COMMISSION}% commission charged on successful conversions using a PopGames discount code`
+    }
+  },
   webhooks: {
     APP_UNINSTALLED: {
       deliveryMethod: DeliveryMethod.Http,
