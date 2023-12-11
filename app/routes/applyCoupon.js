@@ -2,7 +2,7 @@ import db from "../db.server"
 
 export const action = async ({ request }) => {
     try {
-        const { shop, couponCode } = request.body;
+        const { shop, couponCode } = await request.json();
         await db.store.updateMany({ where: { shop: shop },
             data: { 
                 hasCoupon: true,

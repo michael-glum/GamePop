@@ -21,6 +21,7 @@ export async function getStore(shop, id, graphql) {
         await db.store.updateMany({ where: { shop: shop }, data: { ...updatedStore }});
         return updatedStore;
     } else {
+        //store.hasCoupon = false;
         return store;
     }
 }

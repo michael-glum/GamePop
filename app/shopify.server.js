@@ -12,7 +12,8 @@ import prisma from "./db.server";
 
 export const MONTHLY_COMMISSION_PLAN = "Monthly commission plan";
 
-const COMMISSION = 7.5;
+export const COMMISSION = 5;
+export const COUPON_PCT = 20;
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
@@ -26,11 +27,11 @@ const shopify = shopifyApp({
   restResources,
   billing: {
     [MONTHLY_COMMISSION_PLAN]: {
-      amount: 10000,
+      amount: 10000.0,
       currencyCode: "USD",
       interval: BillingInterval.Usage,
-      terms: `${COMMISSION}% commission charged on successful conversions using a PopGames discount code`
-    }
+      usageTerms: `${COMMISSION}% commission charged on orders made using a PopGames discount code`,
+    },
   },
   webhooks: {
     APP_UNINSTALLED: {

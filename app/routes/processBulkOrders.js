@@ -2,6 +2,7 @@ import { authenticate, unauthenticated } from "../shopify.server";
 import { json } from "@remix-run/node"
 import { Readable } from 'stream'
 import { createInterface } from 'readline'
+import { createAppUsageRecord } from "../utils/subscriptionUtil.server";
 import db from '../db.server'
 
 export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRequest }) {
@@ -79,6 +80,9 @@ export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRe
                 return json({ success: true }, {status: 200 });
             }
             store.lastUpdated = today;
+            const couponActive = false;
+            const usageRecordId = await createAppUsageRecord(store.billingId, newSales, couponActive, admin.graphql);
+            console.log("usageRecordId: " + usageRecordId);
             const updateResponses = await db.store.updateMany({ where: { shop: shop}, data: { ...store }});
             if (updateResponses.count === 0) {
                 console.error("Error: Couldn't update store in db for shop: " + shop);

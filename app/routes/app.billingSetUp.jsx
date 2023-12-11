@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { json } from "@remix-run/node";
-import { useActionData, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 import {
   Page,
   Layout,
@@ -8,14 +8,7 @@ import {
   Card,
   Button,
   BlockStack,
-  List,
-  Link,
-  InlineStack,
   TextField,
-  Image,
-  Select,
-  Divider,
-  Badge,
   Form,
   FormLayout,
   Icon,
@@ -26,14 +19,13 @@ import { CircleTickMajor } from "@shopify/polaris-icons";
 
 const DISCOUNT_PERCENTAGE = 20;
 const COUPON_CODES = ["SAVE10"];
+//const COMMISSION = 5;
 
 export const loader = async ({ request }) => {
-    const { admin, session } = await authenticate.admin(request);
-    /*const { searchParams } = new URL(request.url);
-    const shop = decodeURIComponent(searchParams.get('shop'));
-    const id = searchParams.get('id');*/
+    const { session } = await authenticate.admin(request);
 
-    const store = await getStore(session.shop, session.id, null /*admin.graphql*/);
+    const store = await getStore(session.shop, session.id, null);
+
     return json({ store });
 };
 
@@ -45,11 +37,12 @@ export const action = async ({ request }) => {
         isTest: true,
         onFailure: async () => billing.request({
             plan: MONTHLY_COMMISSION_PLAN,
-            returnUrl: '/app/_index'
+            isTest: true,
+            returnUrl: "https://pop-games.fly.dev/app/_index",
         }),
     });
 
-    return json({ billingCheck });
+    return json({ billingCheck })
 };
   
 export default function BillingSetUp() {
@@ -57,7 +50,8 @@ export default function BillingSetUp() {
     const submit = useSubmit();
     const loaderData = useLoaderData();
     const store = loaderData?.store;
-    let hasCoupon = store.hasCoupon;
+    const shop = store.shop;
+    const [hasCoupon, setHasCoupon] = useState(COUPON_CODES.includes(store.couponCode));
 
     const isLoading =
     ["loading", "submitting"].includes(nav.state) && nav.formMethod === "POST";
@@ -70,11 +64,12 @@ export default function BillingSetUp() {
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify({ shop: store.shop, couponCode: couponCode }),
+              body: JSON.stringify({ shop, couponCode }),
             })
               .then((response) => {
                 if (response.ok) {
                   shopify.toast.show("Coupon applied successfully");
+                  setHasCoupon(true);
                 } else {
                   shopify.toast.show("Failed to apply coupon");
                 }
@@ -90,44 +85,48 @@ export default function BillingSetUp() {
     }
 
     const subscribeToBilling = () => {
-        submit({}, { replace: true, method: "POST" })
-    };
+      submit({}, { replace: true, method: "POST" })
+    }
   
     return (
       <Page>
-        <ui-title-bar title="Pop Games">
+        <ui-title-bar title="PopGames">
           <button variant="primary" onClick={subscribeToBilling}>
-            Confirm
+            Next
           </button>
         </ui-title-bar>
         <BlockStack gap="500">
-          <Text as="h1" variant="headingXl">Were you refered to PopGames?</Text>
+          <Text as="h1" variant="headingLg">Were you refered to PopGames?</Text>
+          <Text as="h2" variant="bodyLg">We only charge for successfull conversions using one of our discount codes, so you'll never pay more than what you earn.</Text>
           <Card>
-            <Text as="h2" variant="headingMd">
-              Enter a coupon code for a ${DISCOUNT_PERCENTAGE}% discount on your first month's commissions!
-            </Text>
-            <CouponCodeForm
-              onSubmitCouponCode={(value, couponCode) => handleSubmitCouponCode(value, couponCode)}
-              couponState={hasCoupon}
-            />
+            <BlockStack gap="500">
+              <Text as="h2" variant="headingMd">
+                Enter a coupon code for a {DISCOUNT_PERCENTAGE}% discount on your first month!
+              </Text>
+              {!hasCoupon ? (
+                <CouponCodeForm
+                  onSubmitCouponCode={(value, couponCode) => handleSubmitCouponCode(value, couponCode)}
+                />
+              ) : (
+                <Icon source={CircleTickMajor} tone="success" />
+              )}
+            </BlockStack>
           </Card>
           <Button variant="primary" tone="success" loading={isLoading} onClick={subscribeToBilling} fullWidth>
-            Confirm
+            Next
           </Button>
         </BlockStack>
       </Page>
     );
 }
 
-function CouponCodeForm({ onSubmitCouponCode, couponState }) {
+function CouponCodeForm({ onSubmitCouponCode }) {
     const [couponCode, setCouponCode] = useState('');
-    const [hasCoupon, setHasCoupon] = useState(couponState);
   
     const handleSubmit = useCallback(() => {
       if (COUPON_CODES.includes(couponCode)) {
-        setHasCoupon(true);
         onSubmitCouponCode(true, couponCode)
-        setCouponCode('');
+        setCouponCode("");
       } else {
         onSubmitCouponCode(false, "")
       }
@@ -137,30 +136,72 @@ function CouponCodeForm({ onSubmitCouponCode, couponState }) {
   
     return (
       <Form onSubmit={handleSubmit}>
-        <FormLayout>
-          {!hasCoupon && (
-            <>
-              <TextField
-                value={couponCode}
-                onChange={handleCouponCodeChange}
-                label="Coupon Code"
-                type="text"
-                helpText={
-                  <span>
-                    Enter your coupon code here.
-                  </span>
-                }
-              />
-              <Button submit>Submit</Button>
-            </>
-          )}
-          {hasCoupon && (
-            <InlineStack align="center" gap="0">
-              <Icon source={CircleTickMajor} tone="success" />
-              <Text alignment="start">Redeemed</Text>
-            </InlineStack>
-          )}
-        </FormLayout>
+        <BlockStack gap="200">
+          <FormLayout>
+            <TextField
+              value={couponCode}
+              onChange={handleCouponCodeChange}
+              label="Coupon Code"
+              type="text"
+              helpText={
+                <span>
+                  Enter your coupon code here.
+                </span>
+              }
+            />
+            <Button submit>Submit</Button>
+          </FormLayout>
+        </BlockStack>
       </Form>
     )
   }
+
+  /*async function createUsageBasedAppSubscription(graphql) {
+    console.log("Existing");
+    const response = await graphql(
+      `#graphql
+        mutation AppSubscriptionCreate($name: String!, $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!) {
+          appSubscriptionCreate(name: $name, returnUrl: $returnUrl, lineItems: $lineItems) {
+            userErrors {
+              field
+              message
+            }
+            confirmationUrl
+            appSubscription {
+              id
+              lineItems {
+                id
+              }
+            }
+          }
+        }`,
+      {
+        variables: {
+          "name": "Monthly Commission Plan",
+          "returnUrl": "https://pop-games.fly.dev/",
+          "test": false,
+          "lineItems": [
+            {
+              "plan": {
+                "appUsagePricingDetails": {
+                  "terms": `${COMMISSION}% commission charged on orders made using a PopGames discount code`,
+                  "cappedAmount": {
+                    "amount": 10000,
+                    "currencyCode": "USD",
+                  }
+                }
+              }
+            }
+          ],
+        }
+      }
+    )
+
+    const { data } = await response.json();
+    console.log("Data: " + JSON.stringify(data));
+    const confirmationUrl = data.appSubscriptionCreate.confirmationUrl;
+    console.log("confirmationUrl: " + confirmationUrl);
+    const subscriptionId = data.appSubscriptionCreate.appSubscription.lineItems[0].id;
+    console.log("subscriptionId: " + subscriptionId);
+    return json({ billingId: subscriptionId, confirmationUrl: confirmationUrl });
+  }*/

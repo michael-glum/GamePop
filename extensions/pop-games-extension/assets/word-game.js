@@ -723,7 +723,7 @@ async function setUserStats(myScore, game) {
   }
 
 function showStats(game, myScore) {
-    const delay = 0; // mobile ? 500 : 2000;
+    const delay = 1000; // mobile ? 500 : 2000;
     setUserStats(myScore, game)
         .then(stats => {
             let avg = parseFloat(myScore);
@@ -810,6 +810,11 @@ let pipePlacementInterval = 1500;
 let optimalFPS = 144;
 let fpsOptimizedJumpSpeed = -3;
 
+let headerText = document.getElementById('headerText');
+let computedStyle = window.getComputedStyle(headerText);
+let fontFamily = computedStyle.fontFamily;
+let fontSize = "20px";//computedStyle.fontSize; 
+
 function initializeBirdGame() {
     if (mobile) {
         makeItMobile();
@@ -856,17 +861,15 @@ function initializeBirdGame() {
 
     beginGame = true;
     context.fillStyle = "white";
-    const headerText = document.getElementById('headerText');
-    const computedStyle = window.getComputedStyle(headerText);
-    const fontFamily = computedStyle.fontFamily;
-    const fontSize = computedStyle.fontSize;
     context.font=`${fontSize} ${fontFamily}`;
+
+    wrapTextCentered(context, "Score 5 to win", 22, 100, 250, 25);
     if (!mobile) {
-        wrapTextCentered(context, "Click Space or W to Play", 20, 100, 250, 25);
+        wrapTextCentered(context, "Click Space or W to play", 22, 125, 250, 25);
         document.addEventListener("click", moveBird);
         document.addEventListener("keydown", moveBird);
     } else {
-        wrapTextCentered(context, "Tap to play", 22, 100, 250, 25);
+        wrapTextCentered(context, "Tap to play", 22, 150, 250, 25);
         document.getElementById("popUp").addEventListener("click", moveBird);
     }
 }
@@ -936,7 +939,7 @@ function update(timestamp) {
 
         //score
         context.fillStyle = "white";
-        context.font="28px sans-serif";
+        context.font=`28px ${fontFamily}`;
         context.fillText(score, 5, 30);
 
         if (birdGameOver) {

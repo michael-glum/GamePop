@@ -20,15 +20,17 @@ import {
   FormLayout,
   Icon,
 } from "@shopify/polaris";
-import { MONTHLY_COMMISSION_PLAN, authenticate } from "../shopify.server";
+import { COMMISSION, MONTHLY_COMMISSION_PLAN, authenticate } from "../shopify.server";
 import { getStore } from "~/models/store.server";
 import { updateDiscountPercentage } from "~/utils/discountUtil.server";
+import { getSubscriptionLineItemId } from "~/utils/subscriptionUtil.server";
 import db from "../db.server"
 
-const COMMISSION = .075;
+//const COMMISSION = .05;
 
 export const loader = async ({ request }) => {
   const { billing, admin, session, redirect} = await authenticate.admin(request);
+  const { shop } = session.shop;
 
   const billingCheck = await billing.require({
     plans: [MONTHLY_COMMISSION_PLAN],
@@ -36,14 +38,22 @@ export const loader = async ({ request }) => {
     onFailure: () => redirect('/app/billingSetUp'),
   });
 
+  const store = await getStore(session.shop, session.id, admin.graphql);
+
   if (billingCheck && billingCheck.appSubscriptions && billingCheck.appSubscriptions.length > 0) {
+    console.log("Billing check: " + JSON.stringify(billingCheck));
     const subscription = billingCheck.appSubscriptions[0];
     console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
+    if (!store.billingId) {
+      const billingId = await getSubscriptionLineItemId(subscription.id, admin.graphql);
+      console.log("billingId: " + billingId);
+      store.billingId = billingId;
+      await db.store.updateMany({ where: { shop: shop }, data: { billingId: store.billingId }});
+    }
   } else {
     console.log(`No app subscriptions found`);
   }
 
-  const store = await getStore(session.shop, session.id, admin.graphql);
   return json({ store });
 };
 
@@ -224,7 +234,7 @@ export default function Index() {
 
   return (
     <Page>
-      <ui-title-bar title="Pop Games">
+      <ui-title-bar title="PopGames">
         <button variant="primary" onClick={updatePopUp}>
           Save
         </button>
@@ -373,7 +383,7 @@ export default function Index() {
                   Commissions (Period)
                 </Text>
                 <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
-                  ${(Math.floor(store.currSales * COMMISSION * 100) / 100).toFixed(2)}
+                  ${(Math.floor(store.currSales * COMMISSION) / 100).toFixed(2)}
                 </Text>
               </BlockStack>
             </Card>

@@ -42,6 +42,7 @@ model Store {
   isInstalled     Boolean   @default(true)
   hasCoupon       Boolean   @default(false)
   couponCode      String?
+  billingId       String?
 }
 
 model User {
