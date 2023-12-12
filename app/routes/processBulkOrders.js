@@ -5,8 +5,8 @@ import { createInterface } from 'readline'
 import { createAppUsageRecord } from "../utils/subscriptionUtil.server";
 import db from '../db.server'
 
-export async function processBulkOrdersWebhook (topic, shop, admin, session, clonedRequest) {
-    //const { admin } = await unauthenticated.admin(shop)
+export async function processBulkOrdersWebhook (topic, shop, session, clonedRequest) {
+    const { admin } = await unauthenticated.admin(shop)
 
     console.log("Webhook from shop: " + shop)
     console.log("Topic: " + topic)
@@ -61,6 +61,7 @@ export async function processBulkOrdersWebhook (topic, shop, admin, session, clo
     const { data } = await response.json();
     const dataUrl = data.node.url;
     const partialDataUrl = data.node.partialDataUrl;
+    console.log("Data: " + JSON.stringify(data));
 
     const url = (status == "completed") ? dataUrl : partialDataUrl;
     const jsonDataArray = await downloadJsonData(url);
@@ -78,7 +79,7 @@ export async function processBulkOrdersWebhook (topic, shop, admin, session, clo
                 }
             }
         }
-
+        console.log("New Sales: " + newSales);
         store.totalSales = store.totalSales + newSales;
         store.currSales = store.currSales + newSales;
         try {

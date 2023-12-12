@@ -20,7 +20,7 @@ export const action = async ({ request }) => {
       break;
     case "BULK_OPERATIONS_FINISH":
       if (topic && shop && session) {
-        await processBulkOrdersWebhook(topic, shop, admin, session, clonedRequest);
+        await processBulkOrdersWebhook(topic, shop, session, clonedRequest);
       }
 
       break;
