@@ -4,6 +4,7 @@ import { processBulkOrdersWebhook } from "./processBulkOrders";
 
 export const action = async ({ request }) => {
   const clonedRequest = await request.clone();
+  console.log("Cloned request: " + JSON.stringify(clonedRequest));
   const { topic, session, admin, payload } = await authenticate.webhook(request);
   const { shop } = session;
 

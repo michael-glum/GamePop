@@ -6,6 +6,7 @@ import { createAppUsageRecord } from "../utils/subscriptionUtil.server";
 import db from '../db.server'
 
 export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRequest }) {
+    console.log("Shop: " + shop);
     const { admin } = await unauthenticated.admin(shop)
 
     console.log("Webhook from shop: " + shop)
