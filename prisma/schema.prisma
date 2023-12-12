@@ -23,7 +23,7 @@ model Session {
 
 model Store {
   id              String    @id
-  shop            String
+  shop            String    @unique
   lowDiscountId   String?
   midDiscountId   String?
   highDiscountId  String?
@@ -43,6 +43,9 @@ model Store {
   hasCoupon       Boolean   @default(false)
   couponCode      String?
   billingId       String?
+  nextPeriod      DateTime?
+  couponEndDate   DateTime? 
+  currencyCode    String?
 }
 
 model User {

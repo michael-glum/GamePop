@@ -3,10 +3,12 @@ import db from "../db.server"
 export const action = async ({ request }) => {
     try {
         const { shop, couponCode } = await request.json();
-        await db.store.updateMany({ where: { shop: shop },
+        const endDate = getDateTimeXDaysFromNow(30);
+        await db.store.update({ where: { shop: shop },
             data: { 
                 hasCoupon: true,
                 couponCode: couponCode,
+                couponEndDate: endDate,
             }
         });
 
@@ -16,3 +18,10 @@ export const action = async ({ request }) => {
         return new Response('Failed to apply coupon', { status: 500 });
     }
 };
+
+export function getDateTimeXDaysFromNow(x) {
+    let currentDate = new Date();
+    let futureDate = new Date();
+    futureDate.setDate(currentDate.getDate() + x);
+    return futureDate;
+}

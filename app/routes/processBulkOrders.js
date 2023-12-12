@@ -18,13 +18,16 @@ export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRe
     console.log("Bulk Operation Error Code: " + error_code)
     console.log("Bulk Operation Admin GraphQL API Id: " + admin_graphql_api_id)*/
 
-    const store = await db.store.findFirst({ where: { shop: shop },
+    const store = await db.store.findUnique({ where: { shop: shop },
         select: {
             lowDiscountId: true,
             totalSales: true,
             currSales: true,
             lastUpdated: true,
             hasCoupon: true,
+            billingId: true,
+            couponEndDate: true,
+            currencyCode: true,
         }
     });
 
@@ -67,27 +70,52 @@ export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRe
             const responseJson = jsonDataArray[i];
             for (const code of responseJson.discountCodes) {
                 if (code.startsWith("POPGAMES")) {
-                    newSales = newSales + parseFloat(responseJson.netPaymentSet.shopMoney.amount);
+                    newSales = newSales + parseFloat(responseJson.totalReceivedSet.shopMoney.amount);
+                    if (!store.currencyCode) {
+                        store.currencyCode = responseJson.totalReceivedSet.shopMoney.currencyCode;
+                    }
                     break;
                 }
             }
         }
+
         store.totalSales = store.totalSales + newSales;
         store.currSales = store.currSales + newSales;
         try {
+            //Make sure sales have not been updated already
             const today = await getCurrentDate();
             if (store.lastUpdated === today) {
                 return json({ success: true }, {status: 200 });
             }
             store.lastUpdated = today;
-            const couponActive = false;
-            const usageRecordId = await createAppUsageRecord(store.billingId, newSales, couponActive, admin.graphql);
-            console.log("usageRecordId: " + usageRecordId);
-            const updateResponses = await db.store.updateMany({ where: { shop: shop}, data: { ...store }});
+
+            // Check if coupon has expired
+            if (store.hasCoupon) {
+                let currentDateTime = new Date();
+                if (store.couponEndDate) {
+                    if (currentDateTime > store.couponEndDate) {
+                        store.hasCoupon = false;
+                    }
+                } else {
+                    store.hasCoupon = false;
+                    console.error("End date does not exist. Setting hasCoupon to false.");
+                }
+            }
+
+            // Create a usage record for yesterday's sales
+            if (newSales > 0) {
+                const usageRecordId = await createAppUsageRecord(store.billingId, newSales, store.hasCoupon,
+                    store.currencyCode, admin.graphql);
+                console.log("usageRecordId: " + usageRecordId);
+            }
+
+            // Update the db
+            const updateResponses = await db.store.update({ where: { shop: shop}, data: { ...store }});
             if (updateResponses.count === 0) {
                 console.error("Error: Couldn't update store in db for shop: " + shop);
                 return json({ success: true }, { status: 200 });
             }
+
         } catch (error) {
             console.error("Error updating store for shop: " + shop);
             return json({ success: true }, { status: 200 });

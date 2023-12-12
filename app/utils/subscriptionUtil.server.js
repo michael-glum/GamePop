@@ -24,7 +24,7 @@ export async function getSubscriptionLineItemId(subscriptionId, graphql) {
     return billingId;
 }
 
-export async function createAppUsageRecord(billingId, price, couponActive, graphql) {
+export async function createAppUsageRecord(billingId, price, couponActive, currencyCode, graphql) {
     const commissionModifiedPrice = price * (COMMISSION / 100);
     const finalModifiedPrice = (couponActive) ? commissionModifiedPrice * (COUPON_PCT / 100) : commissionModifiedPrice; 
     let description = `${COMMISSION}% commission charged on orders made using a PopGames discount code`;
@@ -50,7 +50,7 @@ export async function createAppUsageRecord(billingId, price, couponActive, graph
                 "subscriptionLineItemId": billingId,
                 "price": {
                     "amount": finalModifiedPrice,
-                    "currencyCode": "USD"
+                    "currencyCode": currencyCode,
                 },
                 "description": description,
             }

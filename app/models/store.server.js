@@ -2,7 +2,7 @@ import db from "../db.server"
 import { createDiscount, discountStillExists } from "~/utils/discountUtil.server";
 
 export async function getStore(shop, id, graphql) {
-    let store = await db.store.findFirst({ where: { shop: shop }});
+    let store = await db.store.findUnique({ where: { shop: shop }});
 
     if (!store) {
         await db.store.create({
@@ -11,17 +11,16 @@ export async function getStore(shop, id, graphql) {
                 shop: shop,
             }
         })
-        store = await db.store.findFirst({ where: { shop: shop }})
+        store = await db.store.findUnique({ where: { shop: shop }})
     } else {
         store.isInstalled = true;
     }
 
     if (graphql != null) {
         const updatedStore = await supplementDiscounts(store, graphql);
-        await db.store.updateMany({ where: { shop: shop }, data: { ...updatedStore }});
+        await db.store.update({ where: { shop: shop }, data: { ...updatedStore }});
         return updatedStore;
     } else {
-        //store.hasCoupon = false;
         return store;
     }
 }

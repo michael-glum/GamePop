@@ -20,10 +20,11 @@ import {
   FormLayout,
   Icon,
 } from "@shopify/polaris";
-import { COMMISSION, MONTHLY_COMMISSION_PLAN, authenticate } from "../shopify.server";
+import { COMMISSION, COUPON_PCT, MONTHLY_COMMISSION_PLAN, authenticate } from "../shopify.server";
 import { getStore } from "~/models/store.server";
 import { updateDiscountPercentage } from "~/utils/discountUtil.server";
 import { getSubscriptionLineItemId } from "~/utils/subscriptionUtil.server";
+import { getDateTimeXDaysFromNow } from "./applyCoupon";
 import db from "../db.server"
 
 //const COMMISSION = .05;
@@ -32,29 +33,40 @@ export const loader = async ({ request }) => {
   const { billing, admin, session, redirect} = await authenticate.admin(request);
   const { shop } = session.shop;
 
+  // Check for billing
   const billingCheck = await billing.require({
     plans: [MONTHLY_COMMISSION_PLAN],
     isTest: true,
     onFailure: () => redirect('/app/billingSetUp'),
   });
 
+  // Initiate and/or retrieve store data from database
   const store = await getStore(session.shop, session.id, admin.graphql);
 
+  // First time billing set up
   if (billingCheck && billingCheck.appSubscriptions && billingCheck.appSubscriptions.length > 0) {
-    console.log("Billing check: " + JSON.stringify(billingCheck));
     const subscription = billingCheck.appSubscriptions[0];
+    console.log("Billing check: " + JSON.stringify(billingCheck));
     console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
-    if (!store.billingId) {
+    if (!store.billingId || true) {
       const billingId = await getSubscriptionLineItemId(subscription.id, admin.graphql);
-      console.log("billingId: " + billingId);
       store.billingId = billingId;
-      await db.store.updateMany({ where: { shop: shop }, data: { billingId: store.billingId }});
+      store.nextPeriod = getDateTimeXDaysFromNow(30);
+      await db.store.update({
+        where: {
+          shop: store.shop
+        },
+        data: {
+          billingId: store.billingId,
+          nextPeriod: store.nextPeriod
+        },
+      });
     }
   } else {
     console.log(`No app subscriptions found`);
   }
 
-  return json({ store });
+  return json({ store, COMMISSION, COUPON_PCT });
 };
 
 export const action = async ({ request }) => {
@@ -71,7 +83,7 @@ export const action = async ({ request }) => {
   const useWordGame = data.get('useWordGame');
   const useBirdGame = data.get('useBirdGame');
 
-  const store = await db.store.findFirst({ where: { shop: shop }});
+  const store = await db.store.findUnique({ where: { shop: shop }});
 
   if (store == null) {
     return null;
@@ -123,7 +135,7 @@ export const action = async ({ request }) => {
       if (success == false) {
         message = "Update failed";
       } else {
-        await db.store.updateMany({ where: { shop: shop }, data: { ...store }});
+        await db.store.update({ where: { shop: shop }, data: { ...store }});
       }
     }
   } else {
@@ -143,6 +155,8 @@ export default function Index() {
   const submit = useSubmit();
   const loaderData = useLoaderData();
   const store = loaderData?.store;
+  const commission = loaderData?.COMMISSION;
+  const couponPct = loaderData?.COUPON_PCT;
   const lowPctOff = store.lowPctOff;
   const midPctOff = store.midPctOff;
   const highPctOff = store.highPctOff;
@@ -151,6 +165,8 @@ export default function Index() {
   const highProb = store.highProb;
   const useWordGame = store.useWordGame;
   const useBirdGame = store.useBirdGame;
+  const commissionAdjustedCurrSales = store.currSales * (commission / 100)
+  const finalAdjustedCurrSales = (store.hasCoupon) ? commissionAdjustedCurrSales * (couponPct / 100) : commissionAdjustedCurrSales
 
   const isLoading =
     ["loading", "submitting"].includes(nav.state) && nav.formMethod === "POST";
@@ -371,7 +387,7 @@ export default function Index() {
                   Total Sales (All Time)
                 </Text>
                 <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
-                  ${store.totalSales.toFixed(2)}
+                  {store.totalSales.toFixed(2)} {store.currencyCode ? store.currencyCode : ''}
                 </Text>
               </BlockStack>
             </Card>
@@ -383,7 +399,7 @@ export default function Index() {
                   Commissions (Period)
                 </Text>
                 <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
-                  ${(Math.floor(store.currSales * COMMISSION) / 100).toFixed(2)}
+                  {(finalAdjustedCurrSales).toFixed(2)} {store.currencyCode ? store.currencyCode : ''}
                 </Text>
               </BlockStack>
             </Card>

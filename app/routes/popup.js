@@ -29,7 +29,7 @@ export const action = async ({ request }) => {
             validEmailGiven: validEmailGiven
         })
     } else if (getDiscountOptions) {
-        const discountOptions = await db.store.findFirst({ where: { shop: shop },
+        const discountOptions = await db.store.findUnique({ where: { shop: shop },
             select: {
                 lowPctOff: true,
                 midPctOff: true,
@@ -44,7 +44,7 @@ export const action = async ({ request }) => {
             discountOptions: discountOptions
         })
     } else if (getGameOptions) {
-        const gameOptions = await db.store.findFirst({ where: { shop: shop },
+        const gameOptions = await db.store.findUnique({ where: { shop: shop },
             select: {
                 useWordGame: true,
                 useBirdGame: true,

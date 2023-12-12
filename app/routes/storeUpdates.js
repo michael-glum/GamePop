@@ -1,6 +1,7 @@
 import { json } from "@remix-run/node";
 import db from "../db.server";
 import { unauthenticated } from "../shopify.server";
+import { getDateTimeXDaysFromNow } from "./applyCoupon";
 
 const PRIVATE_AUTH_TOKEN = process.env.PRIVATE_AUTH_TOKEN;
 const ORDER_GRACE_PERIOD = 1;
@@ -10,7 +11,16 @@ export const action = async ({ request }) => {
     if (request.method === "POST") {
         const { token, task } = await request.json();
         if (token === PRIVATE_AUTH_TOKEN) {
-            const stores = await db.store.findMany();
+            const stores = await db.store.findMany({
+              select: {
+                shop: true,
+                lowDiscountId: true,
+                currSales: true,
+                lastUpdated: true,
+                nextPeriod: true,
+              }
+            });
+
             if (!stores) {
                 return json({ message: 'Stores not found' }, { status: 404 });
             }
@@ -20,8 +30,18 @@ export const action = async ({ request }) => {
 
             updateResponses.push(stores.forEach(async function(store) {
                 if (store.lastUpdated != today) {
+
+                    // Reset currSales every period
+                    if (store.nextPeriod) {
+                        let currentDateTime = new Date();
+                        if (currentDateTime > store.nextPeriod) {
+                            store.nextPeriod = getDateTimeXDaysFromNow(30);
+                            await db.store.update({ where: { shop: store.shop }, data: { currSales: 0, nextPeriod: store.nextPeriod } })
+                        }
+                    }
+
                     const { admin } = await unauthenticated.admin(store.shop);
-                    if (store.lowDiscountId && store.midDiscountId && store.highDiscountId) {
+                    if (store.lowDiscountId) {
                         if (task === UPDATE_SALES_TASK) {
                             const bulkOpResponse = await queryOrdersBulkOperation(admin);
                             // console.log("Bulk Operation Response Status: " + JSON.stringify(bulkOpResponse));
@@ -45,9 +65,10 @@ async function queryOrdersBulkOperation(admin) {
         edges {
           node {
             discountCodes
-            netPaymentSet {
+            totalReceivedSet {
               shopMoney {
                 amount
+                currencyCode
               }
             }
           }
