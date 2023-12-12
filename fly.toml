@@ -13,7 +13,7 @@ primary_region = "iad"
   PORT = "3000"
   SHOPIFY_APP_URL = "https://pop-games.fly.dev"
   SHOPIFY_API_KEY = "8264fe948822caff6f49c871198a559a"
-  SCOPES = "write_discounts, write_customers, read_customers"
+  SCOPES = "write_discounts, write_customers, read_customers, read_orders"
 
 [http_service]
   internal_port = 3000
