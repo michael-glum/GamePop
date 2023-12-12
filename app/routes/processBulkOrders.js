@@ -5,8 +5,7 @@ import { createInterface } from 'readline'
 import { createAppUsageRecord } from "../utils/subscriptionUtil.server";
 import db from '../db.server'
 
-export async function processBulkOrdersWebhook ({ topic, shop, admin, session, clonedRequest }) {
-    console.log("Shop in webhook: " + shop);
+export async function processBulkOrdersWebhook (topic, shop, admin, session, clonedRequest) {
     //const { admin } = await unauthenticated.admin(shop)
 
     console.log("Webhook from shop: " + shop)
