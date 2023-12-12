@@ -44,7 +44,7 @@ export const action = async ({ request }) => {
                     if (store.lowDiscountId) {
                         if (task === UPDATE_SALES_TASK) {
                             const bulkOpResponse = await queryOrdersBulkOperation(admin);
-                            // console.log("Bulk Operation Response Status: " + JSON.stringify(bulkOpResponse));
+                            console.log("Bulk Operation Response Status: " + JSON.stringify(bulkOpResponse));
                         }
                     }
                 }
