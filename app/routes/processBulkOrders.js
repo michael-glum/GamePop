@@ -8,15 +8,15 @@ import db from '../db.server'
 export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRequest }) {
     const { admin } = await unauthenticated.admin(shop)
 
-    /*console.log("Webhook from shop: " + shop)
+    console.log("Webhook from shop: " + shop)
     console.log("Topic: " + topic)
-    console.log("Session: " + JSON.stringify(session))*/
+    console.log("Session: " + JSON.stringify(session))
 
     const { admin_graphql_api_id, status, error_code } = await clonedRequest.json();
 
-    /*console.log("Bulk Operation Status: " + status)
+    console.log("Bulk Operation Status: " + status)
     console.log("Bulk Operation Error Code: " + error_code)
-    console.log("Bulk Operation Admin GraphQL API Id: " + admin_graphql_api_id)*/
+    console.log("Bulk Operation Admin GraphQL API Id: " + admin_graphql_api_id)
 
     const store = await db.store.findUnique({ where: { shop: shop },
         select: {
@@ -87,7 +87,7 @@ export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRe
             if (store.lastUpdated === today) {
                 return json({ success: true }, {status: 200 });
             }
-            store.lastUpdated = today;
+            store.lastUpdated = null;//today;
 
             // Check if coupon has expired
             if (store.hasCoupon) {
@@ -102,7 +102,7 @@ export async function processBulkOrdersWebhook ({ topic, shop, session, clonedRe
                 }
             }
 
-            // Create a usage record for yesterday's sales
+            // Create a new usage record
             if (newSales > 0) {
                 const usageRecordId = await createAppUsageRecord(store.billingId, newSales, store.hasCoupon,
                     store.currencyCode, admin.graphql);

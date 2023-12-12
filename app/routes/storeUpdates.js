@@ -4,7 +4,7 @@ import { unauthenticated } from "../shopify.server";
 import { getDateTimeXDaysFromNow } from "./applyCoupon";
 
 const PRIVATE_AUTH_TOKEN = process.env.PRIVATE_AUTH_TOKEN;
-const ORDER_GRACE_PERIOD = 1;
+const ORDER_GRACE_PERIOD = 0;//1;
 const UPDATE_SALES_TASK = "UPDATE_SALES"
 
 export const action = async ({ request }) => {
