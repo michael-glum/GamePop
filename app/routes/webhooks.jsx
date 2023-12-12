@@ -4,9 +4,8 @@ import { processBulkOrdersWebhook } from "./processBulkOrders";
 
 export const action = async ({ request }) => {
   const clonedRequest = await request.clone();
-  console.log("Cloned request: " + JSON.stringify(clonedRequest));
-  const { topic, session, admin, payload } = await authenticate.webhook(request);
-  const { shop } = session;
+  const { topic, shop, session, admin, payload } = await authenticate.webhook(request);
+  console.log("Shop: " + shop);
 
   if (!admin) {
     // The admin context isn't returned if the webhook fired after a shop was uninstalled.
@@ -22,7 +21,7 @@ export const action = async ({ request }) => {
       break;
     case "BULK_OPERATIONS_FINISH":
       if (topic && shop && session) {
-        await processBulkOrdersWebhook(topic, shop, session, clonedRequest);
+        await processBulkOrdersWebhook(topic, shop, admin, session, clonedRequest);
       }
 
       break;
