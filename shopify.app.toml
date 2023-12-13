@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "pop-games"
+name = "PopGames"
 client_id = "8264fe948822caff6f49c871198a559a"
 application_url = "https://pop-games.fly.dev"
 embedded = true

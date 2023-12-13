@@ -166,7 +166,7 @@ export default function Index() {
   const useWordGame = store.useWordGame;
   const useBirdGame = store.useBirdGame;
   const commissionAdjustedCurrSales = store.currSales * (commission / 100)
-  const finalAdjustedCurrSales = (store.hasCoupon) ? commissionAdjustedCurrSales * (couponPct / 100) : commissionAdjustedCurrSales
+  const finalAdjustedCurrSales = (store.hasCoupon) ? commissionAdjustedCurrSales * ((100 - couponPct) / 100) : commissionAdjustedCurrSales
 
   const isLoading =
     ["loading", "submitting"].includes(nav.state) && nav.formMethod === "POST";

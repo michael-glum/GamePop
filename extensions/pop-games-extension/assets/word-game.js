@@ -865,11 +865,11 @@ function initializeBirdGame() {
 
     wrapTextCentered(context, "Score 5 to win", 22, 100, 250, 25);
     if (!mobile) {
-        wrapTextCentered(context, "Click Space or W to play", 22, 125, 250, 25);
+        wrapTextCentered(context, "Click Space or W to play", 22, 135, 250, 25);
         document.addEventListener("click", moveBird);
         document.addEventListener("keydown", moveBird);
     } else {
-        wrapTextCentered(context, "Tap to play", 22, 150, 250, 25);
+        wrapTextCentered(context, "Tap to play", 22, 135, 250, 25);
         document.getElementById("popUp").addEventListener("click", moveBird);
     }
 }
@@ -944,7 +944,8 @@ function update(timestamp) {
 
         if (birdGameOver) {
             if (score >= 5) {
-                context.fillText("You Win!", 90, 100);
+                context.font=`20px ${fontFamily}`;
+                wrapTextCentered(context, "You Win!", 22, 100, 250, 25);
                 document.removeEventListener("click", moveBird);
                 document.removeEventListener("keydown", moveBird);
                 document.getElementById('popUp').removeEventListener('click', moveBird);
@@ -965,7 +966,9 @@ function update(timestamp) {
                     gameInProgress = false;
                 }
             } else {
-                context.fillText("Try Again", 80, 100);
+                context.font=`20px ${fontFamily}`;
+                wrapTextCentered(context, "Try Again", 22, 100, 250, 25);
+                wrapTextCentered(context, "Score 5 to win", 22, 135, 250, 25);
                 scores.push(score);
                 //setUserStats(score, 'birdGame');
             }
