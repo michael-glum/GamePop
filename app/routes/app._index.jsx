@@ -19,6 +19,8 @@ import {
   Form,
   FormLayout,
   Icon,
+  MediaCard,
+  VideoThumbnail,
 } from "@shopify/polaris";
 import { COMMISSION, COUPON_PCT, MONTHLY_COMMISSION_PLAN, authenticate } from "../shopify.server";
 import { getStore } from "~/models/store.server";
@@ -66,7 +68,9 @@ export const loader = async ({ request }) => {
     console.log(`No app subscriptions found`);
   }
 
-  return json({ store, COMMISSION, COUPON_PCT });
+  const uuid = process.env.SHOPIFY_POP_GAMES_EXTENSION_ID;
+
+  return json({ store, COMMISSION, COUPON_PCT, uuid });
 };
 
 export const action = async ({ request }) => {
@@ -157,6 +161,7 @@ export default function Index() {
   const store = loaderData?.store;
   const commission = loaderData?.COMMISSION;
   const couponPct = loaderData?.COUPON_PCT;
+  const uuid = loaderData?.uuid;
   const lowPctOff = store.lowPctOff;
   const midPctOff = store.midPctOff;
   const highPctOff = store.highPctOff;
@@ -286,75 +291,26 @@ export default function Index() {
             </Card>
           </Layout.Section>
           <Layout.Section variant="oneThird">
-              <BlockStack gap="500">
-                <Card>
-                  <BlockStack gap="200">
-                    <Text as="h2" variant="headingMd">
-                      Tutorial
-                    </Text>
-                    <BlockStack gap="200">
-                      <InlineStack align="space-between">
-                        <Text as="span" variant="bodyMd">
-                          Framework
-                        </Text>
-                        <Link
-                          url="https://remix.run"
-                          target="_blank"
-                          removeUnderline
-                        >
-                          Remix
-                        </Link>
-                      </InlineStack>
-                      <InlineStack align="space-between">
-                        <Text as="span" variant="bodyMd">
-                          Database
-                        </Text>
-                        <Link
-                          url="https://www.prisma.io/"
-                          target="_blank"
-                          removeUnderline
-                        >
-                          Prisma
-                        </Link>
-                      </InlineStack>
-                      <InlineStack align="space-between">
-                        <Text as="span" variant="bodyMd">
-                          Interface
-                        </Text>
-                        <span>
-                          <Link
-                            url="https://polaris.shopify.com"
-                            target="_blank"
-                            removeUnderline
-                          >
-                            Polaris
-                          </Link>
-                          {", "}
-                          <Link
-                            url="https://shopify.dev/docs/apps/tools/app-bridge"
-                            target="_blank"
-                            removeUnderline
-                          >
-                            App Bridge
-                          </Link>
-                        </span>
-                      </InlineStack>
-                      <InlineStack align="space-between">
-                        <Text as="span" variant="bodyMd">
-                          API
-                        </Text>
-                        <Link
-                          url="https://shopify.dev/docs/api/admin-graphql"
-                          target="_blank"
-                          removeUnderline
-                        >
-                          GraphQL API
-                        </Link>
-                      </InlineStack>
-                    </BlockStack>
-                  </BlockStack>
-                </Card>
+            <BlockStack gap="500">
+              <BlockStack gap="200">
+                <MediaCard
+                  portrait
+                  title="Add PopGames to your theme"
+                  primaryAction={{
+                    content: 'Preview in theme',
+                    onAction: () => previewInTheme(store.shop, uuid),
+                  }}
+                  description="Watch this tutorial to learn how to add the PopGames pop-up app embed to your theme."
+                  popoverAction={[{content: 'Dismiss', onAction: () => {}}]}
+                >
+                  <VideoThumbnail
+                    videoLength={80}
+                    thumbnailUrl="https://i.imgur.com/bfZIZx6.png"
+                    onClick={() => console.log('clicked')}
+                  />
+                </MediaCard>
               </BlockStack>
+            </BlockStack>
           </Layout.Section>
           <DiscountSection
             tier="Low"
@@ -464,12 +420,14 @@ const GameSection = ({ game, description, source, width, height, gap, useGame, o
         </Text>
       </BlockStack>
       <BlockStack gap={gap}>
-        <Image
-          source = {source}
-          alt = "Word Game Image"
-          width = {width}
-          height = {height}
-        />
+        <BlockStack inlineAlign="center">
+          <Image
+            source = {source}
+            alt = "Word Game Image"
+            width = {width}
+            height = {height}
+          />
+        </BlockStack>
         <Select
           options={options}
           onChange={handleSelectChange}
@@ -537,4 +495,8 @@ const DiscountSection = ({ tier, percentage, probability, onPctUpdate, onProbUpd
 
 function SaveDiscountsButton({ isLoading, updatePopUp }) {
   return <Button variant="primary" tone="success" loading={isLoading} onClick={updatePopUp} fullWidth>Save</Button>;
+}
+
+const previewInTheme = (shop, uuid) => {
+  window.open(`https://${shop}/admin/themes/current/editor?context=apps&activateAppId=${uuid}/pop-up`, '_blank');
 }
