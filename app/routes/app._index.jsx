@@ -21,6 +21,7 @@ import {
   Icon,
   MediaCard,
   VideoThumbnail,
+  Modal,
 } from "@shopify/polaris";
 import { COMMISSION, COUPON_PCT, MONTHLY_COMMISSION_PLAN, authenticate } from "../shopify.server";
 import { getStore } from "~/models/store.server";
@@ -240,6 +241,12 @@ export default function Index() {
     }
   }
 
+  const [modalActive, setModalActive] = useState(false);
+
+  const handleModalChange = () => {
+    setModalActive(!modalActive);
+  };
+
   const updatePopUp = () => {
     submit({
       lowPctOff: parseFloat(lowPercentage) / 100,
@@ -260,6 +267,27 @@ export default function Index() {
           Save
         </button>
       </ui-title-bar>
+      <Modal
+        open={modalActive}
+        onClose={handleModalChange}
+        title="Video Tutorial"
+        size="large"
+        primaryAction={{
+          content: 'Close',
+          onAction: handleModalChange,
+        }}
+      >
+        <Modal.Section>
+          <iframe 
+            height="500"
+            src="https://www.youtube.com/embed/LqTryT9mS4g?si=A0UEsEE8ZC2YWuZF" 
+            title="YouTube video player" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            style={{ width: '100%', maxWidth: '100%' }}>
+          </iframe>
+        </Modal.Section>
+      </Modal>
       <BlockStack gap="500">
         <Layout>
           <Layout.Section variant="oneThird">
@@ -304,9 +332,9 @@ export default function Index() {
                   popoverAction={[{content: 'Dismiss', onAction: () => {}}]}
                 >
                   <VideoThumbnail
-                    videoLength={80}
+                    videoLength={144}
                     thumbnailUrl="https://i.imgur.com/bfZIZx6.png"
-                    onClick={() => console.log('clicked')}
+                    onClick={handleModalChange}
                   />
                 </MediaCard>
               </BlockStack>
@@ -378,8 +406,8 @@ export default function Index() {
                       <Badge>
                         Technical Support
                       </Badge>
-                      <Link url="mailto:popgames@gmail.com" target="_blank">
-                        popgames@gmail.com
+                      <Link url="mailto:popgames.app@gmail.com" target="_blank">
+                        popgames.app@gmail.com
                       </Link>
                     </InlineStack>
                   </BlockStack>

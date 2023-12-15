@@ -33,7 +33,7 @@ var highProb = 20;
 var word = "";
 
 var gameToPlay = "birdGame";
-var delay = 0; // Set to 10000
+var delay = 10000; //0; // Set to 10000
 var mobile = false;
 var gameInProgress = false;
 
