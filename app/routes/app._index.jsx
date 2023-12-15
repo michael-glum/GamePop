@@ -309,7 +309,7 @@ export default function Index() {
               <GameSection
                 game="Bird Game"
                 description="Score 5 to win"
-                source="https://i.imgur.com/GMitNo2.png"
+                source="https://i.imgur.com/jfa8UQt.png"
                 width="275"
                 height="315"
                 gap="100"
