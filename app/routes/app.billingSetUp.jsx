@@ -38,7 +38,7 @@ export const action = async ({ request }) => {
         onFailure: async () => billing.request({
             plan: MONTHLY_COMMISSION_PLAN,
             isTest: true,
-            returnUrl: "https://pop-games.fly.dev/app", // Currently makes user have to log in again
+            returnUrl: "https://admin.shopify.com/apps/game-pop",
         }),
     });
 

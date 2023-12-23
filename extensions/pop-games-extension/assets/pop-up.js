@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     popUp.style.display = 'none';
     document.getElementById('emailForm').style.display = 'none';
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
-    if (true || !hasPopUpDisplayed) { // Remove true ||
+    if (!hasPopUpDisplayed) { // Remove true ||
         if (window.innerWidth < 768) {
             mobile = true;
             document.getElementById("exitContainerMobile").style.display = "flex";
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.onload = async function(){
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
-    if (true || !hasPopUpDisplayed) { // Remove true ||
+    if (!hasPopUpDisplayed) { // Remove true ||
         document.getElementById('email').addEventListener('focus', function(event) {
             event.preventDefault();
         });
@@ -180,7 +180,6 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
     // Create the game board
     for (let r = 0; r < height; r++) {
         for (let c = 0; c < width; c++) {
-            // <span id="0-0" class="tile">P</span>
             let tile = document.createElement("span");
             tile.id = r.toString() + "-" + c.toString();
             tile.classList.add("tile");
@@ -213,7 +212,7 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
                 keyTile.id = "Backspace";
             }
             else if ("A" <= key && key <= "Z") {
-                keyTile.id = "Key" + key; // "Key" + "A";
+                keyTile.id = "Key" + key;
             } 
 
             if (isUnlocked) {
@@ -252,7 +251,6 @@ function processWordGameKey() {
 function processWordGameInput(e) {
     if (gameOver) return; 
 
-    // alert(e.code);
     if ("KeyA" <= e.code && e.code <= "KeyZ") {
         if (col < width) {
             let currTile = document.getElementById(row.toString() + '-' + col.toString());
@@ -512,7 +510,7 @@ function processEmail(email) {
           }
         })
         .catch((error) => {
-          console.error(error);
+          //console.error(error);
         });
 }
 
@@ -648,7 +646,7 @@ async function initDiscountOptions() {
       document.getElementById("headerText").textContent = `Get ${lowPctOff}%, ${midPctOff}%, or ${highPctOff}% Off Your First Order`;
       document.getElementById("optOutText").textContent = `Or check the box to receive ${lowPctOff}% off now: `;
     } catch (error) {
-      console.error(error);
+      //console.error(error);
     }
 }
 
@@ -690,7 +688,7 @@ async function initGameOptions() {
             gameToPlay = "none";
         }
       } catch (error) {
-        console.error(error);
+        //console.error(error);
     }
 }
 
@@ -717,7 +715,7 @@ async function setUserStats(myScore, game) {
       return response.json();
     })
     .catch((error) => {
-      console.error(error);
+      //console.error(error);
       throw error; // Re-throw the error for the caller to catch
     });
   }
@@ -750,7 +748,7 @@ function showStats(game, myScore) {
             }, delay);
         })
         .catch(error => {
-            console.error("Error fetching user stats:", error);
+            //console.error("Error fetching user stats:", error);
         });
 }
 

@@ -30,7 +30,7 @@ import { getSubscriptionLineItemId } from "~/utils/subscriptionUtil.server";
 import { getDateTimeXDaysFromNow } from "./applyCoupon";
 import db from "../db.server"
 
-//const COMMISSION = .05;
+// const COMMISSION = .05;
 
 export const loader = async ({ request }) => {
   const { billing, admin, session, redirect} = await authenticate.admin(request);
@@ -328,7 +328,13 @@ export default function Index() {
                     content: 'Preview in theme',
                     onAction: () => previewInTheme(store.shop, uuid),
                   }}
-                  description="Watch this tutorial to learn how to add the PopGames pop-up app embed to your theme."
+                  description={
+                    <div>
+                      <p>Watch this tutorial to learn how to add the PopGames pop-up app embed to your theme.</p>
+                      <br/>
+                      <p><b>Note:</b> The pop-up will only appear once per session. You may need to open a fresh theme editor if it does not appear after ~10 seconds.</p>
+                    </div>
+                  }
                   popoverAction={[{content: 'Dismiss', onAction: () => {}}]}
                 >
                   <VideoThumbnail
@@ -401,7 +407,7 @@ export default function Index() {
                     <Divider />
                     <InlineStack align="space-between">
                       <Text as="span" variant="bodyMd">
-                        Michael
+                        Support
                       </Text>
                       <Badge>
                         Technical Support

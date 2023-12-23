@@ -14,7 +14,7 @@ export const action = async ({ request }) => {
   switch (topic) {
     case "APP_UNINSTALLED":
       if (session) {
-        await db.session.delete({ where: { shop } });
+        await db.session.delete({ where: { id: session.id } });
       }
       throw new Response("Session deleted", { status: 200 });
 
