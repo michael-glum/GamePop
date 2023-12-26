@@ -16,6 +16,9 @@ export const action = async ({ request }) => {
       if (session) {
         await db.session.delete({ where: { id: session.id } });
       }
+      if (shop) {
+        await db.store.update({ where: { shop: shop }, data: { isInstalled: false } })
+      }
       throw new Response("Session deleted", { status: 200 });
 
     case "BULK_OPERATIONS_FINISH":

@@ -18,6 +18,7 @@ export const action = async ({ request }) => {
                 currSales: true,
                 lastUpdated: true,
                 nextPeriod: true,
+                isInstalled: true,
               }
             });
 
@@ -29,24 +30,28 @@ export const action = async ({ request }) => {
             const today = await getDateXDaysAgo(0);
 
             updateResponses.push(stores.forEach(async function(store) {
-                if (store.lastUpdated != today) {
+                try {
+                    if (store.isInstalled && store.lastUpdated != today) {
 
-                    // Reset currSales every period
-                    if (store.nextPeriod) {
-                        let currentDateTime = new Date();
-                        if (currentDateTime > store.nextPeriod) {
-                            store.nextPeriod = getDateTimeXDaysFromNow(30);
-                            await db.store.update({ where: { shop: store.shop }, data: { currSales: 0, nextPeriod: store.nextPeriod } })
+                        // Reset currSales every period
+                        if (store.nextPeriod) {
+                            let currentDateTime = new Date();
+                            if (currentDateTime > store.nextPeriod) {
+                                store.nextPeriod = getDateTimeXDaysFromNow(30);
+                                await db.store.update({ where: { shop: store.shop }, data: { currSales: 0, nextPeriod: store.nextPeriod } })
+                            }
+                        }
+
+                        const { admin } = await unauthenticated.admin(store.shop);
+                        if (store.lowDiscountId) {
+                            if (task === UPDATE_SALES_TASK) {
+                                const bulkOpResponse = await queryOrdersBulkOperation(admin);
+                                //console.log("Bulk Operation Response Status: " + JSON.stringify(bulkOpResponse));
+                            }
                         }
                     }
-
-                    const { admin } = await unauthenticated.admin(store.shop);
-                    if (store.lowDiscountId) {
-                        if (task === UPDATE_SALES_TASK) {
-                            const bulkOpResponse = await queryOrdersBulkOperation(admin);
-                            //console.log("Bulk Operation Response Status: " + JSON.stringify(bulkOpResponse));
-                        }
-                    }
+                } catch (error) {
+                  console.error(`Error updating ${store.shop}:`, error);
                 }
             }));
             return json({updateResponses: updateResponses});
