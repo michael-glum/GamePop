@@ -30,14 +30,17 @@ export const loader = async ({ request }) => {
 };
 
 export const action = async ({ request }) => {
-    const { billing } = await authenticate.admin(request);
+    const { billing, session } = await authenticate.admin(request);
+    const { shop } = session;
+
+    const isDevelopmentStore = (shop === 'quickstart-9f306b3f.myshopify.com');
 
     const billingCheck = await billing.require({
         plans: [MONTHLY_COMMISSION_PLAN],
-        isTest: false,
+        isTest: isDevelopmentStore,
         onFailure: async () => billing.request({
             plan: MONTHLY_COMMISSION_PLAN,
-            isTest: false,
+            isTest: isDevelopmentStore,
             returnUrl: "https://admin.shopify.com/apps/game-pop",
         }),
     });

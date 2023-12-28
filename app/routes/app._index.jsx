@@ -34,18 +34,18 @@ import db from "../db.server"
 
 export const loader = async ({ request }) => {
   const { billing, admin, session, redirect} = await authenticate.admin(request);
-  const { shop } = session.shop;
+  const { shop } = session;
+
+  const isDevelopmentStore = (shop === 'quickstart-9f306b3f.myshopify.com');
 
   // Check for billing
   const billingCheck = await billing.require({
     plans: [MONTHLY_COMMISSION_PLAN],
-    isTest: false,
+    isTest: isDevelopmentStore,
     onFailure: () => redirect('/app/billingSetUp'),
   });
-
   // Initiate and/or retrieve store data from database
   const store = await getStore(session.shop, session.id, admin.graphql);
-
   // First time billing set up
   if (billingCheck && billingCheck.appSubscriptions && billingCheck.appSubscriptions.length > 0) {
     const subscription = billingCheck.appSubscriptions[0];
