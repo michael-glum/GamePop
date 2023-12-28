@@ -34,10 +34,10 @@ export const action = async ({ request }) => {
 
     const billingCheck = await billing.require({
         plans: [MONTHLY_COMMISSION_PLAN],
-        isTest: true,
+        isTest: false,
         onFailure: async () => billing.request({
             plan: MONTHLY_COMMISSION_PLAN,
-            isTest: true,
+            isTest: false,
             returnUrl: "https://admin.shopify.com/apps/game-pop",
         }),
     });

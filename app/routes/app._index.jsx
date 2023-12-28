@@ -39,7 +39,7 @@ export const loader = async ({ request }) => {
   // Check for billing
   const billingCheck = await billing.require({
     plans: [MONTHLY_COMMISSION_PLAN],
-    isTest: true,
+    isTest: false,
     onFailure: () => redirect('/app/billingSetUp'),
   });
 
