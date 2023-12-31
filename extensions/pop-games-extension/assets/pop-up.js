@@ -45,11 +45,19 @@ let scores = [];
 const checkbox = document.getElementById('optOut');
 
 checkbox.addEventListener('change', function(event) {
+  const actionButton = document.getElementById("actionButton");
+  const imageButton = document.getElementById("imageButton");
   if (event.target.checked) {
     optOut = true;
-    document.getElementById("actionButton").textContent = "Claim";
+    actionButton.textContent = "Claim";
+    actionButton.style.display = "inline-block";
+    imageButton.style.display = "none"
   } else {
     optOut = false;
+    if (mobile) {
+        imageButton.style.display = "inline-block";
+        actionButton.style.display = "none";
+    }
     document.getElementById("actionButton").textContent = "Play";
   }
 });
@@ -67,6 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("exitContainerMobile").style.display = "flex";
         } else {
             mobile = false;
+            document.getElementById("actionButton").style.display = "inline-block";
+            document.getElementById("imageButton").style.display = "none";
             document.getElementById("exitContainerMobile").style.display = "none";
         }
         document.getElementById('emailForm').addEventListener('keypress', function(e) {
@@ -113,7 +123,9 @@ window.onload = async function(){
         await initDiscountOptions();
         await initGameOptions();
         word = getRandomWord();
+        const imageButton = document.getElementById("imageButton");
         if (gameToPlay === "wordGame") {
+            imageButton.style.backgroundImage = "url('https://i.imgur.com/hUZIRqH.png')";
             document.getElementById("wordGameContainer").style.display = "flex";
             document.getElementById("birdGameContainer").style.display = "none";
             document.getElementById("birdGameImg").style.display = "none";
@@ -124,6 +136,7 @@ window.onload = async function(){
             document.getElementById("right-column").style.margin = "0px 0px 30px 0px";
             initializeWordGame(true, false);
         } else if (gameToPlay === "birdGame") {
+            imageButton.style.backgroundImage = "url('https://i.imgur.com/L0xY2Y7.png')";
             document.getElementById("wordGameContainer").style.display = "none";
             document.getElementById("birdGameContainer").style.display = "flex";
             document.getElementById("birdGameImg").style.display = "inline-block";

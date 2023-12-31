@@ -328,7 +328,20 @@
   }
 
   #actionButton {
+    display: none;
     background-color: #007BFF;
+    color: #fff;
+    padding: 1% 2%;
+    border: none;
+    cursor: pointer;
+    width: 144px;
+    height: 48px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  #imageButton {
+    background-image: url('https://i.imgur.com/hUZIRqH.png');
     color: #fff;
     padding: 1% 2%;
     border: none;
