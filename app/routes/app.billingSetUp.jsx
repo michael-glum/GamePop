@@ -60,6 +60,10 @@ const COUPON_CODES = [
   "AGRANT20",
   "WADAMS20",
   "MISSMAR20",
+  "PRESLAV20",
+  "SREES20",
+  "EYAD20",
+  "JEFU20",
 ];
 //const COMMISSION = 5;
 
