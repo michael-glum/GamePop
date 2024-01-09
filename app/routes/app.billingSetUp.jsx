@@ -46,6 +46,20 @@ const COUPON_CODES = [
   "GRIFFIN20",
   "ANATOLIY20",
   "JANDY20",
+  "SIDNEY20",
+  "WIZARD20",
+  "ARIE20",
+  "SARA20",
+  "ONHOW20",
+  "GILLEN20",
+  "ACADEMY20",
+  "BENLYU20",
+  "NOUMAN20",
+  "DOOBY20",
+  "BRANDO20",
+  "AGRANT20",
+  "WADAMS20",
+  "MISSMAR20",
 ];
 //const COMMISSION = 5;
 
