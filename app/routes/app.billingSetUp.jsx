@@ -19,7 +19,7 @@ import { CircleTickMajor } from "@shopify/polaris-icons";
 
 const DISCOUNT_PERCENTAGE = 20;
 const COUPON_CODES = [
-  "SAVE10",
+  "SAVE20",
   "DAVIE20",
   "SGHIOR20",
   "JWELCH20",
