@@ -64,6 +64,17 @@ const COUPON_CODES = [
   "SREES20",
   "EYAD20",
   "JEFU20",
+  "RAGHAV20",
+  "PIGEON20",
+  "KOSTIFY20",
+  "KOALA20",
+  "IAMERY20",
+  "MERAM20",
+  "EVERYDAY20",
+  "DEEDEE20",
+  "HUPE20",
+  "SILK20",
+  "LEON20"
 ];
 //const COMMISSION = 5;
 
