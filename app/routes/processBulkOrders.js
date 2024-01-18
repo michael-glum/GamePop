@@ -1,11 +1,11 @@
-import { authenticate, unauthenticated } from "../shopify.server";
+import { authenticate, unauthenticated, COMMISSION } from "../shopify.server";
 import { json } from "@remix-run/node"
 import { Readable } from 'stream'
 import { createInterface } from 'readline'
 import { createAppUsageRecord } from "../utils/subscriptionUtil.server";
 import db from '../db.server'
 
-const MAX_CHARGE = 499.99;
+const MAX_COMMISSIONABLE_SALES = 499.99 / (COMMISSION / 100.00);
 
 export async function processBulkOrdersWebhook (topic, shop, session, clonedRequest) {
     try {
@@ -89,9 +89,9 @@ export async function processBulkOrdersWebhook (topic, shop, session, clonedRequ
             store.totalSales = store.totalSales + newSales;
             const oldCurrSales = store.currSales;
             store.currSales = store.currSales + newSales;
-            if (store.currSales > MAX_CHARGE) {
-                newSales = MAX_CHARGE - oldCurrSales;
-                store.currSales = MAX_CHARGE;
+            if (store.currSales > MAX_COMMISSIONABLE_SALES) {
+                newSales = MAX_COMMISSIONABLE_SALES - oldCurrSales;
+                store.currSales = MAX_COMMISSIONABLE_SALES;
             }
             try {
                 //Make sure sales have not been updated already
