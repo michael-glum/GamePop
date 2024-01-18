@@ -5,6 +5,8 @@ import { createInterface } from 'readline'
 import { createAppUsageRecord } from "../utils/subscriptionUtil.server";
 import db from '../db.server'
 
+const MAX_CHARGE = 499.99;
+
 export async function processBulkOrdersWebhook (topic, shop, session, clonedRequest) {
     try {
         const { admin } = await unauthenticated.admin(shop)
@@ -85,7 +87,12 @@ export async function processBulkOrdersWebhook (topic, shop, session, clonedRequ
             }
             console.log("New Sales: " + newSales);
             store.totalSales = store.totalSales + newSales;
+            const oldCurrSales = store.currSales;
             store.currSales = store.currSales + newSales;
+            if (store.currSales > MAX_CHARGE) {
+                newSales = MAX_CHARGE - oldCurrSales;
+                store.currSales = MAX_CHARGE;
+            }
             try {
                 //Make sure sales have not been updated already
                 const today = await getCurrentDate();
