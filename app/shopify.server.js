@@ -27,7 +27,7 @@ const shopify = shopifyApp({
   restResources,
   billing: {
     [MONTHLY_COMMISSION_PLAN]: {
-      amount: 10000.0,
+      amount: 499.99,
       currencyCode: "USD",
       interval: BillingInterval.Usage,
       usageTerms: `${COMMISSION}% commission charged on orders made using a PopGames discount code`,
