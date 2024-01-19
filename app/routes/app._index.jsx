@@ -386,10 +386,10 @@ export default function Index() {
             <Card>
               <BlockStack gap="200">
                 <Text variant="headingLg" as="h5" fontWeight="semibold" alignment="center">
-                  Commissions (Period)
+                  Total Sales (Period)
                 </Text>
                 <Text variant="headingXl" as="h4" fontWeight="regular" alignment="center">
-                  {(finalAdjustedCurrSales).toFixed(2)} {store.currencyCode ? store.currencyCode : ''}
+                  {store.currSales.toFixed(2)} {store.currencyCode ? store.currencyCode : ''}
                 </Text>
               </BlockStack>
             </Card>

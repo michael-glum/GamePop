@@ -87,12 +87,12 @@ export async function processBulkOrdersWebhook (topic, shop, session, clonedRequ
             }
             console.log("New Sales: " + newSales);
             store.totalSales = store.totalSales + newSales;
-            const oldCurrSales = store.currSales;
+            //const oldCurrSales = store.currSales;
             store.currSales = store.currSales + newSales;
-            if (store.currSales > MAX_COMMISSIONABLE_SALES) {
+            /*if (store.currSales > MAX_COMMISSIONABLE_SALES) {
                 newSales = MAX_COMMISSIONABLE_SALES - oldCurrSales;
                 store.currSales = MAX_COMMISSIONABLE_SALES;
-            }
+            }*/
             try {
                 //Make sure sales have not been updated already
                 const today = await getCurrentDate();
