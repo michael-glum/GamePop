@@ -5,7 +5,7 @@ import { createInterface } from 'readline'
 import { createAppUsageRecord } from "../utils/subscriptionUtil.server";
 import db from '../db.server'
 
-const MAX_COMMISSIONABLE_SALES = 499.99 / (COMMISSION / 100.00);
+const MAX_COMMISSIONABLE_SALES = 199.00 / (COMMISSION / 100.00);
 
 export async function processBulkOrdersWebhook (topic, shop, session, clonedRequest) {
     try {
