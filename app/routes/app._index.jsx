@@ -51,7 +51,7 @@ export const loader = async ({ request }) => {
     const subscription = billingCheck.appSubscriptions[0];
     console.log("Billing check: " + JSON.stringify(billingCheck));
     console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
-    if (!store.billingId || true) {
+    if (!store.billingId) {
       const billingId = await getSubscriptionLineItemId(subscription.id, admin.graphql);
       store.billingId = billingId;
       store.nextPeriod = getDateTimeXDaysFromNow(30);
