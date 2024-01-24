@@ -30,7 +30,7 @@ const shopify = shopifyApp({
       amount: 199,
       currencyCode: "USD",
       interval: BillingInterval.Usage,
-      usageTerms: `Pay just ${COMMISSION}% of your first $4000 earned through PopGames each month, no hidden fees, $199 max.`,
+      usageTerms: `Pay just ${COMMISSION}% of your first $4000 in additional earnings through PopGames each month.`,
     },
   },
   webhooks: {
