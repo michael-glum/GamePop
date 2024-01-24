@@ -157,7 +157,7 @@ export default function BillingSetUp() {
         </ui-title-bar>
         <BlockStack gap="500">
           <Text as="h1" variant="headingLg">Were you refered to PopGames?</Text>
-          <Text as="h2" variant="bodyLg">We only charge for successfull conversions using one of our discount codes, so you'll never pay more than what you earn.</Text>
+          <Text as="h2" variant="bodyLg">We charge just 5% of your first $4000 in additional earnings through PopGames each month. You keep the rest!</Text>
           <Card>
             <BlockStack gap="500">
               <Text as="h2" variant="headingMd">
