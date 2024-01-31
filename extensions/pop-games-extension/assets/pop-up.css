@@ -374,7 +374,8 @@
     border: 1px solid #ccc;
     margin-bottom: 2%;
     font-size: 16px;
-    color: #d2d2d2 !important;
+    color: #000 !important;
+    background-color: #ffffff !important;
   }
 
   #emailForm button[type="button"] {
