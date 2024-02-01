@@ -406,6 +406,7 @@
     font-size: 16px;
     font-weight: bold;
     margin-top: 10px;
+    color: rgb(76, 76, 76) !important;
 }
 
 #board {
@@ -460,6 +461,7 @@
     z-index: 10000;
 
     /* Text */
+    color: rgb(76, 76, 76);
     font-size: 16px;
     font-weight: bold;
     display: flex;
@@ -475,6 +477,7 @@
     z-index: 10000;
 
     /* Text */
+    color: rgb(76, 76, 76);
     font-size: 16px;
     font-weight: bold;
     display: flex;
@@ -484,19 +487,19 @@
 
 .correct {
     background-color: #6AAA64;
-    color: white;
+    color: white !important;
     border-color: white;
 }
 
 .present {
     background-color: #C9B458;
-    color: white;
+    color: white !important;
     border-color: white;
 }
 
 .absent {
     background-color: #787C7E;
-    color: white;
+    color: white !important;
     border-color:white;
 }
 
@@ -546,6 +549,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: black;
   padding: 20px;
 }
 
