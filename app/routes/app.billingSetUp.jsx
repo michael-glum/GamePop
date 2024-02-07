@@ -156,12 +156,12 @@ export default function BillingSetUp() {
           </button>
         </ui-title-bar>
         <BlockStack gap="500">
-          <Text as="h1" variant="headingLg">Were you refered to PopGames?</Text>
-          <Text as="h2" variant="bodyLg">We charge just 5% of your first $1000 earned through PopGames each month. That's $49 max. You keep the rest!</Text>
+          <Text as="h1" variant="headingLg">Commission Only Pricing - Details</Text>
+          <Text as="h2" variant="bodyLg">5% commission will be charged on the first $1000 in total sales made using PopGames codes, not to exceed $49 in any 30-day billing period. No hidden or additional fees. Entry of billing information is required on the next page, but you will not be billed except for commissionable sales.</Text>
           <Card>
             <BlockStack gap="500">
               <Text as="h2" variant="headingMd">
-                Enter a coupon code for a {DISCOUNT_PERCENTAGE}% discount on your first payment!
+                Enter a coupon code for a {DISCOUNT_PERCENTAGE}% discount on your first month's commissions! &lpar;Hint: SAVE20&rpar;
               </Text>
               {!hasCoupon ? (
                 <CouponCodeForm
