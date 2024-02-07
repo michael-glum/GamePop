@@ -161,7 +161,7 @@ export default function BillingSetUp() {
           <Card>
             <BlockStack gap="500">
               <Text as="h2" variant="headingMd">
-                Enter a coupon code for a {DISCOUNT_PERCENTAGE}% discount on your first month's commissions! &lpar;Hint: SAVE20&rpar;
+                Enter a coupon code for a {DISCOUNT_PERCENTAGE}% discount on your first month's commissions! (Hint: SAVE20)
               </Text>
               {!hasCoupon ? (
                 <CouponCodeForm
