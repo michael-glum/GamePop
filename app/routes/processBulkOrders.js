@@ -99,7 +99,7 @@ export async function processBulkOrdersWebhook (topic, shop, session, clonedRequ
                 if (store.lastUpdated === today) {
                     return json({ success: true }, {status: 200 });
                 }
-                store.lastUpdated = null;//today;
+                store.lastUpdated = today;
 
                 // Check if coupon has expired
                 if (store.hasCoupon) {
