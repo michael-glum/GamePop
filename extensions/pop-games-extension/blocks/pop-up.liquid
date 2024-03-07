@@ -1,93 +1,97 @@
-<div id="overlay"></div>
-<div id="popUp">
-  <div id="left-column">
-    <div id="exitContainerMobile" onclick="closePopUp()">
-      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButtonMobile" width="30" height="30" />
-      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHoverMobile" width="30" height="30" />
+<div id="pg-overlay"></div>
+<div id="pg-popUp">
+  <div id="pg-left-column" style="background-color: {{ settings.pg_background_color }};">
+    <div id="pg-exitContainerMobile" onclick="closePopUp()">
+      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="pg-exitButtonMobile" width="30" height="30" />
+      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="pg-exitButtonHoverMobile" width="30" height="30" />
     </div>
-    <div id="headerContainer">
-      <text id="headerText">Get 10%, 20%, or 30% Off Your First Order</text>
+    <div id="pg-headerContainer">
+      <text id="pg-headerText" style="color: {{ settings.pg_primary_text_color }};">Get 10%, 20%, or 30% Off Your First Order</text>
     </div>
-    <div id="subheaderContainer">
-      <text id="subheaderText">Play a game to discover your discount!</text>
+    <div id="pg-subheaderContainer">
+      <text id="pg-subheaderText" style="color: {{ settings.pg_secondary_text_color }};">Play a game to discover your discount!</text>
     </div>
-    <div id="optOutContainer">
-      <text id="optOutText">Or check the box to recieve 10% off now:&nbsp;</text>
-      <input type="checkbox" id="optOut" name="optOut" value="false">
+    <div id="pg-optOutContainer">
+      <text id="pg-optOutText" style="color: {{ settings.pg_secondary_text_color }};">Or check the box to recieve 10% off now:&nbsp;</text>
+      <input type="checkbox" id="pg-optOut" name="optOut" value="false">
     </div>
-    <div id="actionButtonContainer">
-      <button type="button" onclick="actionButtonPressed()" id="actionButton">Play</button>
-      <button type="button" onclick="actionButtonPressed()" id="imageButton"></button>
+    <div id="pg-actionButtonContainer">
+      <button type="button" onclick="actionButtonPressed()" id="pg-actionButton" style="background-color: {{ settings.pg_button_color }}; color: {{ settings.button_text_color }};">Play</button>
+      <button type="button" onclick="actionButtonPressed()" id="pg-imageButton"></button>
     </div>
-    <form id="emailForm">
-      <label for="email" id="emailEntryLabel">Enter your email to claim:</label>
-      <input type="email" id="email" name="email" placeholder="Your email">
-      <button type="button" onclick="validateAndProcessEmail()" id="submitButton">Submit</button>
-      <text id="emailDenied">This email has already been used</text>
+    <form id="pg-emailForm">
+      <label for="email" id="pg-emailEntryLabel" style="color: {{ settings.pg_secondary_text_color }};">Enter your email to claim:</label>
+      <input type="email" id="pg-email" name="email" placeholder="Your email">
+      <button type="button" onclick="validateAndProcessEmail()" id="pg-submitButton" style="background-color: {{ settings.pg_button_color }}; color: {{ settings.button_text_color }};">Submit</button>
+      <text id="pg-emailDenied">This email has already been used</text>
     </form>
-    <div id="imageContainer">
-      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick" id="circleTick" width="20" height="100" />
+    <div id="pg-imageContainer">
+      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick" id="pg-circleTick" width="20" height="100" />
     </div>
-    <div id="discountPercentageContainer">
-      <text id="discountPercentage">20% Off!</text>
+    <div id="pg-discountPercentageContainer">
+      <text id="pg-discountPercentage" style="color: {{ settings.pg_primary_text_color }};">20% Off!</text>
     </div>
-    <div id="discountContainer">
-      <text id="discountText">Redeem code:</text>
+    <div id="pg-discountContainer" style="color: {{ settings.pg_secondary_text_color }};">
+      <text id="pg-discountText" style="color: {{ settings.pg_secondary_text_color }};">Redeem code:</text>
     </div>
-    <div id="discount-box"> 
-      <text id="discountCode"></text>
-      <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="copyButton" onclick="copyTextToClipboard()" width="10" height="75" />
-      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="circleTickSmall" width="10" height="75" />
+    <div id="pg-discount-box"> 
+      <text id="pg-discountCode" style="color: {{ settings.pg_primary_text_color }};"></text>
+      <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="pg-copyButton" onclick="copyTextToClipboard()" width="10" height="75" />
+      <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="pg-circleTickSmall" width="10" height="75" />
     </div>
-    <div id="discount-terms">Single use per customer</div>
-    <div id="email-terms">By submitting your email you agree to recieve email marketing updates for this store</div>
+    <div id="pg-discount-terms" style="color: {{ settings.pg_secondary_text_color }};">Single use per customer</div>
+    <div id="pg-email-terms" style="color: {{ settings.pg_secondary_text_color }};">By submitting your email you agree to recieve email marketing updates for this store</div>
   </div>
-  <div id="right-column">
-    <div id="exitContainer" onclick="closePopUp()">
-      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="exitButton" width="75" height="75" />
-      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="exitButtonHover" width="75" height="75" />
+  <div id="pg-right-column">
+    <div id="pg-exitContainer" onclick="closePopUp()">
+      <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="pg-exitButton" width="75" height="75" />
+      <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="pg-exitButtonHover" width="75" height="75" />
     </div>
-    <div id="gameContainer">
-      <div id="lockContainer">
-        <img src="{{ 'LockFilledMajor.svg' | asset_url }}" alt="Lock" id="lock" width="20" height="100" />
+    <div id="pg-gameContainer">
+      <div id="pg-lockContainer">
+        <img src="{{ 'LockFilledMajor.svg' | asset_url }}" alt="Lock" id="pg-lock" width="20" height="100" />
       </div>
-      <div id="wordGameContainer">
-        <img src="{{ 'wordgame.png' | asset_url }}" alt="Word Game" id="wordGameImg" width="auto" height="95"/>
-        <div id="board"></div>
-        <div id="answer">Guess a word</div>
-        <div id="keyboard"></div>
+      <div id="pg-wordGameContainer">
+        <img src="{{ 'wordgame.png' | asset_url }}" alt="Word Game" id="pg-wordGameImg" width="auto" height="95"/>
+        <div id="pg-board"></div>
+        <div id="pg-answer">Guess a word</div>
+        <div id="pg-keyboard"></div>
       </div>
-      <div id="birdGameContainer">
-        <img src="{{ 'birdgamepic.png' | asset_url }}" alt="Bird Game" id="birdGameImg" width="100" height="100"/>
-        <canvas id="bird-board" width:"360px" height="450px"></canvas>
-        <img src="{{ 'yellowbird-midflap.png' | asset_url }}" alt="Bird" id="birdImg" width="34" height="24" />
-        <img src="{{ 'pipe-green-down.png' | asset_url }}" alt="Top Pipe" id="topPipeImg" width="64" height="360" />
-        <img src="{{ 'pipe-green.png' | asset_url }}" alt="Bottom Pipe" id="bottomPipeImg" width="64" height="360" />
+      <div id="pg-birdGameContainer">
+        <img src="{{ 'birdgamepic.png' | asset_url }}" alt="Bird Game" id="pg-birdGameImg" width="100" height="100"/>
+        <canvas id="pg-bird-board" width:"360px" height="450px"></canvas>
+        <img src="{{ 'yellowbird-midflap.png' | asset_url }}" alt="Bird" id="pg-birdImg" width="34" height="24" />
+        <img src="{{ 'pipe-green-down.png' | asset_url }}" alt="Top Pipe" id="pg-topPipeImg" width="64" height="360" />
+        <img src="{{ 'pipe-green.png' | asset_url }}" alt="Bottom Pipe" id="pg-bottomPipeImg" width="64" height="360" />
       </div>
-      <div id="statsContainer">
-        <p class="title">Your Stats</p>
-        <p id="statsSubtitle">useremail@gmail.com</p>
-        <div class="stats-column-container">
-          <div class="column">
+      <div id="pg-statsContainer">
+        <p class="pg-title">Your Stats</p>
+        <p id="pg-statsSubtitle">useremail@gmail.com</p>
+        <div class="pg-stats-column-container">
+          <div class="pg-column">
             <p>Score:</p>
-            <p id="score">4</p>
+            <p id="pg-score">4</p>
           </div>
-          <div class="column">
+          <div class="pg-column">
             <p>Avg:</p>
-            <p id="avg">3</p>
+            <p id="pg-avg">3</p>
           </div>
-          <div class="column">
+          <div class="pg-column">
             <p>Best:</p>
-            <p id="best">2</p>
+            <p id="pg-best">2</p>
           </div>
         </div>
-        <p class="footer">Powered by PopGames</p>
+        <p class="pg-footer">Powered by PopGames</p>
       </div>
     </div>
   </div>
 </div>
 
 <style>
+  .pg-background-color {
+    background-color: {{ settings.pg_background_color }};
+  }
+
   .visually-hidden {
     position: absolute!important;
     overflow: hidden;
@@ -112,56 +116,56 @@
   }
 
   @media (max-width: 768px) {
-    #popUp {
+    #pg-popUp {
       flex-direction: column;
     }
 
-    #right-column {
+    #pg-right-column {
       display: none;
       width: 350px;
     }
 
-    #left-column {
+    #pg-pg-left-column {
       height: 500px; 
       width: 350px;
       padding: 0px 0px 30x 0px;
       position: relative;
     }
 
-    #exitContainerMobile {
+    #pg-exitContainerMobile {
       display: flex;
     }
 
-    #discountContainer {
+    #pg-discountContainer {
       margin-left: 1%;
     }
 
-    #discount-box {
+    #pg-discount-box {
       width: 200px;
       margin-left: 22%;
     }
 
-    #discount-terms {
+    #pg-discount-terms {
       margin-left: 22%;
     }
 
-    #email-terms {
+    #pg-email-terms {
       margin-left: 0%;
     }
 
-    #wordGameContainer {
+    #pg-wordGameContainer {
       display: none;
     }
 
-    #birdGameContainer {
+    #pg-birdGameContainer {
       width: 350px;
     }
 
-    #wordGameImg {
+    #pg-wordGameImg {
       display: none;
     }
 
-    #lockContainer {
+    #pg-lockContainer {
       display: none;
     }
 
@@ -178,6 +182,37 @@
   "target": "body",
   "stylesheet": "pop-up.css",
   "javascript": "pop-up.js",
-  "settings": []
+  "settings": [
+    {
+      "type": "color",
+      "id": "pg_background_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "pg_primary_text_color",
+      "label": "Primary Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pg_secondary_text_color",
+      "label": "Secondary Text Color",
+      "default": "#d2d2d2"
+    },
+    {
+      "type": "color",
+      "id": "pg_button_color",
+      "label": "Button Color",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "pg_button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    }
+  ]
 }
 {% endschema %}

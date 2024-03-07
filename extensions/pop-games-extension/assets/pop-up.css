@@ -1,4 +1,4 @@
-#overlay {
+#pg-overlay {
   display: none;
   position: fixed;
   top: 0;
@@ -10,7 +10,7 @@
   display: block;
 }
 
-#popUp {
+#pg-popUp {
     display: none;
     position: fixed;
     bottom: 50%;
@@ -25,7 +25,7 @@
     background: #fff;
 }
 
-  #left-column {
+  #pg-left-column {
     width: 400px;
     background-color: #000;
     display: flex;
@@ -35,7 +35,7 @@
     /*margin: 30px 10px 30px 30px;*/
   }
 
-  #right-column {
+  #pg-right-column {
     width: 400px;
     background-color: #fff;
     text-align: center;
@@ -45,7 +45,7 @@
     margin: 0px 0px 30px 0px;
   }
 
-  #exitContainer {
+  #pg-exitContainer {
     /*position: absolute;*/
     height: 30px;
     width: 30px;
@@ -55,7 +55,7 @@
     margin-left: 93%;
   }
 
-  #exitContainerMobile {
+  #pg-exitContainerMobile {
     position: absolute;
     height: 30px;
     width: 30px;
@@ -66,64 +66,64 @@
     z-index: 10002;
   }
 
-  #exitButton {
+  #pg-exitButton {
     display: inline-block;
     width: 75%;
     height: 75%;
     cursor: pointer;
   }
 
-  #exitButtonMobile {
+  #pg-exitButtonMobile {
     display: inline-block;
     width: 75%;
     height: 75%;
     cursor: pointer;
   }
 
-  #exitButtonHover {
+  #pg-exitButtonHover {
     display: none;
     width: 75%;
     height: 75%;
     cursor: pointer;
   }
 
-  #exitButtonHoverMobile {
+  #pg-exitButtonHoverMobile {
     display: none;
     width: 75%;
     height: 75%;
     cursor: pointer;
   }
 
-  #headerContainer {
+  #pg-headerContainer {
     width: 80%;
     text-align: center;
     margin-left: 10%;
   }
 
-  #headerText {
+  #pg-headerText {
     font-size: 25px;
     font-weight: bold;
     color: #fff;
   }
 
-  #subheaderText {
+  #pg-subheaderText {
     font-size: 16px;
     font-weight: bold;
     color: #d2d2d2;
     margin: 10px;
   }
 
-  #subheaderContainer {
+  #pg-subheaderContainer {
     width: 100%;
     text-align: center;
   }
 
-  #optOutText {
+  #pg-optOutText {
     font-size: 12px;
     color: #d2d2d2;
   }
 
-  #optOutContainer {
+  #pg-optOutContainer {
     width: 100%;
     margin-top: 2%;
     text-align: center;
@@ -132,24 +132,24 @@
     justify-content: center;
   }
 
-  #optOut {
+  #pg-optOut {
     margin-left: 2px;
   }
 
-  #discountText {
+  #pg-discountText {
     font-size: 16px;
     font-weight: bold;
     color: #d2d2d2;
   }
 
-  #discountContainer {
+  #pg-discountContainer {
     width: 100%;
     text-align: center;
     margin-top: 10%;
     color: #d2d2d2;
   }
 
-  #discount-box {
+  #pg-discount-box {
     width: 200px;
     height: 60px;
     border: 1px solid #d2d2d2;
@@ -165,13 +165,13 @@
     align-items: center;
   }
 
-  #discountCode {
+  #pg-discountCode {
     color: #fff;
     font-weight: bold;
     font-size: 16px;
   }
 
-  #copyButton {
+  #pg-copyButton {
     display: none;
     width: 10%;
     height: 75%;
@@ -180,14 +180,14 @@
     margin-bottom: 1%;
   }
 
-  #circleTickSmall {
+  #pg-circleTickSmall {
     display: none;
     width: 10%;
     height: 75%;
     margin-bottom: 0.5%;
   }
 
-  #discount-terms {
+  #pg-discount-terms {
     width: 200px;
     height: 20px;
     text-align: center;
@@ -200,7 +200,7 @@
     align-items: center;
   }
 
-  #email-terms {
+  #pg-email-terms {
     width: 350px;
     height: 20px;
     text-align: center;
@@ -213,7 +213,7 @@
     align-items: center;
   }
 
-  #gameContainer {
+  #pg-gameContainer {
     width: 100%;
     height: 100%;
     background-color: #fff; 
@@ -247,7 +247,7 @@
     transform: scale(0.95);
   }
 
-  #imageContainer {
+  #pg-imageContainer {
     display: none;
     align-items: center;
     justify-content: center;
@@ -257,12 +257,12 @@
     margin-bottom: 5.85%;
   }
 
-  #circleTick {
+  #pg-circleTick {
     width: 20%;
     height: 100%;
   }
 
-  #discountPercentageContainer {
+  #pg-discountPercentageContainer {
     display: none;
     align-items: center;
     justify-content: center;
@@ -272,7 +272,7 @@
     margin-bottom: 3.15%;
   }
 
-  #discountPercentage {
+  #pg-discountPercentage {
     width: 80%;
     height: 100%;
     font-size: 40px;
@@ -280,7 +280,7 @@
     color: #fff;
   }
 
-  #lockContainer {
+  #pg-lockContainer {
     position: fixed;
     display: flex;
     align-items: center;
@@ -290,12 +290,12 @@
     bottom: 1%;
   }
 
-  #lock {
+  #pg-lock {
     width: 20%;
     height: 100%;
   }
 
-  #wordGameImg {
+  #pg-wordGameImg {
     position: fixed;
     height: 95%;
     z-index: 10001;
@@ -303,7 +303,7 @@
     bottom: 5%;
   }
 
-  #birdGameImg {
+  #pg-birdGameImg {
     position: fixed;
     display: none;
     height: 100%;
@@ -312,7 +312,7 @@
     /*filter: blur(3px);*/
   }
 
-  #wordGameContainer {
+  #pg-wordGameContainer {
     display: none;
     flex-wrap: wrap;
     justify-content: center;
@@ -320,13 +320,13 @@
     height: 100%;
   }
 
-  #actionButtonContainer {
+  #pg-actionButtonContainer {
     z-index: 10000;
     margin-top: 11.85%;
     margin-bottom: 4%;
   }
 
-  #actionButton {
+  #pg-actionButton {
     display: none;
     background-color: #007BFF;
     color: #fff;
@@ -339,7 +339,7 @@
     border-radius: 8px;
   }
 
-  #imageButton {
+  #pg-imageButton {
     background-image: url('https://i.imgur.com/hUZIRqH.png');
     color: #fff;
     padding: 1% 2%;
@@ -351,7 +351,7 @@
     border-radius: 8px;
   }
 
-  #emailForm {
+  #pg-emailForm {
     padding: 1.25%;
     border: none;
     z-index: 10000;
@@ -360,7 +360,7 @@
     margin-bottom: 5.85%;
   }
 
-  #emailForm label {
+  #pg-emailForm label {
     display: block;
     font-weight: bold;
     margin-bottom: 1%;
@@ -368,7 +368,7 @@
     color: #d2d2d2;
   }
 
-  #emailForm input {
+  #pg-emailForm input {
     display: inline-block;
     padding: 1%;
     border: 1px solid #ccc;
@@ -378,7 +378,7 @@
     background-color: #ffffff !important;
   }
 
-  #emailForm button[type="button"] {
+  #pg-emailForm button[type="button"] {
     display: inline-block;
     background-color: #007BFF;
     color: #fff;
@@ -387,13 +387,13 @@
     cursor: pointer;
   }
 
-  #emailDenied {
+  #pg-emailDenied {
     display: none;
     font-size: 10px;
     color: #FF0000;
   }
 
-#title {
+#pg-title {
     font-size: 30px;
     font-weight: bold;
     letter-spacing: 2px;
@@ -401,7 +401,7 @@
     padding-top: 0px;
 }
 
-#answer {
+#pg-answer {
     width: 100%;
     font-size: 16px;
     font-weight: bold;
@@ -409,7 +409,7 @@
     color: rgb(76, 76, 76) !important;
 }
 
-#board {
+#pg-board {
     width: 200px;
     margin: 0 auto;
     display: flex;
@@ -417,7 +417,7 @@
     cursor: pointer;
 }
 
-.tile {
+.pg-tile {
     /* Box */
     border: 2px solid lightgray;
     margin: 2.5px auto;
@@ -433,7 +433,7 @@
     align-items: center;
 }
 
-#keyboard {
+#pg-keyboard {
     width: 100%;
     margin: 0 auto;
     margin-top: 10px;
@@ -443,7 +443,7 @@
     justify-content: center;
 }
 
-.keyboard-row {
+.pg-keyboard-row {
     width: 100%;
     height: 42px;
     margin: 0 auto;
@@ -453,7 +453,7 @@
     justify-content: center;
 }
 
-.key-tile {
+.pg-key-tile {
     width: 26px;
     height: 40px;
     margin: 1px;
@@ -469,7 +469,7 @@
     align-items: center;
 }
 
-.enter-key-tile {
+.pg-enter-key-tile {
     width: 55px;
     height: 40px;
     margin: 1px;
@@ -485,56 +485,56 @@
     align-items: center;
 }
 
-.correct {
+.pg-correct {
     background-color: #6AAA64;
     color: white !important;
     border-color: white;
 }
 
-.present {
+.pg-present {
     background-color: #C9B458;
     color: white !important;
     border-color: white;
 }
 
-.absent {
+.pg-absent {
     background-color: #787C7E;
     color: white !important;
     border-color:white;
 }
 
-#bird-board {
+#pg-bird-board {
   background-image: url("./birdgamebg.png");
   background-size: 400px 500px;
   height: 500px;
   width: 400px;
 }
 
-#birdGameContainer {
+#pg-birdGameContainer {
   display: flex;
   height: 100%;
   width: 400px;
 }
 
-#birdImg {
+#pg-birdImg {
   display: none;
   width: 34px;
   height: 24px;
 }
 
-#topPipeImg {
+#pg-topPipeImg {
   display: none;
   width: 64px;
   height: 360px;
 }
 
-#bottomPipeImg {
+#pg-bottomPipeImg {
   display: none;
   width: 64px;
   height: 360px;
 }
 
-#statsContainer {
+#pg-statsContainer {
   display: none;
   position: absolute;
   top: 50%;
@@ -553,7 +553,7 @@
   padding: 20px;
 }
 
-.title {
+.pg-title {
   font-size: 18px;
   line-height: 1.5;
   text-align: center;
@@ -562,14 +562,14 @@
   font-weight: bold;
 }
 
-#statsSubtitle {
+#pg-statsSubtitle {
   font-size: 12px;
   line-height: 1.5;
   text-align: center;
   margin: 0;
 }
 
-.footer {
+.pg-footer {
   font-size: 12px;
   line-height: 1.5;
   text-align: center;
@@ -579,7 +579,7 @@
   font-weight: bold;
 }
 
-.stats-column-container {
+.pg-stats-column-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -591,7 +591,7 @@
   font-weight: bold;
 }
 
-.column {
+.pg-column {
   flex: 1;
   text-align: center;
   font-size: 14px;
@@ -600,6 +600,6 @@
   height: 30%;
 }
 
-.column p {
+.pg-column p {
  margin: 5px;
 }

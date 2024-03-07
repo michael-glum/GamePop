@@ -42,11 +42,11 @@ var optOut = false;
 let score = 0;
 let scores = [];
 
-const checkbox = document.getElementById('optOut');
+const checkbox = document.getElementById('pg-optOut');
 
 checkbox.addEventListener('change', function(event) {
-  const actionButton = document.getElementById("actionButton");
-  const imageButton = document.getElementById("imageButton");
+  const actionButton = document.getElementById("pg-actionButton");
+  const imageButton = document.getElementById("pg-imageButton");
   if (event.target.checked) {
     optOut = true;
     actionButton.textContent = "Claim";
@@ -58,28 +58,28 @@ checkbox.addEventListener('change', function(event) {
         imageButton.style.display = "inline-block";
         actionButton.style.display = "none";
     }
-    document.getElementById("actionButton").textContent = "Play";
+    document.getElementById("pg-actionButton").textContent = "Play";
   }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('pg-overlay');
     overlay.style.display = 'none';
-    const popUp = document.getElementById('popUp');
+    const popUp = document.getElementById('pg-popUp');
     popUp.style.display = 'none';
-    document.getElementById('emailForm').style.display = 'none';
+    document.getElementById('pg-emailForm').style.display = 'none';
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
     if (!hasPopUpDisplayed) { // Remove true ||
         if (window.innerWidth < 768) {
             mobile = true;
-            document.getElementById("exitContainerMobile").style.display = "flex";
+            document.getElementById("pg-exitContainerMobile").style.display = "flex";
         } else {
             mobile = false;
-            document.getElementById("actionButton").style.display = "inline-block";
-            document.getElementById("imageButton").style.display = "none";
-            document.getElementById("exitContainerMobile").style.display = "none";
+            document.getElementById("pg-actionButton").style.display = "inline-block";
+            document.getElementById("pg-imageButton").style.display = "none";
+            document.getElementById("pg-exitContainerMobile").style.display = "none";
         }
-        document.getElementById('emailForm').addEventListener('keypress', function(e) {
+        document.getElementById('pg-emailForm').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 validateAndProcessEmail();
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 window.onload = async function(){
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
     if (!hasPopUpDisplayed) { // Remove true ||
-        document.getElementById('email').addEventListener('focus', function(event) {
+        document.getElementById('pg-email').addEventListener('focus', function(event) {
             event.preventDefault();
         });
         initExitHover();
@@ -119,33 +119,33 @@ window.onload = async function(){
         exitContainer.style.top = "10px";
         exitContainer.style.right = "10px";
         exitContainer.style.marginLeft = "initial";
-        document.getElementById("right-column").style.margin = "0";
+        document.getElementById("pg-right-column").style.margin = "0";
         await initDiscountOptions();
         await initGameOptions();
         word = getRandomWord();
-        const imageButton = document.getElementById("imageButton");
+        const imageButton = document.getElementById("pg-imageButton");
         if (gameToPlay === "wordGame") {
             imageButton.style.backgroundImage = "url('https://i.imgur.com/hUZIRqH.png')";
-            document.getElementById("wordGameContainer").style.display = "flex";
-            document.getElementById("birdGameContainer").style.display = "none";
-            document.getElementById("birdGameImg").style.display = "none";
+            document.getElementById("pg-wordGameContainer").style.display = "flex";
+            document.getElementById("pg-birdGameContainer").style.display = "none";
+            document.getElementById("pg-birdGameImg").style.display = "none";
             exitContainer.style.position = "initial";
             exitContainer.style.top = "initial";
             exitContainer.style.right = "initial";
             exitContainer.style.marginLeft = "93%";
-            document.getElementById("right-column").style.margin = "0px 0px 30px 0px";
+            document.getElementById("pg-right-column").style.margin = "0px 0px 30px 0px";
             initializeWordGame(true, false);
         } else if (gameToPlay === "birdGame") {
             imageButton.style.backgroundImage = "url('https://i.imgur.com/L0xY2Y7.png')";
-            document.getElementById("wordGameContainer").style.display = "none";
-            document.getElementById("birdGameContainer").style.display = "flex";
-            document.getElementById("birdGameImg").style.display = "inline-block";
-            const exitContainer = document.getElementById("exitContainer")
+            document.getElementById("pg-wordGameContainer").style.display = "none";
+            document.getElementById("pg-birdGameContainer").style.display = "flex";
+            document.getElementById("pg-birdGameImg").style.display = "inline-block";
+            const exitContainer = document.getElementById("pg-exitContainer")
             /*exitContainer.style.position = "absolute";
             exitContainer.style.top = "10px";
             exitContainer.style.right = "10px";
             exitContainer.style.marginLeft = "initial";
-            document.getElementById("right-column").style.margin = "0";*/
+            document.getElementById("pg-right-column").style.margin = "0";*/
         } else {
             closePopUp();
         }
@@ -169,24 +169,24 @@ function handleOverlayClick(event) {
     event.stopPropagation();
 };
 
-document.getElementById('overlay').addEventListener('click', handleOverlayClick);
-//document.getElementById('overlay').addEventListener('touchstart', handleOverlayClick);
+document.getElementById('pg-overlay').addEventListener('click', handleOverlayClick);
+//document.getElementById('pg-overlay').addEventListener('touchstart', handleOverlayClick);
 
 function makeItMobile() {
     if (gameInProgress) {
-        document.getElementById("right-column").style.display = "flex";
-        document.getElementById("left-column").style.display = "none"
+        document.getElementById("pg-right-column").style.display = "flex";
+        document.getElementById("pg-left-column").style.display = "none"
     } else {
-        document.getElementById("right-column").style.display = "none";
-        document.getElementById("left-column").style.display = "flex";
-        document.getElementById("exitContainerMobile").style.display = "flex";
+        document.getElementById("pg-right-column").style.display = "none";
+        document.getElementById("pg-left-column").style.display = "flex";
+        document.getElementById("pg-exitContainerMobile").style.display = "flex";
     }
 }
 
 function makeItDesktop() {
-    document.getElementById("right-column").style.display = "flex";
-    document.getElementById("left-column").style.display = "flex";
-    document.getElementById("exitContainerMobile").style.display = "none";
+    document.getElementById("pg-right-column").style.display = "flex";
+    document.getElementById("pg-left-column").style.display = "flex";
+    document.getElementById("pg-exitContainerMobile").style.display = "none";
 }
 
 function initializeWordGame(firstInit = true, isUnlocked = true) {
@@ -195,9 +195,9 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
         for (let c = 0; c < width; c++) {
             let tile = document.createElement("span");
             tile.id = r.toString() + "-" + c.toString();
-            tile.classList.add("tile");
+            tile.classList.add("pg-tile");
             tile.innerText = "";
-            document.getElementById("board").appendChild(tile);
+            document.getElementById("pg-board").appendChild(tile);
         }
     }
 
@@ -211,7 +211,7 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
     for (let i = 0; i < keyboard.length; i++) {
         let currRow = keyboard[i];
         let keyboardRow = document.createElement("div");
-        keyboardRow.classList.add("keyboard-row");
+        keyboardRow.classList.add("pg-keyboard-row");
 
         for (let j = 0; j < currRow.length; j++) {
             let keyTile = document.createElement("div");
@@ -234,13 +234,13 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
             }
 
             if (key == "Enter") {
-                keyTile.classList.add("enter-key-tile");
+                keyTile.classList.add("pg-enter-key-tile");
             } else {
-                keyTile.classList.add("key-tile");
+                keyTile.classList.add("pg-key-tile");
             }
             keyboardRow.appendChild(keyTile);
         }
-        document.getElementById("keyboard").appendChild(keyboardRow);
+        document.getElementById("pg-keyboard").appendChild(keyboardRow);
     }
     
 
@@ -294,7 +294,7 @@ function processWordGameInput(e) {
 
 function updateWordGame() {
     let guess = "";
-    document.getElementById("answer").innerText = "Guess a word";
+    document.getElementById("pg-answer").innerText = "Guess a word";
 
     //string up the guesses into the word
     for (let c = 0; c < width; c++) {
@@ -331,24 +331,24 @@ function updateWordGame() {
 
         //Is it in the correct position?
         if (word[c] == letter) {
-            currTile.classList.add("correct");
+            currTile.classList.add("pg-correct");
 
             let keyTile = document.getElementById("Key" + letter);
-            keyTile.classList.remove("present");
-            keyTile.classList.add("correct");
+            keyTile.classList.remove("pg-present");
+            keyTile.classList.add("pg-correct");
 
             correct += 1;
             letterCount[letter] -= 1; //deduct the letter count
         }
 
         if (correct == width) {
-            document.getElementById("answer").innerText = "Correct!";
-            document.getElementById("imageContainer").style.display = "none";
-            const emailForm = document.getElementById("emailForm");
+            document.getElementById("pg-answer").innerText = "Correct!";
+            document.getElementById("pg-imageContainer").style.display = "none";
+            const emailForm = document.getElementById("pg-emailForm");
             emailForm.style.display = "block";
-            document.getElementById("emailEntryLabel").style.display = "block";
-            document.getElementById("email").style.display = "inline-block";
-            document.getElementById("submitButton").style.display = "inline-block";
+            document.getElementById("pg-emailEntryLabel").style.display = "block";
+            document.getElementById("pg-email").style.display = "inline-block";
+            document.getElementById("pg-submitButton").style.display = "inline-block";
             gameOver = true;
             score = row + 1;
             const confettiLength = (mobile) ? 1500 : 2000;
@@ -368,26 +368,26 @@ function updateWordGame() {
         let letter = currTile.innerText;
 
         // skip the letter if it has been marked correct
-        if (!currTile.classList.contains("correct")) {
+        if (!currTile.classList.contains("pg-correct")) {
             //Is it in the word?         //make sure we don't double count
             if (word.includes(letter) && letterCount[letter] > 0) {
-                currTile.classList.add("present");
+                currTile.classList.add("pg-present");
                 
                 let keyTile = document.getElementById("Key" + letter);
-                if (!keyTile.classList.contains("correct")) {
-                    keyTile.classList.add("present");
+                if (!keyTile.classList.contains("pg-correct")) {
+                    keyTile.classList.add("pg-present");
                 }
                 letterCount[letter] -= 1;
             } // Not in the word or (was in word but letters all used up to avoid overcount)
             else {
                 if (letterCount[letter] <= -1) {
-                    currTile.classList.add("present");
+                    currTile.classList.add("pg-present");
                 } else {
-                    currTile.classList.add("absent");
+                    currTile.classList.add("pg-absent");
                 }
                 let keyTile = document.getElementById("Key" + letter);
-                if (!keyTile.classList.contains("correct") && !keyTile.classList.contains("present")) {
-                    keyTile.classList.add("absent");
+                if (!keyTile.classList.contains("pg-correct") && !keyTile.classList.contains("pg-present")) {
+                    keyTile.classList.add("pg-absent");
                 }
             }
         }
@@ -404,7 +404,7 @@ function restartWordGame() {
     while (keyboard.firstChild) {
         keyboard.removeChild(keyboard.firstChild);
     }
-    document.getElementById("answer").innerText = "Try again";
+    document.getElementById("pg-answer").innerText = "Try again";
     word = getRandomWord();
     row = 0;
     col = 0;
@@ -450,7 +450,7 @@ function zoomOutMobile () {
 }
 
 function validateAndProcessEmail() {
-    const emailInput = document.getElementById("email");
+    const emailInput = document.getElementById("pg-email");
     const email = emailInput.value;
 
     if (mobile) {
@@ -483,25 +483,26 @@ function processEmail(email) {
         .then((response) => response.json())
         .then((data) => {
           if (data.validEmailGiven) {
-            document.getElementById("emailForm").style.display = "none";
-            document.getElementById("optOutContainer").style.display = "none"
-            document.getElementById("emailDenied").style.display = "none";
-            document.getElementById("discountContainer").style.marginTop = "5.75%";
-            document.getElementById("imageContainer").style.display = "none";
+            document.getElementById("pg-emailForm").style.display = "none";
+            document.getElementById("pg-optOutContainer").style.display = "none"
+            document.getElementById("pg-emailDenied").style.display = "none";
+            document.getElementById("pg-discountContainer").style.marginTop = "5.75%";
+            document.getElementById("pg-imageContainer").style.display = "none";
             if (optOut) {
                 lowProb = 100;
                 word = getRandomWord();
-                document.getElementById("discountPercentage").textContent = `${pctOff}% Off!`;
-                document.getElementById("discountPercentageContainer").style.display = "flex";
-                document.getElementById("discount-box").style.background = "#000";
-                document.getElementById("discountCode").textContent = "POPGAMES-" + word;
-                document.getElementById("copyButton").style.display = "inline-block"
+                document.getElementById("pg-discountPercentage").textContent = `${pctOff}% Off!`;
+                document.getElementById("pg-discountPercentageContainer").style.display = "flex";
+                //document.getElementById("pg-discount-box").style.background = "#000"; // Discount reveal
+                document.getElementById("pg-discount-box").classList.add('pg-background-color');
+                document.getElementById("pg-discountCode").textContent = "POPGAMES-" + word;
+                document.getElementById("pg-copyButton").style.display = "inline-block"
                 showConfetti(5000);
             } else {
                 const newPctOffTexts = [lowPctOff, midPctOff, highPctOff];
-                const discountPercentage = document.getElementById("discountPercentage");
+                const discountPercentage = document.getElementById("pg-discountPercentage");
                 discountPercentage.textContent = `${lowPctOff}%`;
-                document.getElementById("discountPercentageContainer").style.display = "flex";
+                document.getElementById("pg-discountPercentageContainer").style.display = "flex";
                 let index = 0;
                 const interval = setInterval(() => {
                     discountPercentage.textContent = `${newPctOffTexts[index]}%`;
@@ -509,17 +510,18 @@ function processEmail(email) {
                 }, 50)
                 setTimeout(() => {
                     clearInterval(interval);
-                    document.getElementById("discount-box").style.background = "#000";
-                    document.getElementById("discountCode").textContent = "POPGAMES-" + word;
+                    //document.getElementById("pg-discount-box").style.background = "#000"; // Discount reveal
+                    document.getElementById("pg-discount-box").classList.add('pg-background-color');
+                    document.getElementById("pg-discountCode").textContent = "POPGAMES-" + word;
                     discountPercentage.textContent = `${pctOff}% Off!`;
-                    document.getElementById("copyButton").style.display = "inline-block"
+                    document.getElementById("pg-copyButton").style.display = "inline-block"
                     showConfetti(5000);
                     showStats(gameToPlay, score)
                 }, 1250)
             }
           } else {
-            document.getElementById("emailDenied").style.display = "block";
-            document.getElementById("discountContainer").style.marginTop = "5.5%";
+            document.getElementById("pg-emailDenied").style.display = "block";
+            document.getElementById("pg-discountContainer").style.marginTop = "5.5%";
           }
         })
         .catch((error) => {
@@ -544,37 +546,37 @@ function actionButtonPressed() {
                 keyboard.removeChild(keyboard.firstChild);
             }
             initializeWordGame();
-            document.getElementById("lockContainer").style.display = "none";
+            document.getElementById("pg-lockContainer").style.display = "none";
         } else if (gameToPlay === "birdGame") {
             setTimeout(() => {
-                document.getElementById("birdGameImg").style.display = "none";
-                document.getElementById("lockContainer").style.display = "none";
+                document.getElementById("pg-birdGameImg").style.display = "none";
+                document.getElementById("pg-lockContainer").style.display = "none";
                 initializeBirdGame();
             }, 500)
         }
-        document.getElementById("wordGameImg").style.display = "none";
-        document.getElementById("actionButtonContainer").style.display = "none";
-        document.getElementById("optOutContainer").style.display = "none";
-        document.getElementById("discountContainer").style.marginTop = "5.75%";
-        const imageContainer = document.getElementById("imageContainer");
+        document.getElementById("pg-wordGameImg").style.display = "none";
+        document.getElementById("pg-actionButtonContainer").style.display = "none";
+        document.getElementById("pg-optOutContainer").style.display = "none";
+        document.getElementById("pg-discountContainer").style.marginTop = "5.75%";
+        const imageContainer = document.getElementById("pg-imageContainer");
         imageContainer.style.display = "flex";
         imageContainer.marginTop = "10.85%";
         imageContainer.marginBottom = "4.85%";
     } else {
-        document.getElementById("actionButtonContainer").style.display = "none";
-        document.getElementById("optOutContainer").style.display = "none";
-        const emailForm = document.getElementById("emailForm");
+        document.getElementById("pg-actionButtonContainer").style.display = "none";
+        document.getElementById("pg-optOutContainer").style.display = "none";
+        const emailForm = document.getElementById("pg-emailForm");
         emailForm.style.display = "block";
         emailForm.style.marginTop = "7.85%";
         emailForm.style.marginBottom = "2.85%";
-        document.getElementById("emailEntryLabel").style.display = "block";
-        document.getElementById("email").style.display = "inline-block";
-        document.getElementById("submitButton").style.display = "inline-block";
+        document.getElementById("pg-emailEntryLabel").style.display = "block";
+        document.getElementById("pg-email").style.display = "inline-block";
+        document.getElementById("pg-submitButton").style.display = "inline-block";
     }
 }
 
 function copyTextToClipboard() {
-    var id = "discountCode";
+    var id = "pg-discountCode";
 
     var r = document.createRange();
     r.selectNode(document.getElementById(id));
@@ -582,21 +584,21 @@ function copyTextToClipboard() {
     window.getSelection().addRange(r);
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
-    document.getElementById("copyButton").style.display = "none";
-    document.getElementById("circleTickSmall").style.display = "inline-block";
+    document.getElementById("pg-copyButton").style.display = "none";
+    document.getElementById("pg-circleTickSmall").style.display = "inline-block";
 }
 
 function closePopUp() {
-    var popUp = document.getElementById("popUp");
-    var overlay = document.getElementById("overlay");
+    var popUp = document.getElementById("pg-popUp");
+    var overlay = document.getElementById("pg-overlay");
     overlay.parentNode.removeChild(overlay);
     popUp.parentNode.removeChild(popUp);
 }
 
 function initExitHover() {
-    const exitContainer = document.getElementById('exitContainer');
-    const exitButton = document.getElementById('exitButton');
-    const exitButtonHover = document.getElementById('exitButtonHover');
+    const exitContainer = document.getElementById('pg-exitContainer');
+    const exitButton = document.getElementById('pg-exitButton');
+    const exitButtonHover = document.getElementById('pg-exitButtonHover');
 
     exitContainer.addEventListener('mouseover', () => {
         exitButton.style.display = "none";
@@ -656,8 +658,8 @@ async function initDiscountOptions() {
       midProb = discountOptions.midProb != null ? Math.floor(discountOptions.midProb * 100) : midProb;
       highProb = discountOptions.highProb != null ? Math.floor(discountOptions.highProb * 100) : highProb;
   
-      document.getElementById("headerText").textContent = `Get ${lowPctOff}%, ${midPctOff}%, or ${highPctOff}% Off Your First Order`;
-      document.getElementById("optOutText").textContent = `Or check the box to receive ${lowPctOff}% off now: `;
+      document.getElementById("pg-headerText").textContent = `Get ${lowPctOff}%, ${midPctOff}%, or ${highPctOff}% Off Your First Order`;
+      document.getElementById("pg-optOutText").textContent = `Or check the box to receive ${lowPctOff}% off now: `;
     } catch (error) {
       //console.error(error);
     }
@@ -706,7 +708,7 @@ async function initGameOptions() {
 }
 
 async function setUserStats(myScore, game) {
-    const emailInput = document.getElementById("email");
+    const emailInput = document.getElementById("pg-email");
     const email = emailInput.value;
     return fetch(proxyUrl, {
       method: "POST",
@@ -749,15 +751,15 @@ function showStats(game, myScore) {
                 }
             }
             setTimeout(function() {
-                const statsContainer = document.getElementById("statsContainer");
+                const statsContainer = document.getElementById("pg-statsContainer");
                 statsContainer.style.display = "flex";
-                const emailInput = document.getElementById("email");
+                const emailInput = document.getElementById("pg-email");
                 const email = emailInput.value;
-                document.getElementById("statsSubtitle").textContent = email;
-                document.getElementById("score").textContent = myScore;
-                document.getElementById("avg").textContent = avg;
-                document.getElementById("best").textContent = best;
-                document.getElementById("answer").style.visibility = "hidden";
+                document.getElementById("pg-statsSubtitle").textContent = email;
+                document.getElementById("pg-score").textContent = myScore;
+                document.getElementById("pg-avg").textContent = avg;
+                document.getElementById("pg-best").textContent = best;
+                document.getElementById("pg-answer").style.visibility = "hidden";
             }, delay);
         })
         .catch(error => {
@@ -767,9 +769,9 @@ function showStats(game, myScore) {
 
 function switchScreens() {
     setTimeout(function() {
-        document.getElementById("right-column").style.display = "none";
-        document.getElementById("left-column").style.display = "flex";
-        document.getElementById("exitContainerMobile").style.display = "flex";
+        document.getElementById("pg-right-column").style.display = "none";
+        document.getElementById("pg-left-column").style.display = "flex";
+        document.getElementById("pg-exitContainerMobile").style.display = "flex";
         gameInProgress = false;
     }, 500);
 }
@@ -821,7 +823,7 @@ let pipePlacementInterval = 1500;
 let optimalFPS = 144;
 let fpsOptimizedJumpSpeed = -3;
 
-let headerText = document.getElementById('headerText');
+let headerText = document.getElementById('pg-headerText');
 let computedStyle = window.getComputedStyle(headerText);
 let fontFamily = computedStyle.fontFamily;
 let fontSize = "20px";//computedStyle.fontSize; 
@@ -830,12 +832,12 @@ function initializeBirdGame() {
     if (mobile) {
         makeItMobile();
     }
-    birdBoard = document.getElementById("bird-board");
+    birdBoard = document.getElementById("pg-bird-board");
     context = birdBoard.getContext("2d");
 
-    birdImg = document.getElementById("birdImg");
-    topPipeImg = document.getElementById("topPipeImg");
-    bottomPipeImg = document.getElementById("bottomPipeImg");
+    birdImg = document.getElementById("pg-birdImg");
+    topPipeImg = document.getElementById("pg-topPipeImg");
+    bottomPipeImg = document.getElementById("pg-bottomPipeImg");
 
     topPipe = {
         img: topPipeImg,
@@ -881,7 +883,7 @@ function initializeBirdGame() {
         document.addEventListener("keydown", moveBird);
     } else {
         wrapTextCentered(context, "Tap to play", 22, 135, 250, 25);
-        document.getElementById("popUp").addEventListener("click", moveBird);
+        document.getElementById("pg-popUp").addEventListener("click", moveBird);
     }
 }
 
@@ -959,14 +961,14 @@ function update(timestamp) {
                 wrapTextCentered(context, "You Win!", 22, 100, 250, 25);
                 document.removeEventListener("click", moveBird);
                 document.removeEventListener("keydown", moveBird);
-                document.getElementById('popUp').removeEventListener('click', moveBird);
-                document.getElementById('overlay').removeEventListener('click', handleOverlayClick);
-                document.getElementById('imageContainer').style.display = "none";
-                const emailForm = document.getElementById("emailForm");
+                document.getElementById('pg-popUp').removeEventListener('click', moveBird);
+                document.getElementById('pg-overlay').removeEventListener('click', handleOverlayClick);
+                document.getElementById('pg-imageContainer').style.display = "none";
+                const emailForm = document.getElementById("pg-emailForm");
                 emailForm.style.display = "block";
-                document.getElementById("emailEntryLabel").style.display = "block";
-                document.getElementById("email").style.display = "inline-block";
-                document.getElementById("submitButton").style.display = "inline-block";
+                document.getElementById("pg-emailEntryLabel").style.display = "block";
+                document.getElementById("pg-email").style.display = "inline-block";
+                document.getElementById("pg-submitButton").style.display = "inline-block";
                 const confettiLength = (mobile) ? 1500 : 2000;
                 showConfetti(confettiLength);
                 if (mobile) {
