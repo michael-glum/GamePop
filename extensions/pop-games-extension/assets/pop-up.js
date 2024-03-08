@@ -44,6 +44,8 @@ let scores = [];
 
 const checkbox = document.getElementById('pg-optOut');
 
+let isPopUpOpen = true;
+
 checkbox.addEventListener('change', function(event) {
   const actionButton = document.getElementById("pg-actionButton");
   const imageButton = document.getElementById("pg-imageButton");
@@ -72,7 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
     popUp.style.display = 'none';
     document.getElementById('pg-emailForm').style.display = 'none';
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
-    if (!hasPopUpDisplayed) { // Remove true ||
+    let imageButton = document.getElementById("pg-imageButton");
+    if (!hasPopUpDisplayed || true) { // Remove true ||
+        if (hasPopUpDisplayed) { closePopUp(); }
         if (window.innerWidth < 768) {
             mobile = true;
             document.getElementById("pg-exitContainerMobile").style.display = "flex";
@@ -87,9 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("pg-exitContainerMobile").style.display = "none";
         }
         document.getElementById('pg-emailForm').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                validateAndProcessEmail();
+            if (isPopUpOpen) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    validateAndProcessEmail();
+                }
             }
         });
 
@@ -97,15 +103,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const storedTime = sessionStorage.getItem(`popUpStartTime`);
         const timeElapsed = storedTime ? (currentTime - parseInt(storedTime)) : 0;
 
+        delay = popUp.dataset.delay * 1000;
+
         const minimumDelay = 2000; // Minimum second delay per page
         const remainingDelay = delay - timeElapsed
         const delayRemaining = remainingDelay > minimumDelay ? remainingDelay : minimumDelay;
 
         if (delayRemaining > 0) {
             setTimeout(function() {
-                popUp.style.display = 'flex';
-                overlay.style.display = 'block';
-                sessionStorage.setItem('hasPopUpDisplayed', 'true');
+                if (!hasPopUpDisplayed) {
+                    popUp.style.display = 'flex';
+                    overlay.style.display = 'block';
+                    sessionStorage.setItem('hasPopUpDisplayed', 'true');
+                } else {
+                    closePopUp();
+                }
             }, delayRemaining);
 
             sessionStorage.setItem('popUpStartTime', currentTime - timeElapsed);
@@ -117,9 +129,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.onload = async function(){
     const hasPopUpDisplayed = sessionStorage.getItem('hasPopUpDisplayed');
-    if (!hasPopUpDisplayed) { // Remove true ||
+    if (!hasPopUpDisplayed || true) { // Remove true ||
         document.getElementById('pg-email').addEventListener('focus', function(event) {
-            event.preventDefault();
+            if (isPopUpOpen) {
+                event.preventDefault();
+            }
         });
         initExitHover();
         const exitContainer = document.getElementById("pg-exitContainer")
@@ -154,7 +168,7 @@ window.onload = async function(){
             exitContainer.style.marginLeft = "initial";
             document.getElementById("pg-right-column").style.margin = "0";*/
         } else {
-            closePopUp();
+            closePopUpCompletely();
         }
     }
 }
@@ -254,7 +268,9 @@ function initializeWordGame(firstInit = true, isUnlocked = true) {
     // Listen for Key Press
     if (firstInit && isUnlocked) {
         document.addEventListener("keyup", (e) => {
-            processWordGameInput(e);
+            if (isPopUpOpen) {
+                processWordGameInput(e);
+            }
         })
     }
 
@@ -602,8 +618,38 @@ function copyTextToClipboard() {
 function closePopUp() {
     var popUp = document.getElementById("pg-popUp");
     var overlay = document.getElementById("pg-overlay");
+    var popupButton = document.getElementById("pg-popup-button"); 
+
+    popUp.style.display = "none";
+    overlay.style.display = "none";
+
+    popupButton.style.display = "flex";
+
+    isPopUpOpen = false;
+}
+
+function closePopUpCompletely() {
+    var popUp = document.getElementById("pg-popUp");
+    var overlay = document.getElementById("pg-overlay");
+
     overlay.parentNode.removeChild(overlay);
     popUp.parentNode.removeChild(popUp);
+    
+    isPopUpOpen = false;
+}
+
+
+function openPopUp() {
+    var popUp = document.getElementById("pg-popUp");
+    var overlay = document.getElementById("pg-overlay");
+    var popupButton = document.getElementById("pg-popup-button");
+
+    popUp.style.display = "flex";
+    overlay.style.display = "block";
+
+    popupButton.style.display = "none";
+
+    isPopUpOpen = true;
 }
 
 function initExitHover() {
@@ -1047,25 +1093,27 @@ function placePipes() {
 }
 
 function moveBird(e) {
-    if (e.type === "click" || e.code === "KeyW" || e.code === "Space") {
-        e.preventDefault();
-        if (beginGame) {
-            lastFrameTime = performance.now();
-            requestAnimationFrame(update);
-            //setInterval(placePipes, 1500); //every 1.5 seconds
-            beginGame = false;
-        }
+    if (isPopUpOpen) {
+        if (e.type === "click" || e.code === "KeyW" || e.code === "Space") {
+            e.preventDefault();
+            if (beginGame) {
+                lastFrameTime = performance.now();
+                requestAnimationFrame(update);
+                //setInterval(placePipes, 1500); //every 1.5 seconds
+                beginGame = false;
+            }
 
-        velocityY = fpsOptimizedJumpSpeed;
+            velocityY = fpsOptimizedJumpSpeed;
 
-        if (birdGameOver) {
-            bird.y = birdY;
-            pipeArray = [];
-            score = 0;
-            birdGameOver = false;
-            //initialFrameCalculated = false;
-            lastFrameTime = performance.now();
-            requestAnimationFrame(update);
+            if (birdGameOver) {
+                bird.y = birdY;
+                pipeArray = [];
+                score = 0;
+                birdGameOver = false;
+                //initialFrameCalculated = false;
+                lastFrameTime = performance.now();
+                requestAnimationFrame(update);
+            }
         }
     }
 }
