@@ -1,46 +1,50 @@
 <div id="pg-overlay"></div>
-<div id="pg-popUp">
-  <div id="pg-left-column" style="background-color: {{ settings.pg_background_color }};">
+<div id="pg-popUp"
+    {% unless block.settings.enable_rainbow_animation %}
+      style="border-color: {{ block.settings.pg_border_color }} !important;"
+    {% endunless %}
+>
+  <div id="pg-left-column" style="background-color: {{ block.settings.pg_background_color }} !important;">
     <div id="pg-exitContainerMobile" onclick="closePopUp()">
       <img src="{{ 'CancelMinor.svg' | asset_url }}" alt="Exit Button" id="pg-exitButtonMobile" width="30" height="30" />
       <img src="{{ 'CancelMinorHover.svg' | asset_url }}" alt="Exit Button" id="pg-exitButtonHoverMobile" width="30" height="30" />
     </div>
     <div id="pg-headerContainer">
-      <text id="pg-headerText" style="color: {{ settings.pg_primary_text_color }};">Get 10%, 20%, or 30% Off Your First Order</text>
+      <text id="pg-headerText" style="color: {{ block.settings.pg_primary_text_color }} !important;">Get 10%, 20%, or 30% Off Your First Order</text>
     </div>
     <div id="pg-subheaderContainer">
-      <text id="pg-subheaderText" style="color: {{ settings.pg_secondary_text_color }};">Play a game to discover your discount!</text>
+      <text id="pg-subheaderText" style="color: {{ block.settings.pg_secondary_text_color }} !important;">Play a game to discover your discount!</text>
     </div>
     <div id="pg-optOutContainer">
-      <text id="pg-optOutText" style="color: {{ settings.pg_secondary_text_color }};">Or check the box to recieve 10% off now:&nbsp;</text>
+      <text id="pg-optOutText" style="color: {{ block.settings.pg_secondary_text_color }} !important;">Or check the box to recieve 10% off now:&nbsp;</text>
       <input type="checkbox" id="pg-optOut" name="optOut" value="false">
     </div>
     <div id="pg-actionButtonContainer">
-      <button type="button" onclick="actionButtonPressed()" id="pg-actionButton" style="background-color: {{ settings.pg_button_color }}; color: {{ settings.button_text_color }};">Play</button>
-      <button type="button" onclick="actionButtonPressed()" id="pg-imageButton"></button>
+      <button type="button" onclick="actionButtonPressed()" id="pg-actionButton" style="background-color: {{ block.settings.pg_button_color }} !important; color: {{ block.settings.button_text_color }} !important;">Play</button>
+      <button type="button" onclick="actionButtonPressed()" id="pg-imageButton" data-show="{{ block.settings.show_special_mobile_buttons }} !important"></button>
     </div>
     <form id="pg-emailForm">
-      <label for="email" id="pg-emailEntryLabel" style="color: {{ settings.pg_secondary_text_color }};">Enter your email to claim:</label>
+      <label for="email" id="pg-emailEntryLabel" style="color: {{ block.settings.pg_secondary_text_color }} !important;">Enter your email to claim:</label>
       <input type="email" id="pg-email" name="email" placeholder="Your email">
-      <button type="button" onclick="validateAndProcessEmail()" id="pg-submitButton" style="background-color: {{ settings.pg_button_color }}; color: {{ settings.button_text_color }};">Submit</button>
+      <button type="button" onclick="validateAndProcessEmail()" id="pg-submitButton" style="background-color: {{ block.settings.pg_button_color }} !important; color: {{ block.settings.button_text_color }} !important;">Submit</button>
       <text id="pg-emailDenied">This email has already been used</text>
     </form>
     <div id="pg-imageContainer">
       <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick" id="pg-circleTick" width="20" height="100" />
     </div>
     <div id="pg-discountPercentageContainer">
-      <text id="pg-discountPercentage" style="color: {{ settings.pg_primary_text_color }};">20% Off!</text>
+      <text id="pg-discountPercentage" style="color: {{ block.settings.pg_primary_text_color }} !important;">20% Off!</text>
     </div>
-    <div id="pg-discountContainer" style="color: {{ settings.pg_secondary_text_color }};">
-      <text id="pg-discountText" style="color: {{ settings.pg_secondary_text_color }};">Redeem code:</text>
+    <div id="pg-discountContainer" style="color: {{ block.settings.pg_secondary_text_color }} !important;">
+      <text id="pg-discountText" style="color: {{ block.settings.pg_secondary_text_color }} !important;">Redeem code:</text>
     </div>
-    <div id="pg-discount-box"> 
-      <text id="pg-discountCode" style="color: {{ settings.pg_primary_text_color }};"></text>
+    <div id="pg-discount-box" style="background-color: {{ block.settings.pg_button_color }} !important;"> 
+      <text id="pg-discountCode" style="color: {{ block.settings.pg_primary_text_color }} !important;"></text>
       <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="pg-copyButton" onclick="copyTextToClipboard()" width="10" height="75" />
       <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="pg-circleTickSmall" width="10" height="75" />
     </div>
-    <div id="pg-discount-terms" style="color: {{ settings.pg_secondary_text_color }};">Single use per customer</div>
-    <div id="pg-email-terms" style="color: {{ settings.pg_secondary_text_color }};">By submitting your email you agree to recieve email marketing updates for this store</div>
+    <div id="pg-discount-terms" style="color: {{ block.settings.pg_secondary_text_color }} !important;">Single use per customer</div>
+    <div id="pg-email-terms" style="color: {{ block.settings.pg_secondary_text_color }} !important;">By submitting your email you agree to recieve email marketing updates for this store</div>
   </div>
   <div id="pg-right-column">
     <div id="pg-exitContainer" onclick="closePopUp()">
@@ -89,7 +93,7 @@
 
 <style>
   .pg-background-color {
-    background-color: {{ settings.pg_background_color }};
+    background-color: {{ block.settings.pg_background_color }} !important;
   }
 
   .visually-hidden {
@@ -125,7 +129,7 @@
       width: 350px;
     }
 
-    #pg-pg-left-column {
+    #pg-left-column {
       height: 500px; 
       width: 350px;
       padding: 0px 0px 30x 0px;
@@ -212,6 +216,24 @@
       "id": "pg_button_text_color",
       "label": "Button Text Color",
       "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "pg_border_color",
+      "label": "Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_special_mobile_buttons",
+      "label": "Show Special Button Designs on Mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_rainbow_animation",
+      "label": "Enable Rainbow Border Animation",
+      "default": true
     }
   ]
 }

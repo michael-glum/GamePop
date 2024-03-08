@@ -54,9 +54,12 @@ checkbox.addEventListener('change', function(event) {
     imageButton.style.display = "none"
   } else {
     optOut = false;
-    if (mobile) {
+    if (mobile && imageButton.dataset.show === "true") {
         imageButton.style.display = "inline-block";
         actionButton.style.display = "none";
+    } else {
+        actionButton.style.display = "inline-block";
+        imageButton.style.display = "none"
     }
     document.getElementById("pg-actionButton").textContent = "Play";
   }
@@ -73,6 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.innerWidth < 768) {
             mobile = true;
             document.getElementById("pg-exitContainerMobile").style.display = "flex";
+            if (imageButton.dataset.show === "false") {
+                document.getElementById("pg-actionButton").style.display = "inline-block";
+                document.getElementById("pg-imageButton").style.display = "none";
+            }
         } else {
             mobile = false;
             document.getElementById("pg-actionButton").style.display = "inline-block";
@@ -115,6 +122,7 @@ window.onload = async function(){
             event.preventDefault();
         });
         initExitHover();
+        const exitContainer = document.getElementById("pg-exitContainer")
         exitContainer.style.position = "absolute";
         exitContainer.style.top = "10px";
         exitContainer.style.right = "10px";
@@ -140,7 +148,6 @@ window.onload = async function(){
             document.getElementById("pg-wordGameContainer").style.display = "none";
             document.getElementById("pg-birdGameContainer").style.display = "flex";
             document.getElementById("pg-birdGameImg").style.display = "inline-block";
-            const exitContainer = document.getElementById("pg-exitContainer")
             /*exitContainer.style.position = "absolute";
             exitContainer.style.top = "10px";
             exitContainer.style.right = "10px";
@@ -398,9 +405,11 @@ function updateWordGame() {
 }
 
 function restartWordGame() {
+    let board = document.getElementById("pg-board");
     while (board.firstChild) {
         board.removeChild(board.firstChild);
     }
+    let keyboard = document.getElementById("pg-keyboard");
     while (keyboard.firstChild) {
         keyboard.removeChild(keyboard.firstChild);
     }
@@ -494,7 +503,7 @@ function processEmail(email) {
                 document.getElementById("pg-discountPercentage").textContent = `${pctOff}% Off!`;
                 document.getElementById("pg-discountPercentageContainer").style.display = "flex";
                 //document.getElementById("pg-discount-box").style.background = "#000"; // Discount reveal
-                document.getElementById("pg-discount-box").classList.add('pg-background-color');
+                document.getElementById("pg-discount-box").style.backgroundColor = "transparent";
                 document.getElementById("pg-discountCode").textContent = "POPGAMES-" + word;
                 document.getElementById("pg-copyButton").style.display = "inline-block"
                 showConfetti(5000);
@@ -511,7 +520,7 @@ function processEmail(email) {
                 setTimeout(() => {
                     clearInterval(interval);
                     //document.getElementById("pg-discount-box").style.background = "#000"; // Discount reveal
-                    document.getElementById("pg-discount-box").classList.add('pg-background-color');
+                    document.getElementById("pg-discount-box").style.backgroundColor = "transparent";
                     document.getElementById("pg-discountCode").textContent = "POPGAMES-" + word;
                     discountPercentage.textContent = `${pctOff}% Off!`;
                     document.getElementById("pg-copyButton").style.display = "inline-block"
@@ -536,9 +545,11 @@ function isValidEmail(email) {
 }
 
 function actionButtonPressed() {
+    let keyboard = document.getElementById("pg-keyboard");
     if (!optOut) {
         gameInProgress = true;
         if (gameToPlay === "wordGame") {
+            let board = document.getElementById("pg-board");
             while (board.firstChild) {
                 board.removeChild(board.firstChild);
             }
