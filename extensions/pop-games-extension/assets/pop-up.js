@@ -503,7 +503,7 @@ function processEmail(email) {
                 document.getElementById("pg-discountPercentage").textContent = `${pctOff}% Off!`;
                 document.getElementById("pg-discountPercentageContainer").style.display = "flex";
                 //document.getElementById("pg-discount-box").style.background = "#000"; // Discount reveal
-                document.getElementById("pg-discount-box").style.backgroundColor = "transparent";
+                document.getElementById("pg-discount-box").style.background = "transparent";
                 document.getElementById("pg-discountCode").textContent = "POPGAMES-" + word;
                 document.getElementById("pg-copyButton").style.display = "inline-block"
                 showConfetti(5000);
@@ -520,7 +520,7 @@ function processEmail(email) {
                 setTimeout(() => {
                     clearInterval(interval);
                     //document.getElementById("pg-discount-box").style.background = "#000"; // Discount reveal
-                    document.getElementById("pg-discount-box").style.backgroundColor = "transparent";
+                    document.getElementById("pg-discount-box").style.background = "transparent";
                     document.getElementById("pg-discountCode").textContent = "POPGAMES-" + word;
                     discountPercentage.textContent = `${pctOff}% Off!`;
                     document.getElementById("pg-copyButton").style.display = "inline-block"

@@ -38,7 +38,11 @@
     <div id="pg-discountContainer" style="color: {{ block.settings.pg_secondary_text_color }} !important;">
       <text id="pg-discountText" style="color: {{ block.settings.pg_secondary_text_color }} !important;">Redeem code:</text>
     </div>
-    <div id="pg-discount-box" style="background-color: {{ block.settings.pg_button_color }} !important;"> 
+    <div id="pg-discount-box" 
+        {% unless block.settings.pg_use_default_discount_box %}
+          style="background: {{ block.settings.pg_discount_box_color }} !important;"
+        {% endunless %}
+    > 
       <text id="pg-discountCode" style="color: {{ block.settings.pg_primary_text_color }} !important;"></text>
       <img src="{{ 'ClipboardMinor.svg' | asset_url }}" alt="Clipboard" id="pg-copyButton" onclick="copyTextToClipboard()" width="10" height="75" />
       <img src="{{ 'CircleTickOutline.svg' | asset_url }}" alt="Circle Tick Small" id="pg-circleTickSmall" width="10" height="75" />
@@ -224,6 +228,12 @@
       "default": "#000000"
     },
     {
+      "type": "color",
+      "id": "pg_discount_box_color",
+      "label": "Discount Box Color",
+      "default": "#d2d2d2"
+    },
+    {
       "type": "checkbox",
       "id": "show_special_mobile_buttons",
       "label": "Show Special Button Designs on Mobile",
@@ -233,6 +243,12 @@
       "type": "checkbox",
       "id": "enable_rainbow_animation",
       "label": "Enable Rainbow Border Animation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "pg_use_default_discount_box",
+      "label": "Use Default Discount Box",
       "default": true
     }
   ]
