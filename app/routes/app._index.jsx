@@ -332,7 +332,7 @@ export default function Index() {
                     <div>
                       <p>Watch this tutorial to learn how to add the PopGames pop-up app embed to your theme.</p>
                       <br/>
-                      <p><b>Note:</b> The pop-up will only appear once per session. You may need to open a fresh theme editor if it does not appear after ~10 seconds.</p>
+                      <p><b>Note:</b> The pop-up is now fully customizable within the theme editor.</p>
                     </div>
                   }
                   popoverAction={[{content: 'Dismiss', onAction: () => {}}]}
