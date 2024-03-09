@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         delay = popUp.dataset.delay * 1000;
 
-        const minimumDelay = 2000; // Minimum second delay per page
+        const minimumDelay = 0; // Minimum second delay per page
         const remainingDelay = delay - timeElapsed
         const delayRemaining = remainingDelay > minimumDelay ? remainingDelay : minimumDelay;
 
