@@ -1,12 +1,12 @@
 #pg-popup-button {
-  width: 10vh;
-  height: 10vh;
+  width: 8.5vh;
+  height: 8.5vh;
   position: fixed;
   right: 0;
   bottom: 10%;
   border-radius: 50%;
   background-color: #000;
-  border: 4px solid hsl(0, 100%, 50%);
+  border: 2px solid hsl(0, 100%, 50%);
   animation: rainbow 10s infinite alternate;
   -webkit-animation: rainbow 10s infinite alternate;
   z-index: 10000;
@@ -397,6 +397,7 @@
     display: inline-block;
     padding: 1%;
     border: 1px solid #ccc;
+    width: 50% !important;
     margin-bottom: 2%;
     font-size: 16px;
     color: #000 !important;

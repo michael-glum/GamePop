@@ -98,7 +98,9 @@
     style="background-color: {{ block.settings.pg_background_color }} !important;
     {% unless block.settings.enable_rainbow_animation %}
       border-color: {{ block.settings.pg_border_color }} !important;
-    {% endunless %}"
+    {% endunless %}
+    bottom: {{ block.settings.pg_popup_button_height }}% !important;
+    right: {{ block.settings.pg_popup_button_right }}% !important;"
 >
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
     style="{% unless block.settings.enable_rainbow_animation %}
@@ -252,13 +254,26 @@
       "type": "color",
       "id": "pg_border_color",
       "label": "Border Color",
-      "default": "#000000"
+      "default": "#000000",
+      "info": "Only shows if rainbow animation checkbox is disabled."
     },
     {
       "type": "color",
       "id": "pg_discount_box_color",
       "label": "Discount Box Color",
       "default": "#d2d2d2"
+    },
+    {
+      "type": "number",
+      "id": "pg_popup_button_height",
+      "label": "Icon Button Height",
+      "default": 10
+    },
+    {
+      "type": "number",
+      "id": "pg_popup_button_right",
+      "label": "Icon Button Right Margin",
+      "default": 1
     },
     {
       "type": "range",
