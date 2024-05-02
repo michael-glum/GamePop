@@ -37,6 +37,9 @@ var delay = 10000; //0; // Set to 10000
 var mobile = false;
 var gameInProgress = false;
 
+let openingModifier; // bird game
+let openingSpace; // bird game
+
 var optOut = false;
 
 let score = 0;
@@ -125,6 +128,8 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.setItem('hasPopUpDisplayed', 'true');
         }
     }
+
+    openingModifier = popUp.dataset.difficulty; // bird game
 })
 
 window.onload = async function(){
@@ -942,6 +947,20 @@ function initializeBirdGame() {
         wrapTextCentered(context, "Tap to play", 22, 135, 250, 25);
         document.getElementById("pg-popUp").addEventListener("click", moveBird);
     }
+
+    switch (openingModifier) {
+        case "1":
+            openingSpace = birdBoard.height/3;
+            break;
+        case "2":
+            openingSpace = birdBoard.height/3.5;
+            break;
+        case "3":
+            openingSpace = birdBoard.height/4;
+            break;
+        default:
+            openingSpace = birdBoard.height/4;
+    }
 }
 
 let frameCount = 0;
@@ -1079,7 +1098,6 @@ function placePipes() {
     }
 
     let randomPipeY = pipeY - pipeHeight/4 - Math.random()*(pipeHeight/2);
-    let openingSpace = birdBoard.height/4;
 
     topPipe.x = pipeX;
     topPipe.y = randomPipeY;

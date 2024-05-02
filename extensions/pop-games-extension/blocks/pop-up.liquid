@@ -1,5 +1,7 @@
 <div id="pg-overlay"></div>
-<div id="pg-popUp" data-delay="{{ block.settings.pg_popup_delay }}"
+<div id="pg-popUp"
+    data-delay="{{ block.settings.pg_popup_delay }}"
+    data-difficulty="{{ block.settings.pg_birdgame_difficulty }}"
     {% unless block.settings.enable_rainbow_animation %}
       style="border-color: {{ block.settings.pg_border_color }} !important;"
     {% endunless %}
@@ -220,6 +222,15 @@
   "stylesheet": "pop-up.css",
   "javascript": "pop-up.js",
   "settings": [
+    {
+      "type": "range",
+      "id": "pg_birdgame_difficulty",
+      "label": "Bird Game Difficulty",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 3
+    },
     {
       "type": "color",
       "id": "pg_background_color",
